@@ -31,7 +31,7 @@ function App() {
         </div>
       </section>
       <footer className="footer">
-        © 2024 Comp3801
+        © 2024 DECO3801/7381
       </footer>
     </div>
   );
