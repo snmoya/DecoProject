@@ -18,16 +18,23 @@ Again, the code for both is just the front-end, so you can move through the scre
 
 
 
-How to run each one:
+# How to run each the applications:
 
-Website: cd into /WebMLY through the command line and run the command "npm start". That is going to open the website. 
+## Website
+```
+cd WebMLY/
+npm install
+npm start
+```
+
+## Mobile
+```
+cd MLY/
+npm install
+npm react-native run-ios
+```
+
+This should open Xcode and run an iPhone in your Macbook (Later will be `npx react-native run-android`)
 
 
-
-*Application: cd into /MLY then in the command line run "npx react-native run-ios" (later will be "npx react-native run-android").
-
-This should open Xcode and run an Iphone in your macbook.
-
-
-
-*I dont know if this will work at first, I wonder if you need to install all the libraries in your computer or the libraries are already in the repository. If you get some errors for missing libraries, install them like for example "npm install @react-navigation/native" or npm install "the name of the library".
+*I dont know if this will work at first, I wonder if you need to install all the libraries in your computer or the libraries are already in the repository. If you get some errors for missing libraries, install them like for example `npm install @react-navigation/native` or `npm install library_name`.
