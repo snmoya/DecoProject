@@ -32,6 +32,7 @@ function App() {
       </section>
       <footer className="footer">
         © 2024 DECO3801/7381
+        Ken hacked it
       </footer>
     </div>
   );
