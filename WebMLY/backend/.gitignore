@@ -1,0 +1,30 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for environment variable files
+.env
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Production
+build/
+dist/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Mac OS system files
+.DS_Store
