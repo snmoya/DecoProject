@@ -1,9 +1,18 @@
 // App.js
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+  const [message, setMessage] = useState('');
+
+  // Receive the message from the backend
+  useEffect(() => {
+    axios.get('/api')
+      .then(response => setMessage(response.data))
+      .catch(error => console.log(error));
+  }, []);
+
   return (
     <div className="container">
       <nav className="navBar">
@@ -15,6 +24,7 @@ function App() {
         <h1>Welcome to MLY</h1>
         <p>The place for organizations</p>
         <button>Log In</button>
+        <button id='get-message-button' onClick={() => alert(message)}>Click to see the message from the backend</button>
       </section>
       <section className="contentSection">
         <div className="card">
