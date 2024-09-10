@@ -46,7 +46,7 @@ body {
 }
 
 .heroSection {
-  background-image: url('Images/hero-image.png'); /* Path to your hero image */
+  background-image: url('images/hero-image.png'); /* Path to your hero image */
   background-size: cover;
   background-position: center;
   color: #FFFFFF; /* White text on dark background */
