@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Home() {
     const [message, setMessage] = useState('');
@@ -21,7 +22,9 @@ function Home() {
             <section className="heroSection">
                 <h1>Welcome to MLY</h1>
                 <p>The place for organizations</p>
-                <button>Log In</button>
+                <Link to="/login">
+                    <button>Go to Login</button>
+                </Link>
                 <button id='get-message-button' onClick={() => alert(message)}>Click to see the message from the backend</button>
             </section>
             <section className="contentSection">
