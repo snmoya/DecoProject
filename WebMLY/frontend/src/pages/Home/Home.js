@@ -6,7 +6,14 @@ function Home() {
 
     // Receive the message from the backend
     useEffect(() => {
-        axios.get('/api')
+        // Access the API key from environment variables
+        const apiKey = process.env.REACT_APP_API_KEY;
+
+        axios.get('/api', {
+            headers: {
+                'x-api-key': apiKey
+            }
+        })
             .then(response => {
                 setMessage(response.data.message);
             })

@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path'); // Importing the path module
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+dotenv.config();    // Load environment variables from .env file
 
 const app = express();
 const PORT = process.env.PORT || 8081;
@@ -9,7 +12,7 @@ const PORT = process.env.PORT || 8081;
 app.use(cors({
     origin: '*',    // Allow all origins
     methods: 'GET, POST, PUT, DELETE, OPTIONS',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-api-key'
 }));
 
 // Trust proxy (since Nginx is handling the requests)
@@ -21,8 +24,20 @@ app.use(express.json());
 // Serve the React app from the 'build' folder
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
+// Middleware to check API key
+function checkApiKey(req, res, next) {
+    const clientApiKey = req.headers['x-api-key'];
+    const serverApiKey = process.env.API_KEY;
+
+    if (clientApiKey && clientApiKey === serverApiKey) {
+        next();
+    } else {
+        res.status(403).send('Forbidden - Invalid API Key');
+    }
+}
+
 // API route
-app.get('/api', (req, res) => {
+app.get('/api', checkApiKey, (req, res) => {
     res.json({ message: 'Hello from the backend!' });
 });
 
