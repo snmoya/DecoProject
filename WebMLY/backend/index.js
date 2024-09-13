@@ -3,7 +3,8 @@ const path = require('path'); // Importing the path module
 const cors = require('cors');
 const dotenv = require('dotenv');
 
-dotenv.config();    // Load environment variables from .env file
+// Load environment variables from .env file
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 8081;
