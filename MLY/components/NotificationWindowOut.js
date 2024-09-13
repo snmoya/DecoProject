@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 
-const NotificationWindow = ({ onPressReceive }) => {
+const NotificationWindow = ({ location, onPressReceive }) => {
   return (
     <View style={styles.container}>
         <Image source={icons.Handle} style={styles.handleIcon} />
         <View style={styles.infoFrame}>
             <View style={styles.infoItem}>
                 <Image source={icons.locationPin} style={styles.locIcon} />
-                <Text style={styles.infoText}>Building Name</Text>
+                <Text style={styles.infoText}>{location}</Text>
             </View>
             <View style={styles.smallLine} />
             <View style={styles.infoItem}>

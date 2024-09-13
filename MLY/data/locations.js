@@ -1,9 +1,46 @@
 export const locations = [
-    {"id":"9","location":"Surfers Paradise Beach","suburb":"Surfers Paradise","state":"QLD","country":"Australia","latlong":"-27.9988251431703, 153.43144179177457"},
-    {"id":"7","location":"The Wheel of Brisbane","suburb":"South Bank","state":"QLD","country":"Australia","latlong":"-27.474904608388115, 153.0207753549221"},
-    {"id":"5","location":"UQ Sport Courts, UQ","suburb":"St Lucia","state":"QLD","country":"Australia","latlong":"-27.49278717815242, 153.0142174835569"},
-    {"id":"4","location":"UQU Shops, UQ","suburb":"St Lucia","state":"QLD","country":"Australia","latlong":"-27.497159204277263, 153.0157764058784"},
-    {"id":"3","location":"Near UQ Lakes Bus Station, UQ","suburb":"St Lucia","state":"QLD","country":"Australia","latlong":"-27.498248114899546, 153.01788081097033"},
-    {"id":"2","location":"General Purpose South, UQ","suburb":"St Lucia","state":"QLD","country":"Australia","latlong":"-27.499896755131353, 153.0148290862863"},
-    {"id":"1","location":"Great Court, UQ","suburb":"St Lucia","state":"QLD","country":"Australia","latlong":"-27.49763309197018, 153.01291742634757"}
+    {"id":"6","location":"Bio Science Library","suburb":"St Lucia","state":"QLD","country":"Australia","polygon": [
+        [-27.497098499227658, 153.01127696133022], 
+        [-27.49680585587057, 153.01116564965855], 
+        [-27.49675827151133, 153.01144594049444], 
+        [-27.497024743658145, 153.01154384112138]
+    ]},
+    {"id":"5","location":"Law Library","suburb":"St Lucia","state":"QLD","country":"Australia","polygon": [
+        [-27.49689413568169, 153.01294004912148], 
+        [-27.497060680643482, 153.01299905771853], 
+        [-27.49733542413417, 153.01196356043408],
+        [-27.497171258797643, 153.01191125735946]
+    ]},
+    {"id":"4","location":"Fryer Library","suburb":"St Lucia","state":"QLD","country":"Australia","polygon": [
+        [-27.496431202395744, 153.01423795272177], 
+        [-27.496396703619936, 153.01435999322928], 
+        [-27.49636101521979, 153.01434792328897], 
+        [-27.496351498311135, 153.01440559078154],
+        [-27.496493062242557, 153.0144525294383],
+        [-27.49647878689638, 153.01451153803532],
+        [-27.496652470149087, 153.0145745699458],
+        [-27.496690537674713, 153.01452360797563],
+        [-27.496770241513865, 153.01454506564727],
+        [-27.496824963519266, 153.01434389997556]
+    ]},
+    {"id":"3","location":"Central Library","suburb":"St Lucia","state":"QLD","country":"Australia","polygon": [
+        [-27.495986588483774, 153.01335599743632], 
+        [-27.49587542125021, 153.01377311826766], 
+        [-27.49625372122781, 153.01390405305776], 
+        [-27.49636654728525, 153.01349067322045]
+    ]},
+    {"id":"2","location":"Architecture & Music Library","suburb":"St Lucia","state":"QLD","country":"Australia","polygon": [
+        [-27.498955314382446, 153.01439156287148], 
+        [-27.498892309687225, 153.01469255106116], 
+        [-27.499161654506803, 153.01480442277767], 
+        [-27.499176618088573, 153.0147609171101],
+        [-27.499283725772305, 153.01478932897462],
+        [-27.49935933113339, 153.0145291828402]
+    ]},
+    {"id":"1","location":"Dorothy Hill Library","suburb":"St Lucia","state":"QLD","country":"Australia","polygon": [
+        [-27.499830922688478, 153.01340685148173], 
+        [-27.499923114792242, 153.01307761033237], 
+        [-27.50019731149612, 153.013177522616], 
+        [-27.500096792610236, 153.01349134106385]
+    ]},
 ];
