@@ -7,8 +7,13 @@ function Home() {
     // Receive the message from the backend
     useEffect(() => {
         axios.get('/api')
-            .then(response => setMessage(response.data))
-            .catch(error => console.log(error));
+            .then(response => {
+                setMessage(response.data.message);
+            })
+            .catch(error => {
+                console.log('Error fetching message:', error);
+                setMessage('Error fetching message from backend!');
+            });
     }, []);
 
     return (
