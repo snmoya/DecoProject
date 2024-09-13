@@ -4,8 +4,8 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #FFFFFF; /* Main background color */
-  color: #333; /* Main text color */
+  background-color: #F8ECDF; /* Main background color */
+  color: #5F4100; /* Main text color */
 }
 
 .container {
@@ -15,18 +15,18 @@ body {
   justify-content: space-between;
 }
 
-.header {
-  background-color: rgba(255, 222, 171, 0.9); /* Semi-transparent background for header */
-  color: #333; /* Header text color */
+/* .header {
+  background-color: rgba(255, 222, 171, 0.9); 
+  color: #333; 
   padding: 20px;
   text-align: center;
   font-size: 24px;
   font-weight: bold;
   position: relative;
   z-index: 2;
-}
+} */
 
-.navBar {
+/* .navBar {
   display: flex;
   justify-content: center;
   background-color: rgba(255, 222, 171, 0.9);
@@ -43,10 +43,10 @@ body {
 
 .navBar a:hover {
   color: #FFAE42;
-}
+} */
 
 .heroSection {
-  background-image: url('Images/hero-image.png'); /* Path to your hero image */
+  background-image: url('../src/Images/hero-image.png'); /* Path to your hero image */
   background-size: cover;
   background-position: center;
   color: #FFFFFF; /* White text on dark background */
@@ -71,49 +71,54 @@ body {
   z-index: 1;
 }
 
-.heroSection h1, .heroSection p, .heroSection button {
+.heroSection button {
   position: relative;
+
   z-index: 2;
 }
 
-.heroSection h1 {
-  font-size: 48px;
+button {
+  background-color: #FFDEAB; /* Button background color */
+  color: #5F4100;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  /* font-weight: bold; */
+}
+
+button:hover {
+  background-color: #E5C89A; /* Button hover color */
+}
+
+.contentSection {
+  height: 300px;
+  padding: 0;
+  margin-bottom: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.contentSection h1 {
+  font-size: 40px;
   margin-bottom: 20px;
 }
 
-.heroSection p {
-  font-size: 18px;
+.contentSection p {
+  font-size: 20px;
   margin-bottom: 40px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 }
 
-.heroSection button {
-  background-color: #FFDEAB; /* Button background color */
-  color: #333; /* Button text color */
-  border: none;
-  padding: 15px 30px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.heroSection button:hover {
-  background-color: #E5C89A; /* Button hover color */
-}
-
-.contentSection {
-  padding: 40px 20px;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-
-.card {
-  background-color: #F8ECDF; /* Card background color */
-  color: #333; /* Card text color */
+/* .card {
+  background-color: #F8ECDF; 
+  color: #333;
   width: 300px;
   margin: 20px;
   padding: 20px;
@@ -129,64 +134,17 @@ body {
 
 .card p {
   font-size: 16px;
-}
+} */
 
-.footer {
-  background-color: #F8ECDF; /* Footer background color */
-  color: #333; /* Footer text color */
+/* .footer {
+  background-color: #F8ECDF; 
+  color: #333; 
   text-align: center;
   padding: 20px;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-}
+} */
 
 #get-message-button {
   margin-top: 10px;
 }
 
-.app-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #F8ECDF;
-  padding-top: 20px;
-}
-
-.avatar img {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 50px;
-}
-
-.divider {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: row;
-}
-
-.divider .line {
-  color:  #656565;
-}
-
-.divider p {
-  margin: 4px 10px;
-  font-size: 12px;
-  color: #656565;
-}
-
-.create-account-button {
-  width: 400px;
-  padding: 10px;
-  background-color: #FFDEAB;
-  border: none;
-  border-radius: 30px;
-  font-size: 16px;
-  color: #111111;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.create-account-button:hover {
-  background-color: #ff9900;
-}
