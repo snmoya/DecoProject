@@ -1,5 +1,3 @@
-What I've done in this branch: Homepage adjustment and login page development
-
 In here you can find a `WebMLY` folder for the website and `MLY` for the mobile application.
 
 Please read `README.md` files in each folder for each instructions.
