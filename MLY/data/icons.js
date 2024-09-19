@@ -9,6 +9,7 @@ import menuButton from "../assets/icons/Menu_Button.png";
 import notification from "../assets/icons/notification.png";
 import search from "../assets/icons/Search.png";
 import threeDots from "../assets/icons/three_dots.png";
+import voice from "../assets/icons/voice.png";
 
 export default {
     // General Icons
@@ -23,4 +24,5 @@ export default {
     notification,
     search,
     threeDots,
+    voice,
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, TouchableOpacity } from "react-native";
+import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, TouchableOpacity, Image } from "react-native";
 import MapView from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
 import { isPointInPolygon } from "geolib";
@@ -7,6 +7,7 @@ import { locations } from "../data/locations";
 import NotificationWindow from './NotificationWindowOut';
 import NotificationWindowIn from './NotificationWindowIn';
 import { Polygon } from "react-native-maps";
+import icons from '../data/icons';
 
 const styles = StyleSheet.create({
     container: {
@@ -21,7 +22,21 @@ const styles = StyleSheet.create({
     nearbyLocationText: {
         color: "white",
         lineHeight: 25
-    }
+    },
+    voiceButton: {
+        position: 'absolute',
+        bottom: 30,
+        right: 20,
+        backgroundColor: 'white',
+        borderRadius: 50,
+        padding: 10,
+        elevation: 5,
+        zIndex: 100,
+    },
+    voiceIcon: {
+        width: 32,
+        height: 32,
+    },
 });
 
 function NearbyLocation(props) {
@@ -43,7 +58,7 @@ function NearbyLocation(props) {
     }
 }
 
-export default function ShowMap() {
+export default function ShowMap({navigation}) {
     const updatedLocations = locations.map(location => {
         if (location.polygon) {
             location.coordinates = location.polygon.map(([latitude, longitude]) => ({
@@ -53,6 +68,8 @@ export default function ShowMap() {
         }
         return location;
     });
+
+    const [buttonPosition, setButtonPosition] = useState(30);
 
     const initialMapState = {
         locationPermission: false,
@@ -68,7 +85,7 @@ export default function ShowMap() {
     const [mapState, setMapState] = useState(initialMapState);
     const [inZone, setInZone] = useState(false); 
     const [showNotificationInZone, setShowNotificationInZone] = useState(false);
-    const [showNotificationIn, setShowNotificationIn] = useState(false);
+    const [showNotificationInSelectedZone, setShowNotificationInSelectedZone] = useState(false);
 
     useEffect(() => {
         async function requestAndroidLocationPermission() {
@@ -127,10 +144,12 @@ export default function ShowMap() {
                 if (nearbyLocation && nearbyLocation.distance.nearby) {
                     console.log("User is IN a zone");
                     setInZone(true);
+                    setButtonPosition(280);
                 } else {
                     console.log("User is NOT in zone");
                     setInZone(false);
                     setShowNotificationIn(false);
+                    setButtonPosition(30);
                 }
             },
             error => console.log(error)
@@ -138,7 +157,7 @@ export default function ShowMap() {
     }
 
     const handlePressReceive = () => {
-        setShowNotificationIn(true); 
+        setShowNotificationInZone(true); 
     };
 
     const handleStopReceiving = () => {
@@ -149,9 +168,9 @@ export default function ShowMap() {
     const handleZonePress = (location) => {
         setMapState({
             ...mapState,
-            selectedLocation: location,  // Store the pressed zone information
+            selectedLocation: location,
         });
-        setShowNotificationInSelectedZone(true);  // Show the notification window
+        setShowNotificationInSelectedZone(true);  
     };
 
     return (
@@ -188,6 +207,14 @@ export default function ShowMap() {
                 })}
             </MapView>
 
+            <View style={[styles.voiceButton, { bottom: buttonPosition }]}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('VoiceToText')}
+                >
+                    <Image source={icons.voice} style={styles.voiceIcon} />
+                </TouchableOpacity>
+            </View>
+
             {inZone && showNotificationInZone && (
                 <NotificationWindowIn 
                     location={mapState.nearbyLocation.location} 
@@ -203,12 +230,13 @@ export default function ShowMap() {
                 />
             )}
 
-            {mapState.selectedLocation && showNotificationInSelectedZon && (
+            {mapState.selectedLocation && showNotificationInSelectedZone && (
                 <NotificationWindowIn 
                     location={mapState.selectedLocation.location}
                     onStopReceiving={handleStopReceiving}
                 />
             )}
+
         </>
     );
 }
