@@ -7,9 +7,21 @@ function Home() {
 
     // Receive the message from the backend
     useEffect(() => {
-        axios.get('/api')
-            .then(response => setMessage(response.data))
-            .catch(error => console.log(error));
+        // Access the API key from environment variables
+        const apiKey = process.env.REACT_APP_API_KEY;
+
+        axios.get('/api', {
+            headers: {
+                'x-api-key': apiKey
+            }
+        })
+            .then(response => {
+                setMessage(response.data.message);
+            })
+            .catch(error => {
+                console.log('Error fetching message:', error);
+                setMessage('Error fetching message from backend!');
+            });
     }, []);
 
     return (
