@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Home() {
     const [message, setMessage] = useState('');
@@ -13,34 +14,24 @@ function Home() {
 
     return (
         <div className="container">
-            <nav className="navBar">
+            {/* <nav className="navBar">
                 <a href="#home">Home</a>
                 <a href="#about">About</a>
                 <a href="#contact">Contact</a>
-            </nav>
+            </nav> */}
             <section className="heroSection">
-                <h1>Welcome to MLY</h1>
-                <p>The place for organizations</p>
-                <button>Log In</button>
                 <button id='get-message-button' onClick={() => alert(message)}>Click to see the message from the backend</button>
             </section>
             <section className="contentSection">
-                <div className="card">
-                    <h3>Create Zones</h3>
-                    <p>In here you can create zones.</p>
-                </div>
-                <div className="card">
-                    <h3>Manage Zones</h3>
-                    <p>In here you can manage some zones.</p>
-                </div>
-                <div className="card">
-                    <h3>Send Notifications</h3>
-                    <p>Here you can Send notification to the users in the zone.</p>
-                </div>
+                <h1>Welcome to MLY</h1>
+                <p>The place for organisations to manage zones and push notifications</p>
+                <Link to="/login">
+                    <button>Sign up/in to strat</button>
+                </Link>
             </section>
-            <footer className="footer">
+            {/* <footer className="footer">
                 © 2024 DECO3801/7381
-            </footer>
+            </footer> */}
         </div>
     );
 }

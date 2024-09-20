@@ -4,7 +4,7 @@ import './LoginForm.css';
 const LoginForm = () => {
   return (
     <form className="login-form">
-      <h2>Sign in</h2>
+      <h2>Sign up</h2>
       <label>
         <small>Email or mobile phone number</small>
         <input type="text" placeholder="" />
@@ -13,7 +13,7 @@ const LoginForm = () => {
         <small>Your password</small>
         <input type="password" placeholder="" />
       </label>
-      <button type="submit" className="login-button">Sign in</button>
+      <button type="submit" className="login-button">Sign up</button>
       <p className="terms">
         By continuing, you agree to the <span className="underline">Terms of use</span> and <span className="underline">Privacy Policy</span>.
       </p>
