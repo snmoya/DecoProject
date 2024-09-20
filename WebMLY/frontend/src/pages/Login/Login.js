@@ -1,5 +1,7 @@
 import React from "react";
 import LoginForm from "../../components/LoginForm/LoginForm";
+import './Login.css';
+import { Link } from 'react-router-dom';
 
 const App = () => {
   return (
@@ -10,7 +12,9 @@ const App = () => {
         <p>Don't have an account?</p>
         <span className="line">--------------------------</span>
       </div>
-      <button className="create-account-button">Create your account</button>
+      <Link to="/signup">
+        <button className="create-account-button">Create your account</button>
+      </Link>
     </div>
   );
 };
