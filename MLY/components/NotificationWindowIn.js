@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 import { useNavigation } from '@react-navigation/native';
 
-const NotificationWindowIn = ({ onStopReceiving }) => {
+const NotificationWindowIn = ({ location, onStopReceiving }) => {
   const navigation = useNavigation();
 
   return (
@@ -12,7 +12,7 @@ const NotificationWindowIn = ({ onStopReceiving }) => {
         <Image source={icons.Handle} style={styles.handleIcon} />
         <View style={styles.infoItem1}>
             <Image source={icons.locationPin} style={styles.locIcon} />
-            <Text style={styles.infoText}>Building Name</Text>
+            <Text style={styles.infoText}>{location}</Text>
         </View>
         <View style={styles.infoItem1}>
                 <Image source={icons.notification} style={styles.notIcon} />

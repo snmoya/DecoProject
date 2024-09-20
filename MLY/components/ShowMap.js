@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { PermissionsAndroid, StyleSheet, Appearance, View, SafeAreaView, Text, Platform } from "react-native";
-import MapView, { Circle } from "react-native-maps";
+import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, TouchableOpacity, Image } from "react-native";
+import MapView from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
-import { getDistance } from "geolib";
+import { isPointInPolygon } from "geolib";
 import { locations } from "../data/locations";
 import NotificationWindow from './NotificationWindowOut';
 import NotificationWindowIn from './NotificationWindowIn';
+import { Polygon } from "react-native-maps";
+import icons from '../data/icons';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,54 +22,70 @@ const styles = StyleSheet.create({
     nearbyLocationText: {
         color: "white",
         lineHeight: 25
-    }
+    },
+    voiceButton: {
+        position: 'absolute',
+        bottom: 30,
+        right: 20,
+        backgroundColor: 'white',
+        borderRadius: 50,
+        padding: 10,
+        elevation: 5,
+        zIndex: 100,
+    },
+    voiceIcon: {
+        width: 32,
+        height: 32,
+    },
 });
 
 function NearbyLocation(props) {
-    if (typeof props.location != "undefined") {
+    if (typeof props.location !== "undefined") {
         return (
             <SafeAreaView style={styles.nearbyLocationSafeAreaView}>
                 <View style={styles.nearbyLocationView}>
                     <Text style={styles.nearbyLocationText}>
                         {props.location}
                     </Text>
-                    {props.distance.nearby &&
-                        <Text style={{
-                            ...styles.nearbyLocationText,
-                            fontWeight: "bold"
-                        }}>
+                    {props.distance.nearby && (
+                        <Text style={{ ...styles.nearbyLocationText, fontWeight: "bold" }}>
                             Within 100 Metres!
                         </Text>
-                    }
+                    )}
                 </View>
             </SafeAreaView>
         );
     }
 }
 
-export default function ShowMap() {
-
+export default function ShowMap({navigation}) {
     const updatedLocations = locations.map(location => {
-        const latlong = location.latlong.split(", ");
-        location.coordinates = {
-            latitude: parseFloat(latlong[0]),
-            longitude: parseFloat(latlong[1])
-        };
+        if (location.polygon) {
+            location.coordinates = location.polygon.map(([latitude, longitude]) => ({
+                latitude,
+                longitude
+            }));
+        }
         return location;
     });
+
+    const [buttonPosition, setButtonPosition] = useState(30);
 
     const initialMapState = {
         locationPermission: false,
         locations: updatedLocations,
         userLocation: {
-            latitude: -27.499526188402154,
-            longitude: 152.9728129460468,
+            latitude: -27.50005001846802,
+            longitude: 153.01330426605935,
         },
-        nearbyLocation: {}
+        nearbyLocation: {},
+        selectedLocation: null,
     };
+
     const [mapState, setMapState] = useState(initialMapState);
     const [inZone, setInZone] = useState(false); 
-    const [showNotificationIn, setShowNotificationIn] = useState(false);
+    const [showNotificationInZone, setShowNotificationInZone] = useState(false);
+    const [showNotificationInSelectedZone, setShowNotificationInSelectedZone] = useState(false);
 
     useEffect(() => {
         async function requestAndroidLocationPermission() {
@@ -83,42 +101,28 @@ export default function ShowMap() {
                     }
                 );
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    setMapState({
-                        ...mapState,
-                        locationPermission: true
-                    });
+                    setMapState({ ...mapState, locationPermission: true });
                 }
             } catch (error) {
                 console.warn(error);
             }
-        };
+        }
 
         if (Platform.OS === "android") {
             requestAndroidLocationPermission();
         } else {
-            setMapState({
-                ...mapState,
-                locationPermission: true
-            });
+            setMapState({ ...mapState, locationPermission: true });
         }
-
     }, []);
 
-    function calculateDistance(userLocation) {
-        const nearestLocations = mapState.locations.map(location => {
-            const metres = getDistance(
-                userLocation,
-                location.coordinates
-            );
-            location["distance"] = {
-                metres: metres,
-                nearby: metres <= 100 ? true : false
-            };
+    function checkIfUserInZone(userLocation) {
+        const updatedLocations = mapState.locations.map(location => {
+            const inZone = isPointInPolygon(userLocation, location.coordinates);
+            location["distance"] = { nearby: inZone };
             return location;
-        }).sort((previousLocation, thisLocation) => {
-            return previousLocation.distance.metres - thisLocation.distance.metres;
         });
-        return nearestLocations.shift();
+
+        return updatedLocations.find(location => location.distance.nearby);
     }
 
     if (mapState.locationPermission) {
@@ -126,38 +130,48 @@ export default function ShowMap() {
             position => {
                 const userLocation = {
                     latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                }
-                const nearbyLocation = calculateDistance(userLocation);
+                    longitude: position.coords.longitude,
+                };
+
+                const nearbyLocation = checkIfUserInZone(userLocation);
+
                 setMapState({
                     ...mapState,
                     userLocation,
-                    nearbyLocation: nearbyLocation
+                    nearbyLocation: nearbyLocation,
                 });
 
-                // Check if user is within a zone
-                if (nearbyLocation.distance.nearby) {
+                if (nearbyLocation && nearbyLocation.distance.nearby) {
                     console.log("User is IN a zone");
                     setInZone(true);
+                    setButtonPosition(280);
                 } else {
                     console.log("User is NOT in zone");
                     setInZone(false);
                     setShowNotificationIn(false);
+                    setButtonPosition(30);
                 }
             },
             error => console.log(error)
-            
         );
-
     }
 
     const handlePressReceive = () => {
-        setShowNotificationIn(true); 
+        setShowNotificationInZone(true); 
     };
 
     const handleStopReceiving = () => {
         setShowNotificationIn(false);
-    }
+        setShowNotificationInSelectedZone(false);
+    };
+
+    const handleZonePress = (location) => {
+        setMapState({
+            ...mapState,
+            selectedLocation: location,
+        });
+        setShowNotificationInSelectedZone(true);  
+    };
 
     return (
         <>
@@ -167,36 +181,62 @@ export default function ShowMap() {
                     pitch: 0,
                     heading: 0,
                     altitude: 3000,
-                    zoom: 15
+                    zoom: 15,
                 }}
                 showsUserLocation={mapState.locationPermission}
                 style={styles.container}
             >
-                {mapState.locations.map(location => (
-                    <Circle
-                        key={location.id}
-                        center={location.coordinates}
-                        radius={100}
-                        strokeWidth={3}
-                        strokeColor="#FEC272"
-                        fillColor="rgba(254, 194, 114, 0.3)" 
-                    />
-                ))}
+                {mapState.locations.map(location => {
+                    if (location.coordinates) {
+                        return ( 
+                            <TouchableOpacity
+                                key={location.id}
+                                onPress={() => handleZonePress(location)}
+                            >
+                            <Polygon
+                                key={location.id}
+                                coordinates={location.coordinates}
+                                strokeWidth={3}
+                                strokeColor="#FEC272"
+                                fillColor="rgba(254, 194, 114, 0.3)"
+                            />
+                            </TouchableOpacity>
+                        );
+                    }
+                    return null;
+                })}
             </MapView>
-            {inZone && showNotificationIn && (
+
+            <View style={[styles.voiceButton, { bottom: buttonPosition }]}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('VoiceToText')}
+                >
+                    <Image source={icons.voice} style={styles.voiceIcon} />
+                </TouchableOpacity>
+            </View>
+
+            {inZone && showNotificationInZone && (
                 <NotificationWindowIn 
-                    location={mapState.nearbyLocation} 
+                    location={mapState.nearbyLocation.location} 
                     onStopReceiving={handleStopReceiving}
                 />
             )}
 
-            {inZone && !showNotificationIn && (
+            {inZone && !showNotificationInZone && (
                 <NotificationWindow
-                    location={mapState.nearbyLocation}
+                    location={mapState.nearbyLocation.location}
                     onClose={() => setInZone(false)}
                     onPressReceive={handlePressReceive} 
                 />
             )}
+
+            {mapState.selectedLocation && showNotificationInSelectedZone && (
+                <NotificationWindowIn 
+                    location={mapState.selectedLocation.location}
+                    onStopReceiving={handleStopReceiving}
+                />
+            )}
+
         </>
     );
 }
