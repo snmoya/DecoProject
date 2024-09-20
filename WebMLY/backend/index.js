@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path'); // Importing the path module
 const cors = require('cors');
 const dotenv = require('dotenv');
+const mysql = require('mysql2/promise')
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -37,9 +38,35 @@ function checkApiKey(req, res, next) {
     }
 }
 
+// Connect to the database
+let connectionPool;
+(async () => {
+    try {
+        // Create a connection using promises
+        connectionPool = await mysql.createPool({
+            host: process.env.MYSQL_HOST,
+            user: process.env.MYSQL_USER,
+            password: process.env.MYSQL_PASSWORD,
+            database: process.env.MYSQL_DATABASE,
+            waitForConnections: true,
+            connectionLimit: 10,    // Maximum number of connections in the pool
+            queueLimit: 0           // No limit for queued connection requests
+        });
+
+        console.log('Connected to MySQL!');
+    } catch (err) {
+        console.error('Error connecting to MySQL:', err);
+    }
+})();
+
 // API route
-app.get('/api', checkApiKey, (req, res) => {
-    res.json({ message: 'Hello from the backend!' });
+app.get('/api', checkApiKey, async (req, res) => {
+    try {
+        const [rows] = await connectionPool.execute('SELECT * FROM test');
+        res.json({ message: rows[0].message });
+    } catch (err) {
+        res.json({ message: 'Error fetching data'});
+    }
 });
 
 // Fallback route to serve the React app for any other route
