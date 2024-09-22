@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path'); // Importing the path module
 const cors = require('cors');
 const dotenv = require('dotenv');
-const mysql = require('mysql2/promise')
+const mysql = require('mysql2/promise');
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -68,6 +68,28 @@ app.get('/api', checkApiKey, async (req, res) => {
         res.json({ message: 'Error fetching data'});
     }
 });
+
+app.get('/api/zones/:id', async (req, res) => {
+    try {
+        const zoneId = req.params.id;   // Get zone id from param
+
+        // Query the zone with given id
+        const [rows] = await connectionPool.execute(
+            'SELECT name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones WHERE id = ?',
+            [zoneId]
+        );
+
+        // Zone not found
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Zone not found' });
+        }
+
+        // Return the result as JSON
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+})
 
 // Fallback route to serve the React app for any other route
 app.get('*', (req, res) => {
