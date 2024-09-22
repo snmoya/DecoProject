@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zone Management</title>
+  <!-- 引入 zone.css -->
+  <link rel="stylesheet" href="ZoneManagement.css">
+</head>
+<body>
+<header>
+  <h1>Zone Management</h1>
+</header>
+
+<div class="container">
+  <!-- 左侧zone管理区域 -->
+  <div class="zone-management">
+    <!-- Click to add new zones -->
+    <div class="new-zone-box" onclick="addZone()">
+      <p>Click to add new zones</p>
+    </div>
+    <!-- 动态添加的Zone将显示在这里 -->
+    <div id="zone-list"></div>
+  </div>
+
+  <!-- 右侧区域 -->
+  <div class="right-section">
+    <!-- Push Notification按钮 -->
+    <button class="push-notification" onclick="pushNotification()">Push a New Notification</button>
+  </div>
+</div>
+
+<footer>
+  <p>Footer content goes here</p>
+</footer>
+
+<!-- 引入 zone.js -->
+<script src="ZoneManagement.js"></script>
+</body>
+</html>
