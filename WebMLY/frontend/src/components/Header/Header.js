@@ -11,7 +11,7 @@ function Header() {
                 <NavLink to="/push-notification" activeClassName="active-link">Push Notification</NavLink>
             </div>
             <div className="user-info">
-                <img src={require('../../Images/user-icon.png')} alt="User" />
+                {/* <img src={require('../../Images/user-icon.png')} alt="User" /> */}
                 <NavLink to="/login">Log out</NavLink>
             </div>
         </div>

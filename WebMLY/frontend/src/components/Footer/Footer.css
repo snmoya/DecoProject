@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5px 5px;
-    background-color: #f4f3f3;
+    padding: 20px;
+    background-color: black;
 }
 
 .Footer .navigation {
@@ -14,12 +14,11 @@
 
 .Footer .navigation a {
     text-decoration: none;
-    color: rgb(110, 110, 110);
+    color: white;
     font-weight: lighter;
 }
 
 .Footer .navigation a::selection {
-    background-color: rgba(255, 255, 0, 0.3);
     color: rgb(110, 110, 110);
     text-decoration: underline;
 }

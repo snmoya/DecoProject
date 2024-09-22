@@ -8,7 +8,7 @@ import Footer from '../../components/Footer/Footer';
 function PushNotification() {
     const [title, setTitle] = useState('');
     const [information, setInformation] = useState('');
-    const [time, setTime] = useState('Now');
+    // const [time, setTime] = useState('Now');
     const [type, setType] = useState('Notification');
     const [selectedZones, setSelectedZones] = useState([]);
     const [notifications, setNotifications] = useState([]);
@@ -42,7 +42,7 @@ function PushNotification() {
         const newNotification = {
             title: title,
             information: information,
-            time: time,
+            // time: time,
             type: type,
             zones: selectedZones, 
         };
@@ -53,7 +53,7 @@ function PushNotification() {
         // Clear form fields
         setTitle('');
         setInformation('');
-        setTime('Now');
+        // setTime('Now');
         setType('Notification');
         setSelectedZones([]);
     };
@@ -82,7 +82,7 @@ function PushNotification() {
                     ></textarea>
                 </div>
 
-                <div>
+                {/* <div>
                     <label>Time</label>
                     <select 
                         value={time} 
@@ -92,7 +92,7 @@ function PushNotification() {
                         <option value="5 mins Later">5 mins Later</option>
                         <option value="10 mins Later">10 mins Later</option>
                     </select>
-                </div>
+                </div> */}
 
                 <div>
                     <label>Type</label>
