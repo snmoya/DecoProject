@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PushNotification.css';
 
-import Header from '../../components/Header/Header';
-import Footer from '../../components/Footer/Footer';
-
 function PushNotification() {
     const [title, setTitle] = useState('');
     const [information, setInformation] = useState('');
@@ -60,8 +57,6 @@ function PushNotification() {
 
     return (
         <div className="container">
-            <Header />  {/* Include Header at the top */}
-
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Title</label>
@@ -126,8 +121,6 @@ function PushNotification() {
 
                 <button type="submit">Push</button>
             </form>
-
-            <Footer />  {/* Include Footer at the bottom */}
         </div>
     );
 }
