@@ -16,9 +16,9 @@ function PushNotification() {
 
     // Static zones list (can be fetched dynamically from API)
     const zones = [
-        { id: 'zone1', name: 'Zone 1' },
-        { id: 'zone2', name: 'Zone 2' },
-        { id: 'zone3', name: 'Zone 3' },
+        { id: 'zone1', name: 'Central Library' },
+        { id: 'zone2', name: 'Duhig Tower' },
+        { id: 'zone3', name: 'Forgan Smith Building' },
     ];
 
     const handleZoneChange = (e) => {
