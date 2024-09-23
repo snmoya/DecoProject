@@ -42,16 +42,22 @@ function checkApiKey(req, res, next) {
 let connectionPool;
 (async () => {
     try {
-        // Create a connection using promises
-        connectionPool = await mysql.createPool({
+        const dbConfig = {
             host: process.env.MYSQL_HOST,
             user: process.env.MYSQL_USER,
             password: process.env.MYSQL_PASSWORD,
             database: process.env.MYSQL_DATABASE,
             waitForConnections: true,
             connectionLimit: 10,    // Maximum number of connections in the pool
-            queueLimit: 0           // No limit for queued connection requests
-        });
+            queueLimit: 0           // No limit for queued connection requests 
+        };
+
+        // Add port for MySQL if is running on local
+        if (process.env.MYSQL_PORT)
+            dbConfig.port = process.env.MYSQL_PORT;
+            
+        // Create a connection using promises
+        connectionPool = mysql.createPool(dbConfig);
 
         console.log('Connected to MySQL!');
     } catch (err) {
