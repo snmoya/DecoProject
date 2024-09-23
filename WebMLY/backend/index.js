@@ -65,6 +65,19 @@ let connectionPool;
     }
 })();
 
+// Function to extract coordinates
+function extractCoordinates(polygon) {
+    // Check if polygon is a string (JSON) or an object
+    const geoJSON = typeof polygon === 'string' ? JSON.parse(polygon) : polygon;
+
+    // Ensure the object has the expected structure
+    if (geoJSON && geoJSON.coordinates && Array.isArray(geoJSON.coordinates[0])) {
+        return geoJSON.coordinates[0].map(coord => [coord[1], coord[0]]);
+    } else {
+        throw new Error('Invalid GeoJSON structure');
+    }
+}
+
 // API route
 app.get('/api', checkApiKey, async (req, res) => {
     try {
@@ -81,18 +94,26 @@ app.get('/api/zones/:id', async (req, res) => {
 
         // Query the zone with given id
         const [rows] = await connectionPool.execute(
-            'SELECT name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones WHERE id = ?',
+            'SELECT id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones WHERE id = ?',
             [zoneId]
         );
 
         // Zone not found
         if (rows.length === 0) {
+            console.log('Zone not found');
             return res.status(404).json({ error: 'Zone not found' });
         }
 
+        // Extract the polygon coordinates
+        const transformedZone = {
+            ...rows[0],
+            polygon: extractCoordinates(rows[0].polygon)
+        };
+
         // Return the result as JSON
-        res.json(rows[0]);
+        res.json(transformedZone);
     } catch (error) {
+        console.log('ERROR:', error);
         res.status(500).json({ error: 'Server error' });
     }
 })
