@@ -11,7 +11,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 const app = express();
 const PORT = process.env.PORT || 8081;
 
-// Use CORS to allow requests from other origins
+// * Use CORS to allow requests from other origins
 app.use(cors({
     origin: '*',    // Allow all origins
     methods: 'GET, POST, PUT, DELETE, OPTIONS',
@@ -27,7 +27,7 @@ app.use(express.json());
 // Serve the React app from the 'build' folder
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-// Middleware to check API key
+// * Middleware to check API key
 function checkApiKey(req, res, next) {
     const clientApiKey = req.headers['x-api-key'];
     const serverApiKey = process.env.API_KEY;
@@ -39,7 +39,7 @@ function checkApiKey(req, res, next) {
     }
 }
 
-// Connect to the database
+// * Connect to the database
 let connectionPool;
 (async () => {
     try {
@@ -66,7 +66,7 @@ let connectionPool;
     }
 })();
 
-// Function to extract coordinates
+// * Function to extract coordinates
 function extractCoordinates(polygon) {
     // Check if polygon is a string (JSON) or an object
     const geoJSON = typeof polygon === 'string' ? JSON.parse(polygon) : polygon;
@@ -79,17 +79,64 @@ function extractCoordinates(polygon) {
     }
 }
 
-// API route
+// * API route
 app.get('/api', checkApiKey, async (req, res) => {
     try {
         const [rows] = await connectionPool.execute('SELECT * FROM test');
         res.json({ message: rows[0].message });
     } catch (err) {
-        res.json({ message: 'Error fetching data'});
+        res.json({ message: 'Error fetching data' });
     }
 });
 
-// Add new account from user registration
+// * Login
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    // Validation
+    if (!username || !password) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    try {
+        // Check if the user exists in the database
+        const [accountResult] = await connectionPool.execute(
+            'SELECT * FROM accounts WHERE username = ?',
+            [username]
+        );
+
+        if (accountResult.length == 0) {
+            return res.status(400).json({ error: 'Invalid username or password ' });
+        }
+
+        // Get the user
+        const user = accountResult[0];
+
+        // Compare the password with the hashed password stored in the database
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(400).json({ error: 'Invalid username or password' });
+        }
+
+        // Get the organisation id associated with this account
+        const [organisationResult] = await connectionPool.execute(
+            'SELECT * FROM organisations WHERE id = ?',
+            [user.org_id]
+        );
+
+        if (organisationResult.length == 0) {
+            return res.status(400).json({ error: 'No organisation associated with this account' });
+        }
+
+        res.status(200).json({ message: 'Login successful' });
+    } catch (error) {
+        console.error('ERROR: Logging in', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// * Add new account from user registration
 app.post('/api/signup', async (req, res) => {
     const { username, password, confirmPassword, organisationName } = req.body;
 
@@ -103,10 +150,13 @@ app.post('/api/signup', async (req, res) => {
 
     try {
         // Check if username already exists
-        const [existingUser] = await connectionPool.execute('SELECT id FROM accounts WHERE username = ?', [username]);
+        const [existingUser] = await connectionPool.execute(
+            'SELECT id FROM accounts WHERE username = ?',
+            [username]
+        );
 
         if (existingUser.length > 0) {
-            return res.status(400).json({error: 'Username is already taken'});
+            return res.status(400).json({ error: 'Username is already taken' });
         }
 
         // Insert new organisation into the database

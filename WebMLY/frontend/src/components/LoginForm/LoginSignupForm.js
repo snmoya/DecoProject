@@ -10,7 +10,35 @@ const LoginForm = ({ isLoginPage }) => {
   const [organisationName, setOrganisationName] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation
+    if (!username || !password) {
+      alert('All fields are required');
+      return;
+    }
+
+    try { 
+      const response = await axios.post('/api/login', {
+        username,
+        password
+      });
+
+      // Successful login
+      if (response.status === 200) {
+        window.location.href = '/home';   // TODO
+      }
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.error);
+      } else {
+        alert('ERROR: Logging in');
+      }
+    }
+  };
+
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
 
     // Validation
@@ -26,7 +54,6 @@ const LoginForm = ({ isLoginPage }) => {
 
     // Handle submission logic
     try {
-      console.log('send');
       const response = await axios.post('/api/signup', {
         username,
         password,
@@ -35,6 +62,9 @@ const LoginForm = ({ isLoginPage }) => {
       });
 
       setMessage(response.data.message);
+      setUsername('');
+      setPassword('');
+      window.location.href = '/login';
     } catch (error) {
       if (error.response) {
         alert(error.response.data.error);
@@ -45,7 +75,7 @@ const LoginForm = ({ isLoginPage }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
+    <form onSubmit={isLoginPage ? handleLoginSubmit : handleSignupSubmit} className="login-form">
       <h2>{isLoginPage ? 'Login' : 'Sign Up'}</h2>
 
       <label>
