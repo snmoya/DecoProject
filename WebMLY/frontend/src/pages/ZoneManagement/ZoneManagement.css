@@ -1,133 +1,169 @@
-/* 整个页面的背景颜色设置为淡奶黄色 */
+/*See line 19n and line 32 to see bug problems. Buy may related to js file*/
+
+/* Set up the entire page */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f6eadd; /* 淡奶黄色 */
-}
-
-/* header 的背景色为白色 */
-header {
-    background-color: #f9f9f9; /* 白色 */
-    color: #a38a56;
-    text-align: center;
-    padding: 10px;
-}
-
-/* footer 样式，保持灰色或其他默认颜色 */
-footer {
-    background-color: #f9f9f9;
-    text-align: center;
-    padding: 10px;
-    margin-top: auto;
-}
-
-/* 主体区域 */
-.container {
-    display: flex;
-    flex-direction: row; /* 改为横向布局 */
-    flex: 1;
-    padding: 20px;
-    position: relative;
-}
-
-/* zone管理区域 */
-.zone-management {
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    flex-wrap: wrap;
-    width: 75%; /* 左侧占75% */
+    background-color: #f6eadd;
+    border: 2px solid #f7ff00; /* Boundary marker, should be removed in production */
+
 }
 
-/* zone方块，初始为较大的竖长方形，浅粉色 */
-.zone-box, .new-zone-box {
-    width: 300px;  /* 长方形宽度 */
-    min-height: 400px; /* 默认较高 */
-    background-color: #fdf6f1; /* 浅粉色 */
+/* Main content area */
+.container {
+    display: flex;
+    flex-direction: row;   /* Ensure children are aligned horizontally */
+    justify-content: flex-start;  /* Align items to the left */
+    align-items: flex-start;      /* Align items to the top */
+    width: 100%;                  /* Occupy the full available width */
+    /*height: 100vh;*/         /*uncomment them make you solve bug1 and see bug2 (code 1/2)*/
+    padding: 20px;
+    gap: 20px;                    /* Create space between new-zone-box and zone-list */
+    border: 2px solid #070707; /* Boundary marker, should be removed in production */
+
+}
+
+/* Zone management section handling two areas */
+.zone-management {
+    display: flex;
+    flex-direction: row; /* Arrange horizontally */
+    gap: 20px; /* Space between blocks */
+    width: 100%;/* Ensure management area occupies full width */
+    /*height: 100%;*/     /*uncomment them make you solve bug1 and see bug2 (code 2/2)*/
+    padding: 20px;
+    justify-content: flex-start; /* Align child elements to the left */
+    border: 2px solid #000dff; /* Boundary marker, should be removed in production */
+}
+
+/* Right side Zone area */
+#zone-list {
+    display: flex;
+    flex-direction: row;   /* Align items horizontally */
+    flex-wrap: wrap;       /* Wrap items if space is insufficient */
+    gap: 20px;             /* Space between child elements */
+    width: 100%;           /* Occupy the available width */
+    /*height: 50%;*/        /*Not work to fix bug*/
+    box-sizing: border-box; /* Include padding and borders in the total width */
+    border: 2px solid #ff006f; /* Boundary marker, should be removed in production */
+}
+
+/* Click to add new zone area */
+.new-zone-box {
+    width: 300px;
+    height: 400px; /* Fixed height, consistent size */
+    background-color: #fdf6f1; /* Light pink */
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     cursor: pointer;
     border: 2px dashed #999;
-    flex-direction: column; /* 纵向排列内容 */
-    padding: 15px; /* 内边距 */
+    flex-direction: column;
+    padding: 15px;
+    margin: 20px;
+    box-sizing: border-box;
+
+    /* Make new-zone-box sticky while scrolling */
+    position: sticky;           /* Keep its relative position */
+    top: 50%;                   /* 50% from the top of the viewport */
+    transform: translateY(-50%); /* Center it vertically */
+}
+
+/* Individual zone box, initially a larger vertical rectangle */
+.zone-box {
+    width: 300px;  /* Box width */
+    min-height: 400px; /* Default height */
+    background-color: #fdf6f1; /* Light pink */
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    border: 2px solid #ccc;
+    flex-direction: column; /* Align contents vertically */
+    /*height: 50%;*/    /*NO help for fix bug*/
+    padding: 20px; /* Inner padding */
     box-sizing: border-box;
     position: relative;
-    transition: min-height 0.3s ease; /* 动态调整高度 */
+    transition: min-height 0.3s ease; /* Smooth height adjustment */
 }
 
-.zone-box {
-    background-color: #fdf6f1; /* 浅粉色 */
-    border: 1px solid #ccc;
+/* Change the zone box appearance on hover */
+.zone-box:hover {
+    background-color: #f7e6d5; /* Lighten background color on hover */
 }
 
-/* 新 zone 方块 */
+/* Plus sign area for adding a new zone */
 .new-zone-box::before {
     content: "+";
     font-size: 48px;
     color: #999;
-    margin-bottom: 10px; /* 十字与文字之间留出空间 */
+    margin-bottom: 10px; /* Space between the plus sign and text */
+    border: 2px solid #00ff0d; /* Boundary marker, should be removed in production */
 }
 
-/* 固定 Push Notification 按钮，使其始终在右上角，且随滚动保持可见 */
+/* Fixed Push Notification button */
 .push-notification {
     position: fixed;
-    top: 20px;      /* 距离顶部20px */
-    right: 20px;    /* 距离右侧20px */
-    background-color: #fddcaa; /* 橙奶黄色 */
+    bottom: 40px;
+    right: 40%;
+    background-color: #fddcaa; /* Creamy orange-yellow */
     color: #281900;
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-    border-radius: 5px; /* 圆角按钮 */
+    border-radius: 5px;
     width: 200px;
     text-align: center;
 }
 
 .push-notification:hover {
-    background-color: #c69b51; /* 按钮 hover 状态，深橙色 */
+    background-color: #c69b51; /* Darker orange when hovered */
 }
 
 .push-notification:active {
-    background-color: #FF7F50; /* 按钮按下状态，浅橙色 */
+    background-color: #FF7F50; /* Lighter orange when clicked */
 }
 
-/* 可点击的 "See more" 链接样式 */
+/* Clickable "See more" link */
 .see-more {
     color: #007bff;
     cursor: pointer;
     text-decoration: underline;
     border: none;
     background: none;
-    padding: 0;
-    margin-left: auto; /* 将它移到最右边 */
+    padding: 5px;
+    margin-left: auto;
     font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.see-more:hover {
+    color: #0056b3; /* Darken color on hover */
 }
 
 .see-more:focus {
-    outline: none; /* 去除点击时的边框 */
+    outline: none;
 }
 
-/* 下拉框的内容样式，初始隐藏 */
+/* Checkbox style change on hover */
+.zone-box input[type="checkbox"]:hover {
+    transform: scale(1.2); /* Enlarge on hover */
+}
+
+/* Dropdown content styling, hidden by default */
 .dropdown-content {
-    display: none; /* 默认隐藏 */
+    display: none; /* Hidden by default */
     margin-top: 10px;
     border-top: 1px solid #ddd;
     padding-top: 10px;
     font-size: 12px;
 }
 
-/* 下拉框展开时的显示效果 */
+/* Display dropdown content when expanded */
 .zone-box.expanded .dropdown-content {
     display: block;
 }
 
-/* 允许 zone 方块动态调整高度 */
+/* Allow zone box to adjust height dynamically */
 .zone-box.expanded {
-    min-height: 500px; /* 增加高度以包住下拉内容 */
+    min-height: 500px; /* Increase height to accommodate dropdown content */
 }
