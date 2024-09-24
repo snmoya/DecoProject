@@ -27,7 +27,7 @@ const NotificationWindow = ({ location, onPressReceive }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
+    paddingTop: 23,
     paddingBottom: 20,
     paddingHorizontal: 20,
     backgroundColor: '#F8EDDF',
@@ -39,9 +39,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8ECDF',
     borderRadius: 10,
     padding: 15,
-    marginBottom: 20,
+    marginBottom: 40,
     borderWidth: 1, 
     borderColor: '#D2C5B4',
+    minHeight: 150,
   },
   infoItem: {
     flexDirection: 'row',

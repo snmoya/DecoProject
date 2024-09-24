@@ -59,6 +59,7 @@ container: {
     borderRadius: 0,
     marginHorizontal: 0,
     marginVertical: 0,
+    minHeight: 150,
     },
   handleIcon: {
     width: 40,

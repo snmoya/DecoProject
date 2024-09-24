@@ -8,6 +8,8 @@ import NotificationWindow from './NotificationWindowOut';
 import NotificationWindowIn from './NotificationWindowIn';
 import { Polygon } from "react-native-maps";
 import icons from '../data/icons';
+import VoiceToText from './VoiceToText';
+import { useFocusEffect } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
     container: {
@@ -39,26 +41,9 @@ const styles = StyleSheet.create({
     },
 });
 
-function NearbyLocation(props) {
-    if (typeof props.location !== "undefined") {
-        return (
-            <SafeAreaView style={styles.nearbyLocationSafeAreaView}>
-                <View style={styles.nearbyLocationView}>
-                    <Text style={styles.nearbyLocationText}>
-                        {props.location}
-                    </Text>
-                    {props.distance.nearby && (
-                        <Text style={{ ...styles.nearbyLocationText, fontWeight: "bold" }}>
-                            Within 100 Metres!
-                        </Text>
-                    )}
-                </View>
-            </SafeAreaView>
-        );
-    }
-}
 
-export default function ShowMap({navigation}) {
+
+export default function ShowMap({ navigation }) {
     const updatedLocations = locations.map(location => {
         if (location.polygon) {
             location.coordinates = location.polygon.map(([latitude, longitude]) => ({
@@ -144,11 +129,11 @@ export default function ShowMap({navigation}) {
                 if (nearbyLocation && nearbyLocation.distance.nearby) {
                     console.log("User is IN a zone");
                     setInZone(true);
-                    setButtonPosition(280);
+                    setButtonPosition(340);
                 } else {
                     console.log("User is NOT in zone");
                     setInZone(false);
-                    setShowNotificationIn(false);
+                    setShowNotificationInZone(false);
                     setButtonPosition(30);
                 }
             },
@@ -156,12 +141,48 @@ export default function ShowMap({navigation}) {
         );
     }
 
+    useFocusEffect(
+        React.useCallback(() => {
+            if (mapState.locationPermission) {
+                Geolocation.getCurrentPosition(
+                    position => {
+                        const userLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                        };
+
+                        const nearbyLocation = checkIfUserInZone(userLocation);
+
+                        setMapState(prevState => ({
+                            ...prevState,
+                            userLocation,
+                            nearbyLocation: nearbyLocation || {}
+                        }));
+
+                        if (nearbyLocation && nearbyLocation.distance.nearby) {
+                            console.log("User is IN a zone");
+                            setInZone(true);
+                            setButtonPosition(340);
+                        } else {
+                            console.log("User is NOT in zone");
+                            setInZone(false);
+                            setShowNotificationInZone(false);
+                            setButtonPosition(30);
+                        }
+                    },
+                    error => console.log("Error getting current position: ", error),
+                    { enableHighAccuracy: true }
+                );
+            }
+        }, [mapState.locationPermission])
+    );
+
     const handlePressReceive = () => {
         setShowNotificationInZone(true); 
     };
 
     const handleStopReceiving = () => {
-        setShowNotificationIn(false);
+        setShowNotificationInZone(false);
         setShowNotificationInSelectedZone(false);
     };
 
