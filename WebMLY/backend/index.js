@@ -91,7 +91,7 @@ app.get('/api', checkApiKey, async (req, res) => {
 
 // Add new account from user registration
 app.post('/api/signup', async (req, res) => {
-    const { username, password, confirmPassword } = req.body;
+    const { username, password, confirmPassword, organisationName } = req.body;
 
     // Validation
     if (!username || !password || !confirmPassword) {
@@ -109,13 +109,22 @@ app.post('/api/signup', async (req, res) => {
             return res.status(400).json({error: 'Username is already taken'});
         }
 
+        // Insert new organisation into the database
+        const [orgResult] = await connectionPool.execute(
+            'INSERT INTO organisations (name) VALUES (?)',
+            [organisationName]
+        );
+
+        // Retrieve the inserted organisation's ID
+        const organisationId = orgResult.insertId;
+
         // Hash the password before saving to the database
         const hashedPassword = await bcrypt.hash(password, 10);     // 10 is the salt rounds
 
         // Insert new user into the database
-        const [result] = await connectionPool.execute(
+        const [accResult] = await connectionPool.execute(
             'INSERT INTO accounts (username, password, org_id) VALUES (?, ?, ?)',
-            [username, hashedPassword, 1]
+            [username, hashedPassword, organisationId]
         );
 
         // Send success response

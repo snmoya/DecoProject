@@ -7,6 +7,7 @@ const LoginForm = ({ isLoginPage }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [organisationName, setOrganisationName] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
@@ -29,7 +30,8 @@ const LoginForm = ({ isLoginPage }) => {
       const response = await axios.post('/api/signup', {
         username,
         password,
-        confirmPassword
+        confirmPassword,
+        organisationName
       });
 
       setMessage(response.data.message);
@@ -69,16 +71,29 @@ const LoginForm = ({ isLoginPage }) => {
       </label>
 
       {!isLoginPage && (
-        <label>
-          <small>Confirm Password</small>
-          <input
-            type='password'
-            placeholder='Enter your password again'
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </label>
+        <div>
+          <label>
+            <small>Confirm Password</small>
+            <input
+              type='password'
+              placeholder='Enter your password again'
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </label>
+
+          <label>
+            <small>Organisation's Name</small>
+            <input
+              type='text'
+              placeholder="Enter your organisation's name"
+              value={organisationName}
+              onChange={(e) => setOrganisationName(e.target.value)}
+              required
+            />
+          </label>
+        </div>
       )}
 
       <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>
