@@ -84,3 +84,9 @@
 .form-other li:hover {
   color: #7C580D;
 }
+
+#success-message {
+  font-size: 14px;
+  font-weight: 700px;
+  color: green;
+}

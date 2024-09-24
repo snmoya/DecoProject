@@ -3,6 +3,7 @@ const path = require('path'); // Importing the path module
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mysql = require('mysql2/promise');
+const bcrypt = require('bcrypt');   // For hashing passwords
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -85,6 +86,43 @@ app.get('/api', checkApiKey, async (req, res) => {
         res.json({ message: rows[0].message });
     } catch (err) {
         res.json({ message: 'Error fetching data'});
+    }
+});
+
+// Add new account from user registration
+app.post('/api/signup', async (req, res) => {
+    const { username, password, confirmPassword } = req.body;
+
+    // Validation
+    if (!username || !password || !confirmPassword) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (password !== confirmPassword)
+        return res.status(400).json({ error: 'Passwords do not match' });
+
+    try {
+        // Check if username already exists
+        const [existingUser] = await connectionPool.execute('SELECT id FROM accounts WHERE username = ?', [username]);
+
+        if (existingUser.length > 0) {
+            return res.status(400).json({error: 'Username is already taken'});
+        }
+
+        // Hash the password before saving to the database
+        const hashedPassword = await bcrypt.hash(password, 10);     // 10 is the salt rounds
+
+        // Insert new user into the database
+        const [result] = await connectionPool.execute(
+            'INSERT INTO accounts (username, password, org_id) VALUES (?, ?, ?)',
+            [username, hashedPassword, 1]
+        );
+
+        // Send success response
+        res.status(201).json({ message: 'Account created successfully' });
+    } catch (error) {
+        console.error('ERROR: Creating account', error);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
