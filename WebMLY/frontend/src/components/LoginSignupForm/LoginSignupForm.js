@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import './LoginSignupForm.css';
 
-const LoginSignupForm = ({ isLoginPage }) => {
+const LoginSignupForm = ({ isLoginPage, resetSignal }) => {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
@@ -12,6 +12,14 @@ const LoginSignupForm = ({ isLoginPage }) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [organisationName, setOrganisationName] = useState('');
     const [message, setMessage] = useState('');
+
+    // Clear the input fields when switching the page
+    useEffect(() => {
+        setUsername('');
+        setPassword('');
+        setConfirmPassword('');
+        setOrganisationName('');
+    }, [resetSignal]);      // This runs when the reset signal changes
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
@@ -65,8 +73,6 @@ const LoginSignupForm = ({ isLoginPage }) => {
             });
 
             setMessage(response.data.message);
-            setUsername('');
-            setPassword('');
             navigate('/login');
         } catch (error) {
             if (error.response) {

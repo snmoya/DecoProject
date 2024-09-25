@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, Link } from 'react-router-dom';
 
 import LoginSignupForm from "../../components/LoginSignupForm/LoginSignupForm";
@@ -9,10 +9,15 @@ const App = () => {
     const location = useLocation();
 
     const isLoginPage = location.pathname === '/login';
+    const [resetSignal, setResetSignal] = useState(false);
+
+    const handleReset = () => {
+        setResetSignal(prevSignal => !prevSignal);  // Toggle the signal
+    };
 
     return (
         <div className="app-container">
-            <LoginSignupForm isLoginPage={isLoginPage} />
+            <LoginSignupForm isLoginPage={isLoginPage} resetSignal={resetSignal} />
 
             <div className="divider">
                 <span className="line">--------------------------</span>
@@ -21,7 +26,9 @@ const App = () => {
             </div>
 
             <Link to={isLoginPage ? '/signup' : '/login'}>
-                <button className="create-account-button">{isLoginPage ? 'Create your account' : 'Login with your account'}</button>
+                <button onClick={handleReset} className="create-account-button">
+                    {isLoginPage ? 'Create your account' : 'Login with your account'}
+                </button>
             </Link>
         </div>
     );
