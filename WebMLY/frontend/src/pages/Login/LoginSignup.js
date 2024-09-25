@@ -17,7 +17,7 @@ const App = () => {
 
     return (
         <div className="app-container">
-            <LoginSignupForm isLoginPage={isLoginPage} resetSignal={resetSignal} />
+            <LoginSignupForm isLoginPage={isLoginPage} resetSignal={resetSignal} handleReset={handleReset} />
 
             <div className="divider">
                 <span className="line">--------------------------</span>

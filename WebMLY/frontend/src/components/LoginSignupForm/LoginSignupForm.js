@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import './LoginSignupForm.css';
 
-const LoginSignupForm = ({ isLoginPage, resetSignal }) => {
+const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
@@ -73,6 +73,7 @@ const LoginSignupForm = ({ isLoginPage, resetSignal }) => {
             });
 
             setMessage(response.data.message);
+            handleReset();
             navigate('/login');
         } catch (error) {
             if (error.response) {
