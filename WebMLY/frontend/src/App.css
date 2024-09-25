@@ -15,36 +15,6 @@ body {
   justify-content: space-between;
 }
 
-/* .header {
-  background-color: rgba(255, 222, 171, 0.9); 
-  color: #333; 
-  padding: 20px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  position: relative;
-  z-index: 2;
-} */
-
-/* .navBar {
-  display: flex;
-  justify-content: center;
-  background-color: rgba(255, 222, 171, 0.9);
-  padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navBar a {
-  margin: 0 15px;
-  color: #333;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.navBar a:hover {
-  color: #FFAE42;
-} */
-
 .heroSection {
   background-image: url('./Images/hero-image.png'); /* Path to your hero image */
   background-size: cover;
@@ -115,35 +85,7 @@ button:hover {
   margin-left: auto;
   margin-right: auto;
 }
-
-/* .card {
-  background-color: #F8ECDF; 
-  color: #333;
-  width: 300px;
-  margin: 20px;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.card h3 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.card p {
-  font-size: 16px;
-} */
-
-/* .footer {
-  background-color: #F8ECDF; 
-  color: #333; 
-  text-align: center;
-  padding: 20px;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-} */
-
+ 
 #get-message-button {
   margin-top: 10px;
 }
