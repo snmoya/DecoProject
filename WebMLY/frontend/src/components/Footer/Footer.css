@@ -1,0 +1,34 @@
+.Footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: black;
+}
+
+.Footer .navigation {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.Footer .navigation a {
+    text-decoration: none;
+    color: white;
+    font-weight: lighter;
+}
+
+.Footer .navigation a::selection {
+    color: rgb(110, 110, 110);
+    text-decoration: underline;
+}
+
+.Footer .navigation a:not(:first-child)::before {
+    content: '|';
+    color: rgb(110, 110, 110);
+    margin-right: 25px;
+}
+
+.Footer .navigation a:hover {
+    text-decoration: underline;
+}
