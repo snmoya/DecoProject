@@ -111,29 +111,29 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
             </label>
 
             {!isLoginPage && (
-                <div>
-                    <label>
-                        <small>Confirm Password</small>
-                        <input
-                            type='password'
-                            placeholder='Enter your password again'
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                        />
-                    </label>
+                <label id='confirm-password'>
+                    <small>Confirm Password</small>
+                    <input
+                        type='password'
+                        placeholder='Enter your password again'
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                    />
+                </label>
+            )}
 
-                    <label>
-                        <small>Organisation's Name</small>
-                        <input
-                            type='text'
-                            placeholder="Enter your organisation's name"
-                            value={organisationName}
-                            onChange={(e) => setOrganisationName(e.target.value)}
-                            required
-                        />
-                    </label>
-                </div>
+            {!isLoginPage && (
+                <label>
+                    <small>Organisation's Name</small>
+                    <input
+                        type='text'
+                        placeholder="Enter your organisation's name"
+                        value={organisationName}
+                        onChange={(e) => setOrganisationName(e.target.value)}
+                        required
+                    />
+                </label>
             )}
 
             <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>

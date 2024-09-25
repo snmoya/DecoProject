@@ -12,12 +12,11 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    padding-top: 20px;
+    height: 90vh;
+    padding-bottom: 20px;
 }
 
 .divider {
-    margin-top: 20px;
     display: flex;
     flex-direction: row;
 }
