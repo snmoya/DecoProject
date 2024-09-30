@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');   // For hashing passwords
+const jwt = require('jsonwebtoken');
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -129,7 +130,17 @@ app.post('/api/login', async (req, res) => {
             return res.status(400).json({ error: 'No organisation associated with this account' });
         }
 
-        res.status(200).json({ message: 'Login successful' });
+        // Generate JWT token
+        const token = jwt.sign(
+            { accId: user.id, orgId: user.org_id },  // Payload
+            process.env.JWT_SECRET,  // Secret or private key
+            { expiresIn: '1d' }  // Token expiry (1 day in this case)
+        );
+
+        res.status(200).json({ 
+            token,
+            message: 'Login successful' 
+        });
     } catch (error) {
         console.error('ERROR: Logging in', error);
         res.status(500).json({ error: 'Server error' });

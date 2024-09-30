@@ -1,11 +1,37 @@
 import React, { useState } from "react";
 import { useLocation, Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 import LoginSignupForm from "../../components/LoginSignupForm/LoginSignupForm";
 
 import './LoginSignup.css';
 
-const App = () => {
+const LoginSignup = () => {
+    const [accId, setAccId] = useState(null);
+    const [orgId, setOrgId] = useState(null);
+
+    const handleCheckLocalStorage = () => {
+        // Get accId and orgId from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('No token');
+            return;
+        }
+        
+        const decoded = jwtDecode(token); // Use a library like jwt-decode to parse the JWT payload
+
+        const accId = decoded.accId;
+        const orgId = decoded.orgId;
+
+        if (accId && orgId) {
+            setAccId(accId);
+            setOrgId(orgId);
+            alert(`accId: ${accId}, orgId: ${orgId}`);
+        } else {
+            alert('No accId or orgId found in localStorage');
+        }
+    };
+
     const location = useLocation();
 
     const isLoginPage = location.pathname === '/login';
@@ -25,6 +51,8 @@ const App = () => {
                 <span className="line">--------------------------</span>
             </div>
 
+            <button onClick={handleCheckLocalStorage}>Check LocalStorage for accId and orgId</button>
+
             <Link to={isLoginPage ? '/signup' : '/login'}>
                 <button onClick={handleReset} className="create-account-button">
                     {isLoginPage ? 'Create your account' : 'Login with your account'}
@@ -34,4 +62,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default LoginSignup;

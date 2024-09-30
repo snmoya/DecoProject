@@ -38,6 +38,8 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
 
             // Successful login
             if (response.status === 200) {
+                // Store JWT in localStorage
+                localStorage.setItem('token', response.data.token);
                 navigate('/home');   // TODO
             }
         } catch (error) {
