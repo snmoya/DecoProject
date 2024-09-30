@@ -6,6 +6,7 @@ import SideMenu from './components/SideMenu';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import List from './components/List';
+import VoiceToText from './components/VoiceToText';
 
 const Stack = createStackNavigator();
 
@@ -16,11 +17,12 @@ export default function App() {
         setSideMenuVisible(!sideMenuVisible);
     };
 
+
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Main">
-                    {() => (
+                    {({navigation}) => (
                         <View style={styles.container}>
                             <TopBar 
                                 title="DECO3801"
@@ -28,7 +30,7 @@ export default function App() {
                                 onSearchPress={() => console.log('search is working :)')}
                                 onOptionsPress={() => console.log('options is working :)')}
                             />
-                            <ShowMap />
+                            <ShowMap navigation={navigation} />
                             {sideMenuVisible && (
                                 <SideMenu visible={sideMenuVisible} showSideMenu={showSideMenu} />
                             )}
@@ -36,6 +38,7 @@ export default function App() {
                     )}
                 </Stack.Screen>
                 <Stack.Screen name="List" component={List} />
+                <Stack.Screen name="VoiceToText" component={VoiceToText} />
             </Stack.Navigator>
         </NavigationContainer>
     );

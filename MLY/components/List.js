@@ -1,46 +1,57 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import icons from '../data/icons';
+//import { API_KEY } from '@env';
+
 
 const List = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Notifications</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={icons.close} style={styles.closeIcon} />
-        </TouchableOpacity>
-      </View>
 
-      <View style={styles.infoFrame}>
-            <View style={styles.infoItem2}>
-                <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
-                <View style={styles.textContainer}>
-                    <View style={styles.titleRow}>
-                        <Text style={styles.infoText}>Example notification 1</Text>
-                        <Text style={styles.timeText}> • 1h</Text>
-                    </View>
-                    <Text style={styles.messageText}>Message</Text>
-                </View>
-                <Image source={icons.circledArrow} style={styles.arrowIcon} />
-            </View>
-        </View>
+  const [messages, setMessages] = useState([]); // State to store fetched messages
+  const [loading, setLoading] = useState(true); // Loading state
 
-        <View style={styles.ExampleinfoFrame}>
-            <View style={styles.infoItem2}>
-                <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
-                <View style={styles.textContainer}>
-                    <View style={styles.titleRow}>
-                        <Text style={styles.infoText}>Example Notification 2</Text>
-                        <Text style={styles.timeText}> • 2h</Text>
-                    </View>
-                    <Text style={styles.messageText}>Hello!</Text>
-                </View>
-                <Image source={icons.circledArrow} style={styles.arrowIcon} />
+  // Fetch messages on component mount
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const url = `${baseURL}/`; // Adjust the endpoint if necessary
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json', // Inform server of JSON format
+            'x-api-key': API_KEY, // Include API key in headers
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Parse the response as JSON
+        console.log('Fetched data:', data);
+
+        setMessages(data); // Set the state with the fetched messages
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      } finally {
+        setLoading(false); // Stop loading spinner
+      }
+    };
+
+    fetchMessages(); // Call the fetch function when component mounts
+  }, []);
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Notifications</Text>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image source={icons.close} style={styles.closeIcon} />
+                </TouchableOpacity>
             </View>
+            
+            
         </View>
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
@@ -133,5 +144,29 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
 });
+
+/*
+            <ScrollView>
+                {loading ? (
+                    <Text>Loading...</Text> // Display loading text while fetching
+                ) : (
+                    messages.map((message, index) => (
+                        <View key={index} style={styles.infoFrame}>
+                            <View style={styles.infoItem2}>
+                                <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
+                                <View style={styles.textContainer}>
+                                    <View style={styles.titleRow}>
+                                        <Text style={styles.infoText}>{message.user}</Text>
+                                        <Text style={styles.timeText}> • {index + 1}h</Text>
+                                    </View>
+                                    <Text style={styles.messageText}>{message.message}</Text>
+                                </View>
+                                <Image source={icons.circledArrow} style={styles.arrowIcon} />
+                            </View>
+                        </View>
+                    ))
+                )}
+            </ScrollView>
+*/
 
 export default  List;
