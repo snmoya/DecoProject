@@ -196,6 +196,37 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
+// * Get all zones
+app.get('/api/zones', async (req, res) => {
+    try {
+        const zoneId = req.params.id;   // Get zone id from param
+
+        // Query the all zones 
+        const [rows] = await connectionPool.execute(
+            'SELECT id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones'
+        );
+
+        // Zone not found
+        if (rows.length === 0) {
+            console.log('No zone found');
+            return res.status(404).json({ error: 'No zone found' });
+        }
+
+        // Transform each zone to extract polygon coordinates
+        const transformedZones = rows.map((zone) => ({
+            ...zone,
+            polygon: extractCoordinates(zone.polygon),
+        }));
+
+        // Return the result as JSON
+        res.json(transformedZones);
+    } catch (error) {
+        console.log('ERROR:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+})
+
+// * Get specific zone
 app.get('/api/zones/:id', async (req, res) => {
     try {
         const zoneId = req.params.id;   // Get zone id from param
