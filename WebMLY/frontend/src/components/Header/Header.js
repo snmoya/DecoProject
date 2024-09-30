@@ -1,26 +1,31 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import './Header.css';
 
 function Header() {
-    const loginStatus = true;
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-    }
+    const { isAuthenticated, logout } = useContext(AuthContext);
 
     return (
         <div className="header">
             <div className="navigation">
-                <NavLink to="/zones-management" activeClassName="active-link">Zone Manage</NavLink>
-                <NavLink to="/map" activeClassName="active-link">Zone Map</NavLink>
-                <NavLink to="/push-notification" activeClassName="active-link">Push Notification</NavLink>
+                {isAuthenticated ? (
+                    <>
+                        <NavLink to="/zones-management" activeClassName="active-link">Zone Manage</NavLink>
+                        <NavLink to="/map" activeClassName="active-link">Zone Map</NavLink>
+                        <NavLink to="/push-notification" activeClassName="active-link">Push Notification</NavLink>
+                    </>
+                ) : (
+                    <NavLink to="/home" activeClassName="active-link">Home</NavLink>
+                )}
             </div>
 
             <div className="navigation" id="user-info">
                 {/* <img src={require('../../Images/user-icon.png')} alt="User" /> */}
-                <NavLink onClick={handleLogout} to="/login">Log out</NavLink>
+                {isAuthenticated && (
+                    <NavLink onClick={logout} to="/login">Log out</NavLink>
+                )}
             </div>
         </div>
     );

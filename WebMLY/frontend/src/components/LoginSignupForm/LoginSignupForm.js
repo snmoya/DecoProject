@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import './LoginSignupForm.css';
 
 const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -38,8 +40,7 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
 
             // Successful login
             if (response.status === 200) {
-                // Store JWT in localStorage
-                localStorage.setItem('token', response.data.token);
+                login(response.data.token);
                 navigate('/home');   // TODO
             }
         } catch (error) {
