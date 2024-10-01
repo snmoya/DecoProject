@@ -217,7 +217,7 @@ app.get('/api/zones', async (req, res) => {
         // Zone not found
         if (rows.length === 0) {
             console.log('No zone found');
-            return res.status(404).json({ error: 'No zone found' });
+            return res.status(200).json([]);
         }
 
         // Transform each zone to extract polygon coordinates

@@ -5,12 +5,13 @@ import { AuthContext } from '../../contexts/AuthContext';
 import './PushNotification.css';
 
 function PushNotification() {
-    const {orgId} = useContext(AuthContext);
+    const { orgId } = useContext(AuthContext);
 
     const [zones, setZones] = useState([]);
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [selectedZones, setSelectedZones] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch the list of zones
     useEffect(() => {
@@ -18,12 +19,16 @@ function PushNotification() {
             if (!orgId) return;
 
             try {
+                setIsLoading(true);
+
                 // Fetch all zones of current organisation
                 const response = await axios.get(`/api/zones?orgId=${orgId}`);
                 setZones(response.data);
             } catch (error) {
                 console.error('ERROR: Fetching zones:', error);
                 alert('Failed to load zones:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -107,18 +112,24 @@ function PushNotification() {
                 <div>
                     <label>Select Zones:</label>
                     <div className="zones-list">
-                        {zones.map((zone) => (
-                            <div key={zone.id}>
-                                <input
-                                    type="checkbox"
-                                    id={zone.id}
-                                    value={zone.id}
-                                    checked={selectedZones.includes(String(zone.id))}
-                                    onChange={handleZoneChange}
-                                />
-                                <label htmlFor={zone.id}>{zone.name}</label>
-                            </div>
-                        ))}
+                        {isLoading ? (
+                            <p>Loading zones...</p>  // Show loading message while fetching zones
+                        ) : zones.length === 0 ? (
+                            <p>No zones available for this organization. Please add new zone!</p>  // Show message if no zones found
+                        ) : (
+                            zones.map((zone) => (
+                                <div key={zone.id}>
+                                    <input
+                                        type="checkbox"
+                                        id={zone.id}
+                                        value={zone.id}
+                                        checked={selectedZones.includes(String(zone.id))}
+                                        onChange={handleZoneChange}
+                                    />
+                                    <label htmlFor={zone.id}>{zone.name}</label>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
 
