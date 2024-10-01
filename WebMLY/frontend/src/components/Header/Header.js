@@ -23,8 +23,10 @@ function Header() {
 
             <div className="navigation" id="user-info">
                 {/* <img src={require('../../Images/user-icon.png')} alt="User" /> */}
-                {isAuthenticated && (
+                {isAuthenticated ? (
                     <NavLink onClick={logout} to="/login">Log out</NavLink>
+                ) : (
+                    <NavLink to="/login">Login</NavLink>
                 )}
             </div>
         </div>

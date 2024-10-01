@@ -14,8 +14,8 @@ import './App.css';
 
 const App = () => {
     return (
-        <AuthProvider>
-            <Router>
+        <Router>
+            <AuthProvider>
                 <Header />
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -25,8 +25,8 @@ const App = () => {
                     <Route path="*" element={<Home />} />
                 </Routes>
                 <Footer />
-            </Router>
-        </AuthProvider>
+            </AuthProvider>
+        </Router>
     );
 };
 
