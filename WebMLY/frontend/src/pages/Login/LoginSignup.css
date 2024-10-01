@@ -1,9 +1,10 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #F8ECDF; /* Main background color */
-  color: #333;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F8ECDF;
+    /* Main background color */
+    color: #333;
 }
 
 .app-container {
@@ -11,26 +12,25 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    padding-top: 20px;
-  }
-  
-  .divider {
-    margin-top: 20px;
+    height: 90vh;
+    padding-bottom: 20px;
+}
+
+.divider {
     display: flex;
     flex-direction: row;
-  }
-  
-  .divider .line {
-    color:  #656565;
-  }
-  
-  .divider p {
+}
+
+.divider .line {
+    color: #656565;
+}
+
+.divider p {
     margin: 4px 10px;
     font-size: 14px;
-  }
-  
-  .create-account-button {
+}
+
+.create-account-button {
     width: 450px;
     padding: 10px;
     background-color: #FFDEAB;
@@ -40,8 +40,8 @@ body {
     cursor: pointer;
     margin-top: 20px;
     color: #5F4100;
-  }
-  
-  .create-account-button:hover {
+}
+
+.create-account-button:hover {
     background-color: #EECF9E;
-  }
+}
