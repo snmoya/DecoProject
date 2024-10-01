@@ -198,13 +198,21 @@ app.post('/api/signup', async (req, res) => {
 
 // * Get all zones
 app.get('/api/zones', async (req, res) => {
-    try {
-        const zoneId = req.params.id;   // Get zone id from param
+    const { orgId } = req.query;    // Get org id from query params
 
-        // Query the all zones 
-        const [rows] = await connectionPool.execute(
-            'SELECT id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones'
-        );
+    try {
+        // Base query
+        let query = 'SELECT id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones';
+        let queryParams = [];
+
+        // If orgId provided, concatenate the query
+        if (orgId) {
+            query += ' WHERE org_id = ?';
+            queryParams.push(orgId);
+        }
+
+        // Execute the query
+        const [rows] = await connectionPool.execute(query, queryParams);
 
         // Zone not found
         if (rows.length === 0) {
@@ -256,6 +264,43 @@ app.get('/api/zones/:id', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 })
+
+// * Create new notification
+app.post('/api/notifications', async (req, res) => {
+    const { message, zones } = req.body;
+
+    // Validation: Ensure message & zone_id are provided
+    if (!message || !zones || zones.length === 0) {
+        return res.status(400).json({ error: 'Message and at least one zone_id are required'});
+    }
+
+    try {
+        // Loop over the selected zones
+        for (const zone_id of zones) {
+            // Check if the zone exists in the database
+            const [zoneResult] = await connectionPool.execute(
+                'SELECT id FROM zones WHERE id = ?',
+                [zone_id]
+            );
+
+            if (zoneResult.length == 0) {
+                return res.status(400).json({ error: 'Invalid zone id'});
+            }
+
+            // Insert the new notification into the notifications table
+            await connectionPool.execute(
+                'INSERT INTO notifications (message, zone_id, created_at) VALUES (?, ?, ?)',
+                [message, zone_id, new Date()]
+            );
+        }
+        
+        // Send success response with the newly created notification's id
+        res.status(201).json({ message: 'Notification created successfully' });
+    } catch (error) {
+        console.error('ERROR: Creating notification', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 // Fallback route to serve the React app for any other route
 app.get('*', (req, res) => {

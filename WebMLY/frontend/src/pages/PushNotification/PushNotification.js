@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import './PushNotification.css';
 
 function PushNotification() {
+    const {orgId} = useContext(AuthContext);
+
     const [zones, setZones] = useState([]);
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
@@ -12,18 +15,22 @@ function PushNotification() {
     // Fetch the list of zones
     useEffect(() => {
         const fetchZones = async () => {
+            if (!orgId) return;
+
             try {
-                const response = await axios.get('/api/zones');
+                // Fetch all zones of current organisation
+                const response = await axios.get(`/api/zones?orgId=${orgId}`);
                 setZones(response.data);
             } catch (error) {
                 console.error('ERROR: Fetching zones:', error);
-                alert('Failed to load zones');
+                alert('Failed to load zones:', error);
             }
         };
 
         fetchZones();
-    }, []);     // Run once when the component mounts
+    }, [orgId]);     // Run once when the component mounts
 
+    // Handle zone selection change
     const handleZoneChange = (e) => {
         const zoneId = String(e.target.value); // Ensure zoneId is a string
 
@@ -41,13 +48,37 @@ function PushNotification() {
         });
     };
 
-    const handleSubmit = (e) => {
+    // Handle form submission
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Ensure at least one zone is selected before submitting
         if (selectedZones.length === 0) {
             alert('Please select at least one zone');
             return;
+        }
+
+        try {
+            // API request to push new notification
+            const response = await axios.post('/api/notifications', {
+                message,
+                zones: selectedZones,
+            });
+
+            if (response.status === 201) {
+                alert('Notification pushed successfully!');
+
+                // Clear the form
+                setTitle('');
+                setMessage('');
+                setSelectedZones([]);
+            }
+        } catch (error) {
+            if (error.response) {
+                alert(error.response.data.error);
+            } else {
+                alert('ERROR: Pushing notifications');
+            }
         }
     };
 
