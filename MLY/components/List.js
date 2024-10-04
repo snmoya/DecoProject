@@ -4,21 +4,22 @@ import icons from '../data/icons';
 //import { API_KEY } from '@env';
 
 
+
 const List = ({ navigation }) => {
 
-  const [messages, setMessages] = useState([]); // State to store fetched messages
+  const [messages, setMessages] = useState([]); 
   const [loading, setLoading] = useState(true); // Loading state
 
   // Fetch messages on component mount
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const url = `${baseURL}/`; // Adjust the endpoint if necessary
+        const url = `${baseURL}/`; 
         const response = await fetch(url, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json', // Inform server of JSON format
-            'x-api-key': API_KEY, // Include API key in headers
+            'Content-Type': 'application/json', 
+            'x-api-key': API_KEY, 
           },
         });
 

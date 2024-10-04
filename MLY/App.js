@@ -25,7 +25,7 @@ export default function App() {
                     {({navigation}) => (
                         <View style={styles.container}>
                             <TopBar 
-                                title="DECO3801"
+                                title="EVAN"
                                 onMenuPress={showSideMenu}
                                 onSearchPress={() => console.log('search is working :)')}
                                 onOptionsPress={() => console.log('options is working :)')}

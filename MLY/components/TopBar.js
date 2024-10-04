@@ -2,21 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import icons from '../data/icons';
 
-const AppBar = ({ title, onMenuPress, onSearchPress, onOptionsPress }) => {
+const AppBar = ({ title, onMenuPress }) => {
   return (
     <View style={styles.container}>
+      {/* Left Menu Button */}
       <TouchableOpacity onPress={onMenuPress}>
         <Image source={icons.menuButton} style={styles.icon} />
       </TouchableOpacity>
+      
+      {/* Centered Title */}
       <Text style={styles.title}>{title}</Text>
-      <View style={styles.rightIcons}>
-        <TouchableOpacity onPress={onSearchPress}>
-          <Image source={icons.search} style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onOptionsPress}>
-          <Image source={icons.threeDots} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
+      
+      {/* Placeholder for right icons to balance the AppBar */}
+      <View style={styles.rightIcons} />
     </View>
   );
 };
@@ -36,15 +34,20 @@ const styles = StyleSheet.create({
   icon: {
     width: 40,
     height: 40,
+    marginLeft: 10, 
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+    position: 'absolute', 
+    left: 0,
+    right: 0,
+    top: 50,
+    textAlign: 'center',
   },
   rightIcons: {
-    flexDirection: 'row',
-    alignItems: 'centre',
+    width: 40, 
   },
 });
 

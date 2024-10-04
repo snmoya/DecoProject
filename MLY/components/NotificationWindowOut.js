@@ -2,10 +2,15 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 
-const NotificationWindow = ({ location, onPressReceive }) => {
+const NotificationWindow = ({ location, onPressReceive, onClose }) => {
   return (
     <View style={styles.container}>
-        <Image source={icons.Handle} style={styles.handleIcon} />
+
+        <View style={styles.closeButtonFrame}>
+            <TouchableOpacity onPress={onClose}>
+                <Image source={icons.close} style={styles.closeIcon} />
+            </TouchableOpacity>
+        </View>
         <View style={styles.infoFrame}>
             <View style={styles.infoItem}>
                 <Image source={icons.locationPin} style={styles.locIcon} />
@@ -21,6 +26,7 @@ const NotificationWindow = ({ location, onPressReceive }) => {
         <TouchableOpacity style={styles.button} onPress={onPressReceive}>
             <Text style={styles.buttonText}>Press to receive</Text>
         </TouchableOpacity>
+
     </View>
   );
 };
@@ -34,15 +40,17 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     marginHorizontal: 0,
     marginVertical: 0,
+    position: 'relative',
   },
   infoFrame: {
     backgroundColor: '#F8ECDF',
     borderRadius: 10,
     padding: 15,
-    marginBottom: 40,
+    marginBottom: 25,
     borderWidth: 1, 
     borderColor: '#D2C5B4',
     minHeight: 150,
+    marginTop: 25,
   },
   infoItem: {
     flexDirection: 'row',
@@ -93,6 +101,18 @@ const styles = StyleSheet.create({
     height: 5,
     alignSelf: 'center',
     marginBottom: 20,
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 0,
+    width: 24,
+    height: 24,
+  },
+  closeButtonFrame: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
 
