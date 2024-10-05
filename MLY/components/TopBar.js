@@ -6,7 +6,7 @@ const AppBar = ({ title, onMenuPress }) => {
   return (
     <View style={styles.container}>
       {/* Left Menu Button */}
-      <TouchableOpacity onPress={onMenuPress}>
+      <TouchableOpacity style={styles.menuButton} onPress={onMenuPress}>
         <Image source={icons.menuButton} style={styles.icon} />
       </TouchableOpacity>
       
@@ -27,14 +27,23 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingBottom: 10,
     paddingVertical: 5,
+    paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
   },
+  menuButton: {
+    width: 60, 
+    height: 60, 
+    justifyContent: 'center',
+    alignItems: 'center', 
+    marginLeft: 0,
+    zIndex: 1000,
+  },
   icon: {
-    width: 40,
-    height: 40,
-    marginLeft: 10, 
+    width: 50,
+    height: 50,
+    marginLeft: 0, 
   },
   title: {
     fontSize: 18,
@@ -43,11 +52,11 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     left: 0,
     right: 0,
-    top: 50,
+    top: 60,
     textAlign: 'center',
   },
   rightIcons: {
-    width: 40, 
+    width: 50, 
   },
 });
 
