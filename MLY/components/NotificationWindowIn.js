@@ -3,13 +3,17 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 import { useNavigation } from '@react-navigation/native';
 
-const NotificationWindowIn = ({ location, onStopReceiving }) => {
+const NotificationWindowIn = ({ location, onStopReceiving, onClose }) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
 
-        <Image source={icons.Handle} style={styles.handleIcon} />
+        <View style={styles.closeButtonFrame}>
+            <TouchableOpacity onPress={onClose}>
+                <Image source={icons.close} style={styles.closeIcon} />
+            </TouchableOpacity>
+        </View>
         <View style={styles.infoItem1}>
             <Image source={icons.locationPin} style={styles.locIcon} />
             <Text style={styles.infoText}>{location}</Text>
@@ -60,6 +64,7 @@ container: {
     marginHorizontal: 0,
     marginVertical: 0,
     minHeight: 150,
+    position: 'relative',
     },
   handleIcon: {
     width: 40,
@@ -87,6 +92,7 @@ container: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    marginTop: 10,
   },
   infoItem2: {
     flexDirection: 'row',
@@ -141,11 +147,17 @@ container: {
     width: 24,
     height: 24,
   },
-  handleIcon: {
-    width: 50,
-    height: 5,
-    alignSelf: 'center',
-    marginBottom: 20,
+  closeIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 0,
+    width: 24,
+    height: 24,
+  },
+  closeButtonFrame: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
   arrowIcon: {
     width: 40,

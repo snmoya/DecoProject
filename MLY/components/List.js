@@ -1,45 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native';
 import icons from '../data/icons';
+import getNotifications from './getNotifications'; 
 //import { API_KEY } from '@env';
-
 
 const List = ({ navigation }) => {
 
-  const [messages, setMessages] = useState([]); // State to store fetched messages
-  const [loading, setLoading] = useState(true); // Loading state
+  const {messages, loading} = getNotifications(); // Loading state
 
   // Fetch messages on component mount
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const url = `${baseURL}/`; // Adjust the endpoint if necessary
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json', // Inform server of JSON format
-            'x-api-key': API_KEY, // Include API key in headers
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json(); // Parse the response as JSON
-        console.log('Fetched data:', data);
-
-        setMessages(data); // Set the state with the fetched messages
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      } finally {
-        setLoading(false); // Stop loading spinner
-      }
-    };
-
-    fetchMessages(); // Call the fetch function when component mounts
-  }, []);
-
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -48,9 +17,21 @@ const List = ({ navigation }) => {
                     <Image source={icons.close} style={styles.closeIcon} />
                 </TouchableOpacity>
             </View>
-            
-            
-        </View>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item.notificationId.toString()}  // Ensure key matches your mock data
+          renderItem={({ item }) => (
+            <View style={styles.notificationItem}>
+              <Text style={styles.notificationTitle}>{item.message}</Text>
+              <Text style={styles.notificationMessage}>Zone: {item.zone_id}</Text>
+            </View>
+          )}
+        />
+      )}
+    </View>
     );
 };
 

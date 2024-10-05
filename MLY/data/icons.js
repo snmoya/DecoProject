@@ -13,6 +13,7 @@ import voice from "../assets/icons/voice.png";
 import minus from "../assets/icons/minus.png";
 import more from "../assets/icons/more.png";
 import fontSize from "../assets/icons/font-size.png";
+import locArrow from "../assets/icons/location-arrow.png";
 
 export default {
     // General Icons
@@ -31,4 +32,5 @@ export default {
     minus,
     more,
     fontSize,
+    locArrow,
 }
