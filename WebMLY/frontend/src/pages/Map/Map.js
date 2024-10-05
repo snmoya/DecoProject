@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Polygon, Popup } from 'react-leaflet';
+import React, { useState, useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, Polygon, Popup, FeatureGroup } from 'react-leaflet';
+import { EditControl } from 'react-leaflet-draw';
 import axios from 'axios';
 
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 
 const Map = () => {
+    const featureGroupRef = useRef();
+
     const [zones, setZones] = useState([]);
 
     // Fetch zones from API
@@ -17,6 +20,31 @@ const Map = () => {
 
         fetchZones();
     }, []);
+
+    // Handle zone creation
+    const handleZoneCreated = async (e) => {
+        const { layerType, layer } = e;
+        if (layerType === 'polygon') {
+            // Extract polygon coordinates and reverse them to LON LAT
+            const coordinates = layer.getLatLngs()[0].map((latLng) => [latLng.lng, latLng.lat]);
+
+            // Ensure the polygon is closed by adding the first point as the last point
+            if (coordinates[0] !== coordinates[coordinates.length - 1]) {
+                coordinates.push(coordinates[0]);  // Close the polygon
+            }
+
+            const newZone = {
+                polygon: coordinates,  // Use the closed polygon
+                org_id: 1,
+                name: 'New Zone',
+                address: 'New Address'
+            };
+
+            // Save the new zone to the backend
+            await axios.post('/api/zones', newZone);
+            setZones((prevZones) => [...prevZones, newZone]);
+        }
+    };
 
     return (
         <MapContainer center={[-27.497418, 153.013277]} zoom={18} style={{ height: 'calc(100vh - 100px)', width: '100%' }}>
@@ -46,6 +74,21 @@ const Map = () => {
                     </Popup>
                 </Polygon>
             ))}
+
+            {/* FeatureGroup to manage layers */}
+            <FeatureGroup ref={featureGroupRef}>
+                {/* Add Leaflet Draw for creating new zones */}
+                <EditControl
+                    position="topright"
+                    onCreated={handleZoneCreated}
+                    draw={{
+                        rectangle: false,
+                        circle: false,
+                        circlemarker: false,
+                        polyline: false
+                    }}
+                />
+            </FeatureGroup>
         </MapContainer>
     )
 }

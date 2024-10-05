@@ -196,6 +196,33 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
+// * Create new zones
+app.post('/api/zones', async (req, res) => {
+    const { org_id, name, address, polygon } = req.body;
+
+    // Basic validation
+    if (!org_id || !name || !address || !polygon || !Array.isArray(polygon)) {
+        return res.status(400).json({ error: 'Invalid request. Name, address, and polygon are required' });
+    }
+
+    try {
+        // Convert the polygon into a string format for storage in the database
+        const polygonString = `POLYGON((${polygon.map(coord => `${coord[1]} ${coord[0]}`).join(', ')}))`;
+
+        // Insert the new zone into the database
+        const [result] = await connectionPool.execute(
+            'INSERT INTO zones (org_id, name, address, polygon) VALUES (?, ?, ?, ST_GeomFromText(?))',
+            [org_id, name, address, polygonString]
+        );
+
+        // Respond with the ID of the created zone
+        res.status(201).json({ message: 'Zone created successfully', zoneId: result.insertId});
+    } catch (error) {
+        console.error('ERROR: Creating zone:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // * Get all zones (or from specific organisation)
 app.get('/api/zones', async (req, res) => {
     const { orgId } = req.query;    // Get org id from query params
