@@ -66,6 +66,7 @@ function PushNotification() {
         try {
             // API request to push new notification
             const response = await axios.post('/api/notifications', {
+                title,
                 message,
                 zones: selectedZones,
             });

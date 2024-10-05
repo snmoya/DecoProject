@@ -267,7 +267,7 @@ app.get('/api/zones/:id', async (req, res) => {
 
 // * Create new notification
 app.post('/api/notifications', async (req, res) => {
-    const { message, zones } = req.body;
+    const { title, message, zones } = req.body;
 
     // Validation: Ensure message & zone_id are provided
     if (!message || !zones || zones.length === 0) {
@@ -289,8 +289,8 @@ app.post('/api/notifications', async (req, res) => {
 
             // Insert the new notification into the notifications table
             await connectionPool.execute(
-                'INSERT INTO notifications (message, zone_id, created_at) VALUES (?, ?, ?)',
-                [message, zone_id, new Date()]
+                'INSERT INTO notifications (title, message, zone_id, created_at) VALUES (?, ?, ?, ?)',
+                [title, message, zone_id, new Date()]
             );
         }
         
