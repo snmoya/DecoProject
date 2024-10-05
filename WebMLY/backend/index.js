@@ -196,7 +196,7 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
-// * Get all zones
+// * Get all zones (or from specific organisation)
 app.get('/api/zones', async (req, res) => {
     const { orgId } = req.query;    // Get org id from query params
 
@@ -302,7 +302,39 @@ app.post('/api/notifications', async (req, res) => {
     }
 });
 
-// Fallback route to serve the React app for any other route
+// * Get all the notifications (or from specific zones)
+app.get('/api/notifications', async (req, res) => {
+    const { zoneId } = req.query;   // Get zone id from query params
+
+    try {
+        // Base query
+        let query = 'SELECT * FROM notifications';
+        let queryParams = [];
+
+        // If zoneId provided, concatenate the query
+        if (zoneId) {
+            query += ' WHERE zone_id = ?';
+            queryParams.push(zoneId);
+        }
+
+        // Execute the query
+        const [rows] = await connectionPool.execute(query, queryParams);
+
+        // Notification not found
+        if (rows.length === 0) {
+            console.log('No notification found');
+            return res.status(200).json([]);
+        }
+
+        // Return the notifications
+        res.status(200).json(rows);
+    } catch (error) {
+        console.log('ERROR: Fetching notifications', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// * Fallback route to serve the React app for any other route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
