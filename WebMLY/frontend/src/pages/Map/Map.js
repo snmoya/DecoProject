@@ -3,8 +3,11 @@ import { MapContainer, TileLayer, Polygon, Popup, FeatureGroup } from 'react-lea
 import { EditControl } from 'react-leaflet-draw';
 import axios from 'axios';
 
+import CreateZoneButton from '../../components/CreateZoneButton/CreateZoneButton';
+
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
+import './Map.css';
 
 const Map = () => {
     const featureGroupRef = useRef();
@@ -74,6 +77,8 @@ const Map = () => {
                     </Popup>
                 </Polygon>
             ))}
+
+            <CreateZoneButton />  {/* Add the custom button */}
 
             {/* FeatureGroup to manage layers */}
             <FeatureGroup ref={featureGroupRef}>
