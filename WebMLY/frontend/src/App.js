@@ -11,8 +11,6 @@ import Footer from './components/Footer/Footer';
 
 import { AuthProvider } from './contexts/AuthContext';
 
-import './App.css';
-
 const App = () => {
     return (
         <Router>

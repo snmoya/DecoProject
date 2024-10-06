@@ -2,7 +2,7 @@
 .create-zone-button {
     position: absolute;
     bottom: 20px;
-    left: 20px;
+    right: 20px;
     z-index: 1000;  /* Make sure it appears on top of the map */
 }
 

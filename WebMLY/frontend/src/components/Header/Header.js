@@ -12,7 +12,6 @@ function Header() {
             <div className="navigation">
                 {isAuthenticated ? (
                     <>
-                        <NavLink to="/zones-management" activeClassName="active-link">Zone Manage</NavLink>
                         <NavLink to="/map" activeClassName="active-link">Zone Map</NavLink>
                         <NavLink to="/push-notification" activeClassName="active-link">Push Notification</NavLink>
                     </>
