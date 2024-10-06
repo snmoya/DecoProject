@@ -41,7 +41,7 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
             // Successful login
             if (response.status === 200) {
                 login(response.data.token);
-                navigate('/home');   // TODO
+                navigate('/map');
             }
         } catch (error) {
             if (error.response) {

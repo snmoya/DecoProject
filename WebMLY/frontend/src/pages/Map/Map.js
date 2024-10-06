@@ -23,12 +23,14 @@ const Map = () => {
     // * Fetch zones from API
     useEffect(() => {
         const fetchZones = async () => {
-            const response = await axios.get('/api/zones');
+            const response = await axios.get(`/api/zones?orgId=${orgId}`);
             setZones(response.data);
         };
 
-        fetchZones();
-    }, []);
+        if (orgId) {
+            fetchZones();
+        }
+    }, [orgId]);
 
     // Reset form function to clean up the states
     const resetForm = () => {
@@ -52,8 +54,7 @@ const Map = () => {
             }
 
             setNewZone({
-                polygon: coordinates,
-                org_id: orgId
+                polygon: coordinates
             });
 
             // Keep the reference to the drawn layer to remove it if cancellation
@@ -68,13 +69,20 @@ const Map = () => {
     const handleZoneSubmit = async (e) => {
         e.preventDefault();
 
+        if (!orgId) {
+            console.error('OrgId is missing!');
+            alert('Failed to create the zone because orgId is missing.');
+            return;
+        }
+
         const zoneData = {
-            ...newZone,
+            polygon: newZone.polygon,
             name: zoneInfo.name,
-            address: zoneInfo.address
+            address: zoneInfo.address,
+            org_id: orgId
         };
 
-        console.log(zoneData);
+        console.log('Zone data:', zoneData);
 
         // Save the new zone to the backend
         await axios.post('/api/zones', zoneData);
