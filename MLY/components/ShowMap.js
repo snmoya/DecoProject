@@ -10,9 +10,12 @@ import { Polygon } from "react-native-maps";
 import icons from '../data/icons';
 import VoiceToText from './VoiceToText';
 import { useFocusEffect } from '@react-navigation/native';
+import getNotifications from './getNotifications';
+import getZones from './getZones';
 
 
 export default function ShowMap({ navigation }) {
+    /*
     const updatedLocations = locations.map(location => {
         if (location.polygon) {
             location.coordinates = location.polygon.map(([latitude, longitude]) => ({
@@ -22,12 +25,13 @@ export default function ShowMap({ navigation }) {
         }
         return location;
     });
-
+    */
     const [buttonPosition, setButtonPosition] = useState(30);
+    const { messages, loading } = getNotifications(1);
 
     const initialMapState = {
         locationPermission: false,
-        locations: updatedLocations,
+        locations: [],
         userLocation: {
             latitude: -27.50005001846802,
             longitude: 153.01330426605935,
@@ -36,6 +40,7 @@ export default function ShowMap({ navigation }) {
         selectedLocation: null,
     };
 
+    const { zones, loading: zonesLoading } = getZones();
     const [mapState, setMapState] = useState(initialMapState);
     //Variable to check if user is in a zone
     const [inZone, setInZone] = useState(false); 
@@ -75,6 +80,23 @@ export default function ShowMap({ navigation }) {
         }
     }, []);
 
+    useEffect(() => {
+        if (!zonesLoading) {
+          const updatedLocations = zones.map(zone => ({
+            id: zone.id,
+            location: zone.name,
+            coordinates: zone.polygon.map(([longitude, latitude]) => ({
+              latitude,
+              longitude
+            }))
+          }));
+          setMapState((prevState) => ({
+            ...prevState,
+            locations: updatedLocations,
+          }));
+        }
+      }, [zonesLoading, zones]);    
+
     function checkIfUserInZone(userLocation) {
         const updatedLocations = mapState.locations.map(location => {
             const inZone = isPointInPolygon(userLocation, location.coordinates);
@@ -85,39 +107,6 @@ export default function ShowMap({ navigation }) {
         return updatedLocations.find(location => location.distance.nearby);
     }
 
-    /*
-    if (mapState.locationPermission) {
-        Geolocation.watchPosition(
-            position => {
-                const userLocation = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                };
-
-                const nearbyLocation = checkIfUserInZone(userLocation);
-
-                setMapState({
-                    ...mapState,
-                    userLocation,
-                    nearbyLocation: nearbyLocation,
-                });
-
-                if (nearbyLocation && nearbyLocation.distance.nearby) {
-                    console.log("User is IN a zone");
-                    setInZone(true);
-                    setButtonPosition(340);
-                    setShowNotifA(true);
-                } else {
-                    console.log("User is NOT in zone");
-                    setInZone(false);
-                    setShowNotifA(false);
-                    setButtonPosition(30);
-                }
-            },
-            error => console.log(error)
-        );
-    }
-    */
 
     useEffect(() => {
         // Adjust button position when the user is in the zone or when they click a zone
@@ -198,7 +187,7 @@ export default function ShowMap({ navigation }) {
             ...mapState,
             selectedLocation: location,
         });
-        setShowNotifSelectZone(true);  
+        setShowNotifSelectZone(true);
     };
 
     const handleUserLocPress = () => {
@@ -215,7 +204,10 @@ export default function ShowMap({ navigation }) {
     console.log("inZone: ", inZone);
     console.log("showNotifA: ", showNotifA);
     console.log("showNotifSelectZone: ", showNotifSelectZone);
-
+    //const filteredMessages = messages.filter(message => message.zone_id === mapState.selectedLocation?.id);
+    //console.log("filteredMessages: ", filteredMessages);
+    //console.log("isReceivingNotifications: ", isReceivingNotifications);
+    console.log("messages: ", messages);   
 
 
     return (

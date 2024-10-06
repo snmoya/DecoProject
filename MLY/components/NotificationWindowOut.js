@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 
-const NotificationWindow = ({ location, onPressReceive, onClose }) => {
+const NotificationWindow = ({ location, zone_id, onPressReceive, onClose }) => {
   return (
     <View style={styles.container}>
 

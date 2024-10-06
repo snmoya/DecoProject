@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native';
 import icons from '../data/icons';
 import getNotifications from './getNotifications'; 
 //import { API_KEY } from '@env';
 
-const List = ({ navigation }) => {
+const List = ({ navigation, route }) => {
 
-  const {messages, loading} = getNotifications(); // Loading state
+  const { zone_id } = route.params;
+  const {messages, loading} = getNotifications(zone_id);
 
   // Fetch messages on component mount
     return (
@@ -22,11 +23,12 @@ const List = ({ navigation }) => {
       ) : (
         <FlatList
           data={messages}
-          keyExtractor={(item) => item.notificationId.toString()}  // Ensure key matches your mock data
+          keyExtractor={(item) => item.id.toString()}  // Use the notification ID as the key
           renderItem={({ item }) => (
             <View style={styles.notificationItem}>
-              <Text style={styles.notificationTitle}>{item.message}</Text>
-              <Text style={styles.notificationMessage}>Zone: {item.zone_id}</Text>
+              <Text style={styles.notificationTitle}>{item.title}</Text>
+              <Text style={styles.notificationMessage}>{item.message}</Text>
+              <Text style={styles.notificationTimestamp}>{new Date(item.created_at).toLocaleString()}</Text>
             </View>
           )}
         />
