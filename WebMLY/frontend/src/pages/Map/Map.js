@@ -18,6 +18,7 @@ const Map = () => {
     const [newZone, setNewZone] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [zoneInfo, setZoneInfo] = useState({ name: '', address: '' });
+    const [drawnLayer, setDrawnLayer] = useState(null);     // Hold reference to the drawn zone
 
     // * Fetch zones from API
     useEffect(() => {
@@ -28,6 +29,14 @@ const Map = () => {
 
         fetchZones();
     }, []);
+
+    // Reset form function to clean up the states
+    const resetForm = () => {
+        setShowPopup(false);
+        setZoneInfo({ name: '', address: '' });
+        setNewZone(null);
+        setDrawnLayer(null);
+    }
 
     // * Handle zone creation
     const handleZoneCreated = async (e) => {
@@ -46,6 +55,9 @@ const Map = () => {
                 polygon: coordinates,
                 org_id: orgId
             });
+
+            // Keep the reference to the drawn layer to remove it if cancellation
+            setDrawnLayer(layer);
 
             // Show the popup to enter zone info
             setShowPopup(true);
@@ -71,9 +83,17 @@ const Map = () => {
         setZones((prevZone) => [...prevZone, zoneData]);
 
         // Reset the form and close the popup
-        setShowPopup(false);
-        setZoneInfo({ name: '', address: '' });
-        setNewZone(null);
+        resetForm();
+    }
+
+    // * Handle cancel action (remove the drawn layer from the map)
+    const handleCancel = () => {
+        if (drawnLayer) {
+            featureGroupRef.current.removeLayer(drawnLayer);
+        }
+
+        // Reset the form and close the popup
+        resetForm();
     }
 
     return (
@@ -134,7 +154,7 @@ const Map = () => {
                             <button
                                 type="button"
                                 className="cancel-button"
-                                onClick={() => setShowPopup(false)}
+                                onClick={handleCancel}
                             >
                                 &times;  {/* This will display the 'X' */}
                             </button>
