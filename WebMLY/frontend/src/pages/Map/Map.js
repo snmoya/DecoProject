@@ -84,14 +84,29 @@ const Map = () => {
 
         console.log('Zone data:', zoneData);
 
-        // Save the new zone to the backend
-        await axios.post('/api/zones', zoneData);
+        try {
+            // Save the new zone to the backend
+            const response = await axios.post('/api/zones', zoneData);
 
-        // Add the new zone to the list
-        setZones((prevZone) => [...prevZone, zoneData]);
+            // Extract the newly created zoneId from the backend response
+            const { zoneId } = response.data;
 
-        // Reset the form and close the popup
-        resetForm();
+            // Add the new zone with its ID to the list
+            setZones((prevZones) => [
+                ...prevZones,
+                { ...zoneData, id: zoneId } // Add the newly generated ID
+            ]);
+
+            // Associate the layer with the zoneId (used for deletion)
+            drawnLayer.options.zoneId = zoneId;
+            featureGroupRef.current.addLayer(drawnLayer);  // Add the layer to the FeatureGroup
+
+            // Reset the form and close the popup
+            resetForm();
+        } catch (error) {
+            console.error('Error creating zone:', error);
+            alert('Failed to create the zone.');
+        }
     }
 
     // * Handle cancel action (remove the drawn layer from the map)
@@ -104,6 +119,29 @@ const Map = () => {
         resetForm();
     }
 
+    // * Handle zone deletion
+    const handleDeleteZone = async (zoneId) => {
+        if (window.confirm("Are you sure you want to delete this zone?")) {
+            try {
+                await axios.delete(`/api/zones/${zoneId}`);
+
+                // Remove the deleted zone from the state
+                setZones((prevZones) => prevZones.filter((zone) => zone.id !== zoneId));
+
+                // Remove the drawn layer from the map
+                const layer = featureGroupRef.current.getLayers().find((layer) => layer.options.zoneId === zoneId);
+                if (layer) {
+                    featureGroupRef.current.removeLayer(layer);  // Remove the layer
+                }
+
+                alert('Zone deleted successfully');
+            } catch (error) {
+                console.error('Error deleting zone:', error);
+                alert('Failed to delete the zone.');
+            }
+        }
+    };
+
     return (
         <div>
             <MapContainer center={[-27.497418, 153.013277]} zoom={18} style={{ height: 'calc(100vh - 100px)', width: '100%' }}>
@@ -113,31 +151,36 @@ const Map = () => {
                 />
 
                 {/* Render zones as polygons */}
-                {zones.map(zone => (
-                    <Polygon
-                        key={zone.id}
-                        positions={zone.polygon.map(coord => [
-                            parseFloat(coord[1].toFixed(5)), // Round to 5 decimal places if you want
-                            parseFloat(coord[0].toFixed(5))
-                        ])}
-                        color='blue'
-                        fillColor='lightblue'
-                        fillOpacity={0.3}
-                        onClick={() => alert(`Zone: ${zone.name}`)}
-                    >
-                        <Popup>
-                            <div>
-                                <h4>{zone.name}</h4>
-                                <p>Address: {zone.address}</p>
-                            </div>
-                        </Popup>
-                    </Polygon>
-                ))}
-
-                <CreateZoneButton />  {/* Add the custom button */}
-
                 {/* FeatureGroup to manage layers */}
                 <FeatureGroup ref={featureGroupRef}>
+                    {zones.map(zone => (
+                        <Polygon
+                            key={zone.id}
+                            positions={zone.polygon.map(coord => [
+                                parseFloat(coord[1].toFixed(5)), // Round to 5 decimal places if you want
+                                parseFloat(coord[0].toFixed(5))
+                            ])}
+                            color='blue'
+                            fillColor='lightblue'
+                            fillOpacity={0.3}
+                            onClick={() => alert(`Zone: ${zone.name}`)}
+                        >
+                            <Popup>
+                                <div>
+                                    <h4 className='popup-text zone-name'>{zone.name}</h4>
+                                    <p className='popup-text'>Address: {zone.address}</p>
+
+                                    <button
+                                        className='delete-button'
+                                        onClick={() => handleDeleteZone(zone.id)}
+                                    >
+                                        Delete Zone
+                                    </button>
+                                </div>
+                            </Popup>
+                        </Polygon>
+                    ))}
+
                     {/* Add Leaflet Draw for creating new zones */}
                     <EditControl
                         position="topright"
@@ -150,6 +193,8 @@ const Map = () => {
                         }}
                     />
                 </FeatureGroup>
+
+                <CreateZoneButton />  {/* Add the custom button */}
             </MapContainer>
 
             {/* Popup form to enter new zone info */}

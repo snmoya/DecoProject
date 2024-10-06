@@ -292,6 +292,27 @@ app.get('/api/zones/:id', async (req, res) => {
     }
 })
 
+// * Delete specific zone by ID
+app.delete('/api/zones/:id', async (req, res) => {
+    const zoneId = req.params.id;
+
+    try {
+        // Check if the zone exists
+        const [zone] = await connectionPool.execute('SELECT * FROM zones WHERE id = ?', [zoneId]);
+        if (zone.length === 0) {
+            return res.status(404).json({ error: 'Zone not found' });
+        }
+
+        // Delete the zone
+        await connectionPool.execute('DELETE FROM zones WHERE id = ?', [zoneId]);
+
+        res.status(200).json({ message: 'Zone deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting zone:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // * Create new notification
 app.post('/api/notifications', async (req, res) => {
     const { title, message, zones } = req.body;
