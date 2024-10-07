@@ -3,7 +3,7 @@ import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, Tou
 import MapView, { AnimateToRegion } from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
 import { isPointInPolygon } from "geolib";
-import { locations } from "../data/locations";
+//import { locations } from "../data/locations";
 import NotificationWindow from './NotificationWindowOut';
 import NotificationWindowIn from './NotificationWindowIn';
 import { Polygon } from "react-native-maps";
@@ -145,7 +145,7 @@ export default function ShowMap({ navigation }) {
                             console.log("User is NOT in zone");
                             setInZone(false);
                             setShowNotifA(false);
-                            setButtonPosition(30);
+                            //setButtonPosition(30);
                         }
                     },
                     error => console.log("Error getting current position: ", error),
@@ -207,9 +207,8 @@ export default function ShowMap({ navigation }) {
     //const filteredMessages = messages.filter(message => message.zone_id === mapState.selectedLocation?.id);
     //console.log("filteredMessages: ", filteredMessages);
     //console.log("isReceivingNotifications: ", isReceivingNotifications);
-    console.log("messages: ", messages);   
-
-
+    //console.log("messages: ", messages);   
+    
     return (
         <>
             <MapView
@@ -290,10 +289,12 @@ export default function ShowMap({ navigation }) {
             {inZone && !showNotifA && (
                 <NotificationWindowIn
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
+                    zoneId={showNotifSelectZone ? mapState.selectedLocation.id : mapState.nearbyLocation.id}
                     onStopReceiving={handleStopReceiving}
                     onClose={() => {
                         setShowNotifA(true);  // Close the notification window
                         setShowNotifSelectZone(false);  // Optionally close the selected zone window
+                        setButtonPosition(340);
                 }}
                 />
             )}
@@ -301,10 +302,12 @@ export default function ShowMap({ navigation }) {
             {!inZone && !showNotifA && showNotifSelectZone && (
                 <NotificationWindowIn
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
+                    zoneId={showNotifSelectZone ? mapState.selectedLocation.id : mapState.nearbyLocation.id}
                     onStopReceiving={handleStopReceiving}
                     onClose={() => {
                         setShowNotifA(true);  // Close the notification window
                         setShowNotifSelectZone(false);  // Optionally close the selected zone window
+                        setButtonPosition(340);
                 }}
                 />
             )}

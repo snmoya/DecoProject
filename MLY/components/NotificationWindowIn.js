@@ -1,10 +1,46 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
 import icons from '../data/icons';
 import { useNavigation } from '@react-navigation/native';
+import getNotifications from './getNotifications';
 
-const NotificationWindowIn = ({ location, onStopReceiving, onClose }) => {
+
+const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId }) => {
   const navigation = useNavigation();
+  const { messages, loading } = getNotifications(1);
+
+  const getlatestMessage = () => {
+        const zoneMessages = messages.filter(message => message.zone_id === zoneId);
+        if (zoneMessages.length > 0) {
+          return zoneMessages.reduce((latest, current) => {
+            return new Date(latest.created_at) > new Date(current.created_at) ? latest : current;
+          });
+        }
+
+        return null;
+  };
+  const latestMessage = getlatestMessage();
+  let timeMessage = '';
+  if (latestMessage === null) {
+      timeMessage = null;
+  } else {
+      timeMessage = new Date(latestMessage.created_at).toLocaleString('en-AU', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+  }
+
+  const cutMessage = (message, length = 40) => {
+    if (message.length > length) {
+      return message.substring(0, length) + '...';
+    }
+    return message;
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -18,26 +54,27 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose }) => {
             <Image source={icons.locationPin} style={styles.locIcon} />
             <Text style={styles.infoText}>{location}</Text>
         </View>
+        {/*
         <View style={styles.infoItem1}>
                 <Image source={icons.notification} style={styles.notIcon} />
                 <Text style={styles.infoText}>Notification receiving type</Text>
         </View>
-
+          */}
         <View style={styles.infoFrame}>
             <View style={styles.infoItem2}>
                 <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
                 <View style={styles.textContainer}>
                     <View style={styles.titleRow}>
-                        <Text style={styles.infoText}>Title</Text>
-                        <Text style={styles.timeText}> • 1h</Text>
+                      <Text style={styles.notificationTitle}>{latestMessage ? latestMessage.title : 'No Notifications'}</Text>
+                      <Text style={styles.timeText}> • {timeMessage || 'N/A'}</Text>
                     </View>
-                    <Text style={styles.messageText}>Message</Text>
+                    <Text style={styles.messageText}>{latestMessage ? cutMessage(latestMessage.message) : 'No messages for this zone.'}</Text>
                 </View>
                 <Image source={icons.arrowDown} style={styles.arrowIcon} />
             </View>
         </View>
         <TouchableOpacity
-                onPress={() => navigation.navigate('List')}
+                onPress={() => navigation.navigate('List', { zoneId })}
                 style={styles.arrowIconContainer}
                 >
                 <View style={styles.infoItem1}>
@@ -86,7 +123,9 @@ container: {
   },
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'left',
+    justifyContent: 'space-between', // Space between title and time
+    alignItems: 'center',
+    width: '100%',
   },
   infoItem1: {
     flexDirection: 'row',
@@ -111,7 +150,7 @@ container: {
     paddingLeft: 20,
   },
   timeText: {
-    fontSize: 16,
+    fontSize: 12,
     color: '#666',
     paddingLeft: 10,
   },
@@ -162,6 +201,10 @@ container: {
   arrowIcon: {
     width: 40,
     height: 40,
+  },
+  notificationTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
