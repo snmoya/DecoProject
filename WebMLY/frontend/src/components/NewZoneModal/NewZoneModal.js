@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../contexts/AuthContext";
 
-import './ZonePopupForm.css';
+import './NewZoneModal.css';
 
-const ZonePopupForm = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGroupRef, resetForm }) => {
+const NewZoneModal = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGroupRef, resetForm }) => {
     const { orgId } = useContext(AuthContext);
-    
+
     // * Handle form submission for the new zone
     const handleZoneSubmit = async (e) => {
         e.preventDefault();
@@ -62,38 +62,44 @@ const ZonePopupForm = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGro
     }
 
     return (
-        <form onSubmit={handleZoneSubmit} className="popup-form">
-            <div className="popup-form-header">
-                <h3>Create New Zone</h3>
+        <>
+            {/* Transparent background overlay */}
+            <div className="popup-overlay"></div>
 
-                <button
-                    type="button"
-                    className="cancel-button"
-                    onClick={handleCancel}
-                >
-                    &times;  {/* This will display the 'X' */}
-                </button>
-            </div>
+            <form onSubmit={handleZoneSubmit} className="popup-form">
+                <div className="popup-form-header">
+                    <h3>Create New Zone</h3>
 
-            <label>Name:</label>
-            <input
-                type="text"
-                value={zoneInfo.name}
-                onChange={(e) => setZoneInfo({ ...zoneInfo, name: e.target.value })}
-                required
-            />
+                    <button
+                        type="button"
+                        className="cancel-button"
+                        onClick={handleCancel}
+                    >
+                        &times;  {/* This will display the 'X' */}
+                    </button>
+                </div>
 
-            <label>Address:</label>
-            <input
-                type="text"
-                value={zoneInfo.address}
-                onChange={(e) => setZoneInfo({ ...zoneInfo, address: e.target.value })}
-                required
-            />
+                <label>Name:</label>
+                <input
+                    type="text"
+                    value={zoneInfo.name}
+                    onChange={(e) => setZoneInfo({ ...zoneInfo, name: e.target.value })}
+                    required
+                />
 
-            <button type="submit" className='save-button'>Save Zone</button>
-        </form>
+                <label>Address:</label>
+                <input
+                    type="text"
+                    value={zoneInfo.address}
+                    onChange={(e) => setZoneInfo({ ...zoneInfo, address: e.target.value })}
+                    required
+                />
+
+                <button type="submit" className='save-button'>Save Zone</button>
+            </form>
+        </>
+
     )
 };
 
-export default ZonePopupForm;
+export default NewZoneModal;
