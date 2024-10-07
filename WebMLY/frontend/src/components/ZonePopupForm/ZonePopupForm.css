@@ -1,0 +1,62 @@
+.popup-form {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000;  /* Ensure the form is above everything */
+    width: 300px;
+    max-width: 100%;  /* Ensure it doesn't overflow on small screens */
+    transition: opacity 1s ease, transform 1s ease;  /* Smooth transition */
+}
+
+.popup-form-header {
+    display: flex;
+    justify-content: space-between;  /* Push the h3 and button to opposite sides */
+    align-items: center;  /* Align vertically in the middle */
+    margin-bottom: 10px;  /* Add some space below the header */
+}
+
+.popup-form button.cancel-button {
+    background-color: transparent;
+    color: #6b4f18;  /* Use the desired color for the button */
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;  /* Remove padding */
+    margin: 0;   /* Remove any margin */
+    width: 20px;  /* Ensure the button has a width */
+}
+
+.popup-form button.cancel-button:hover {
+    color: #543d10;  /* Darker red on hover */
+}
+
+h3 {
+    margin: 0;
+    font-weight: bold;
+    color: #6b4f18;
+    text-align: center;
+}
+
+.popup-form label {
+    display: block;
+    color: #6b4f18;
+    margin: 0 !important;
+}
+
+.popup-form input {
+    width: 90%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 0 !important;
+}
+
+.popup-form .save-button:hover {
+    background-color: #f4c682;
+}
