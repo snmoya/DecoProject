@@ -5,7 +5,8 @@ import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 
 import CreateZoneButton from '../../components/CreateZoneButton/CreateZoneButton';
-import ZonePopupForm from '../../components/ZonePopupForm/ZonePopupForm';
+import NewZoneModal from '../../components/NewZoneModal/NewZoneModal';
+import PushNotificationModal from '../../components/PushNotificationModal/PushNotificationModal';
 
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
@@ -16,9 +17,11 @@ const Map = () => {
     const { orgId } = useContext(AuthContext);
 
     const [zones, setZones] = useState([]);
-    const [showPopup, setShowPopup] = useState(false);
     const [zoneInfo, setZoneInfo] = useState({ name: '', address: '', polygon: null});
     const [drawnLayer, setDrawnLayer] = useState(null);     // Hold reference to the drawn zone
+    const [showPopup, setShowPopup] = useState(false);
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
+    const [selectedZoneForNotification, setSelectedZoneForNotification] = useState(null);
 
     // * Fetch zones from API
     useEffect(() => {
@@ -88,6 +91,12 @@ const Map = () => {
         }
     };
 
+    // * Handle "Send Notification" button click
+    const handleSendNotificationClick = (zone) => {
+        setSelectedZoneForNotification(zone); // Pass the selected zone to the modal
+        setShowNotificationModal(true); // Show the modal
+    };
+
     return (
         <div>
             <MapContainer center={[-27.497418, 153.013277]} zoom={18} style={{ height: 'calc(100vh - 100px)', width: '100%' }}>
@@ -117,6 +126,13 @@ const Map = () => {
                                     <p className='popup-text'>Address: {zone.address}</p>
 
                                     <button
+                                        className="notification-button"
+                                        onClick={() => handleSendNotificationClick(zone)}
+                                    >
+                                        Send Notification
+                                    </button>
+
+                                    <button
                                         className='delete-button'
                                         onClick={() => handleDeleteZone(zone.id)}
                                     >
@@ -143,9 +159,17 @@ const Map = () => {
                 <CreateZoneButton />  {/* Add the custom button */}
             </MapContainer>
 
+            {/* PushNotificationModal Popup */}
+            {showNotificationModal && (
+                <PushNotificationModal
+                    zone={selectedZoneForNotification}
+                    onClose={() => setShowNotificationModal(false)} // Close the modal
+                />
+            )}
+
             {/* Popup form to enter new zone info */}
             {showPopup && (
-                <ZonePopupForm
+                <NewZoneModal
                     setZones={setZones}
                     zoneInfo={zoneInfo}
                     setZoneInfo={setZoneInfo}
