@@ -5,7 +5,7 @@ Run the following command in the terminal to install Homebrew:
 ```shell
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
-*if you have problem with this instalation visit the website https://brew.sh.
+*if you have problems with this instalation visit the website https://brew.sh.
 
 Verify that Homebrew is installed correctly:
 ```shell
