@@ -54,11 +54,6 @@ git clone https://github.com/snmoya/DecoProject.git
 ```
 This will clone the complete project (Web + Mobile).
 
-Move into the Mobile app directory:
-```shell
-cd DecoProject/MLY
-```
-
 
 ## Running the project
 
@@ -73,6 +68,11 @@ Once all dependencies are installed, you can run the app on an iPhone simulator 
 cd /clonePath
 ```
 *replace "/clonePath" with the actual path of the repository clone.
+
+Move into the Mobile app directory:
+```shell
+cd DecoProject/MLY
+```
 
 - In the project directory, run:
 
