@@ -25,7 +25,7 @@ watchman -v
 ```
 * Make sure it is Node 18.18 or newer.
 
-Verify that npm was installed as part of node,js:
+Verify that npm was installed as part of node.js:
 ```shell
 npm -v
 ``` 
@@ -52,7 +52,7 @@ In a new directory run the following command:
 ```shell
 git clone https://github.com/snmoya/DecoProject.git
 ```
-This will the complete project (Web + Mobile).
+This will clone the complete project (Web + Mobile).
 
 Move into the Mobile app directory:
 ```shell
