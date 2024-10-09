@@ -15,7 +15,8 @@
 /* Modal Content */
 .modal-content {
     background-color: #fff8f3;
-    margin: 10% auto; /* 5% from the top and centered */
+    margin: 5% auto; /* 5% from the top and centered */
+    margin-bottom: 0;
     padding: 20px;
     border: 1px solid #888;
     width: 40%; /* Adjust the width of the modal */
@@ -38,7 +39,7 @@
 
 .modal-content input[type="text"],
 .modal-content textarea {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -55,6 +56,8 @@
     margin-top: 10px;
     width: 100%;
     max-width: 90%;
+    max-height: 250px;
+    overflow-y: auto;
 }
 
 .zones-list input {
