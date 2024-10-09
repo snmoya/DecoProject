@@ -13,12 +13,12 @@
     font-size: 24px;
 }
 
-.login-form label {
-    text-align: left;
-}
-
 .login-form input {
     width: 380px;
+}
+
+.login-button {
+    margin-top: 15px;
 }
 
 .terms {
@@ -37,7 +37,7 @@
 }
 
 .form-other {
-    margin-top: 5px;
+    margin-top: 30px;
 }
 
 .form-other ul {

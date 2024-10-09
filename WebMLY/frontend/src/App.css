@@ -36,6 +36,7 @@ form label {
 input,
 select,
 textarea {
+    font-family: Arial, sans-serif;
     width: 90%;
     padding: 10px;
     margin-bottom: 20px;
@@ -57,7 +58,7 @@ button {
     font-weight: bold;
     font-size: 16px;
     width: 100%;
-    margin: 20px auto 0 auto;
+    margin: 0 auto;
     padding: 12px 20px;
     border: none;
     border-radius: 5px;

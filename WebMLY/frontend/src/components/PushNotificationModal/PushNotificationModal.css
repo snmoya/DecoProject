@@ -47,6 +47,10 @@
     font-size: 16px;
 }
 
+.modal-content button {
+    margin-top: 20px;
+}
+
 /* Zones list container */
 .zones-list {
     background-color: #ffffff;
@@ -63,6 +67,7 @@
 .zones-list input {
     margin-bottom: 0;
 }
+
 /* Ensure checkboxes and labels are left aligned */
 .zones-list div {
     display: flex;
@@ -75,10 +80,6 @@
     padding-top: 10px;
     font-size: 13.5px;
     font-weight: 400;
-}
-
-.zones-list div:last-child {
-    margin-bottom: 0;
 }
 
 /* Custom checkbox styles */
