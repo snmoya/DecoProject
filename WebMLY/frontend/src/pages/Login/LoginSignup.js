@@ -16,7 +16,7 @@ const LoginSignup = () => {
     };
 
     return (
-        <div className="app-container">
+        <div className="login-container">
             <LoginSignupForm isLoginPage={isLoginPage} resetSignal={resetSignal} handleReset={handleReset} />
 
             <div className="divider">

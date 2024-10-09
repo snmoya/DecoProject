@@ -10,19 +10,13 @@
     height: 50px;
     border: none;
     border-radius: 50%;
-    color: black;
     font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: background-color 0.3s;
     position: relative;
-}
-
-.circle-button:hover {
-    background-color: #f5c070;  /* Darker green on hover */
 }
 
 .hover-text {

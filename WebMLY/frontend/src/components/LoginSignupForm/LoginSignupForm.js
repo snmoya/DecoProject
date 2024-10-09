@@ -91,31 +91,29 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
         <form onSubmit={isLoginPage ? handleLoginSubmit : handleSignupSubmit} className="login-form">
             <h2>{isLoginPage ? 'Login' : 'Sign Up'}</h2>
 
-            <label>
-                <small>Username</small>
-                <input
-                    type="text"
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-            </label>
+            <label>Username</label>
+            <input
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+            />
 
-            <label>
-                <small>Password</small>
-                <input
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </label>
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
 
             {!isLoginPage && (
-                <label id='confirm-password'>
-                    <small>Confirm Password</small>
+                <>
+                    <label id='confirm-password'>Confirm Password</label>
                     <input
                         type='password'
                         placeholder='Enter your password again'
@@ -123,12 +121,12 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                     />
-                </label>
+                </>
             )}
 
             {!isLoginPage && (
-                <label>
-                    <small>Organisation's Name</small>
+                <>
+                    <label>Organisation's Name</label>
                     <input
                         type='text'
                         placeholder="Enter your organisation's name"
@@ -136,7 +134,7 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
                         onChange={(e) => setOrganisationName(e.target.value)}
                         required
                     />
-                </label>
+                </>
             )}
 
             <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>

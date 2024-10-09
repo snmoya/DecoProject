@@ -23,22 +23,6 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Add some shadow */
 }
 
-/* Close Button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
 /* Form Styling */
 .modal-content form {
     background-color: #fff8f3;
@@ -49,7 +33,6 @@
 }
 
 .modal-content label {
-    font-weight: bold;
     color: #6b4f18;
 }
 
@@ -63,16 +46,70 @@
     font-size: 16px;
 }
 
-.modal-content button {
-    color: black;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+/* Zones list container */
+.zones-list {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 90%;
 }
 
-.modal-content button:hover {
-    background-color: #f4c682;
+.zones-list input {
+    margin-bottom: 0;
+}
+/* Ensure checkboxes and labels are left aligned */
+.zones-list div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+}
+
+.zones-list label {
+    padding-top: 10px;
+    font-size: 13.5px;
+    font-weight: 400;
+}
+
+.zones-list div:last-child {
+    margin-bottom: 0;
+}
+
+/* Custom checkbox styles */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+/* Checkbox styles when checked */
+input[type="checkbox"]:checked {
+    background-color: #ffca7a;
+    border: 0.5px solid #888;
+}
+
+/* Add checkmark symbol using pseudo-element */
+input[type="checkbox"]:checked::before {
+    content: '✓';
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Hover effect for checkbox */
+input[type="checkbox"]:hover {
+    border-color: #FFAE42;
 }

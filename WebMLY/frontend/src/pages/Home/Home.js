@@ -8,7 +8,7 @@ function Home() {
     const { orgId } = useContext(AuthContext);
 
     return (
-        <div className="container">
+        <div className="home-container">
             <section className="heroSection"></section>
 
             <section className="contentSection">

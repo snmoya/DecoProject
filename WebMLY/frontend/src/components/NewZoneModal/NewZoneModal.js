@@ -67,19 +67,12 @@ const NewZoneModal = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGrou
             <div className="popup-overlay"></div>
 
             <form onSubmit={handleZoneSubmit} className="popup-form">
-                <div className="popup-form-header">
+                {/* <div className="popup-form-header"> */}
+                    <span className="close-button" onClick={handleCancel}>&times;</span>
                     <h3>Create New Zone</h3>
+                {/* </div> */}
 
-                    <button
-                        type="button"
-                        className="cancel-button"
-                        onClick={handleCancel}
-                    >
-                        &times;  {/* This will display the 'X' */}
-                    </button>
-                </div>
-
-                <label>Name:</label>
+                <label>Name</label>
                 <input
                     type="text"
                     value={zoneInfo.name}
@@ -87,7 +80,7 @@ const NewZoneModal = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGrou
                     required
                 />
 
-                <label>Address:</label>
+                <label>Address</label>
                 <input
                     type="text"
                     value={zoneInfo.address}

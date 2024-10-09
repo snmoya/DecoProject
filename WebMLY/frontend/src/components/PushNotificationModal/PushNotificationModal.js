@@ -52,7 +52,7 @@ const PushNotificationModal = ({ zones, onClose }) => {
     return (
         <div className="modal">
             <div className="modal-content">
-                <span className="close" onClick={onClose}>&times;</span>
+                <span className="close-button" onClick={onClose}>&times;</span>
                 
                 {/* Dynamic title based on single or multiple zones */}
                 <h3>
