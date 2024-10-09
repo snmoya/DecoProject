@@ -4,7 +4,7 @@ import { EditControl } from 'react-leaflet-draw';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 
-import CreateZoneButton from '../../components/CreateZoneButton/CreateZoneButton';
+import ControlButtons from '../../components/ControlButtons/ControlButtons';
 import NewZoneModal from '../../components/NewZoneModal/NewZoneModal';
 import PushNotificationModal from '../../components/PushNotificationModal/PushNotificationModal';
 
@@ -93,7 +93,12 @@ const Map = () => {
 
     // * Handle "Send Notification" button click
     const handleSendNotificationClick = (zone) => {
-        setSelectedZoneForNotification(zone); // Pass the selected zone to the modal
+        if (zone) {
+            setSelectedZoneForNotification(zone); // Pass the selected zone to the modal
+        } else {
+            setSelectedZoneForNotification(zones);
+        }
+        
         setShowNotificationModal(true); // Show the modal
     };
 
@@ -156,13 +161,13 @@ const Map = () => {
                     />
                 </FeatureGroup>
 
-                <CreateZoneButton />  {/* Add the custom button */}
+                <ControlButtons handleSendNotificationClick={handleSendNotificationClick} />  {/* The custom buttons */}
             </MapContainer>
 
             {/* PushNotificationModal Popup */}
             {showNotificationModal && (
                 <PushNotificationModal
-                    zone={selectedZoneForNotification}
+                    zones={selectedZoneForNotification}
                     onClose={() => setShowNotificationModal(false)} // Close the modal
                 />
             )}

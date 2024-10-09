@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import './PushNotificationModal.css';
 
-const PushNotificationModal = ({ zone, onClose }) => {
+const PushNotificationModal = ({ zones, onClose }) => {
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
-    const [selectedZones, setSelectedZones] = useState([zone.id]);  // Pre-select the zone
+    const [selectedZones, setSelectedZones] = useState([]); 
+
+    const isMultipleZones = Array.isArray(zones);
+
+    // Pre-select the zone or all zones depending on the input
+    useEffect(() => {
+        if (!isMultipleZones && zones?.id) {
+            setSelectedZones([zones.id]);  // Single zone case
+        } else if (isMultipleZones) {
+            setSelectedZones(zones.map((zone) => zone.id)); // All zones
+        }
+    }, [zones, isMultipleZones]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,11 +41,25 @@ const PushNotificationModal = ({ zone, onClose }) => {
         }
     };
 
+    const handleZoneChange = (zoneId) => {
+        setSelectedZones((prevSelectedZones) =>
+            prevSelectedZones.includes(zoneId)
+                ? prevSelectedZones.filter((id) => id !== zoneId)  // Remove zone
+                : [...prevSelectedZones, zoneId]  // Add zone
+        );
+    };
+
     return (
         <div className="modal">
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
-                <h3>Send Notification for {zone.name}</h3>
+                
+                {/* Dynamic title based on single or multiple zones */}
+                <h3>
+                    {isMultipleZones
+                        ? 'Send Notification to Multiple Zones'
+                        : `Send Notification for ${zones?.name}`}
+                </h3>
 
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -55,6 +80,27 @@ const PushNotificationModal = ({ zone, onClose }) => {
                             required
                         ></textarea>
                     </div>
+
+                    {/* If multiple zones, show a list of checkboxes */}
+                    {isMultipleZones && (
+                        <div>
+                            <label>Select Zones:</label>
+                            <div className="zones-list">
+                                {zones.map((zone) => (
+                                    <div key={zone.id}>
+                                        <input
+                                            type="checkbox"
+                                            id={zone.id}
+                                            value={zone.id}
+                                            checked={selectedZones.includes(zone.id)}
+                                            onChange={() => handleZoneChange(zone.id)}
+                                        />
+                                        <label htmlFor={zone.id}>{zone.name}</label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     <button type="submit">Send Notification</button>
                 </form>

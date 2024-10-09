@@ -1,9 +1,8 @@
-/* Container for the button and hover text */
-.create-zone-button {
+.control-buttons {
     position: absolute;
     bottom: 20px;
     right: 20px;
-    z-index: 1000;  /* Make sure it appears on top of the map */
+    z-index: 500;
 }
 
 .circle-button {
@@ -29,8 +28,8 @@
 .hover-text {
     display: none;
     position: absolute;
-    bottom: 60px;
-    right: 0;
+    top: 45%;
+    right: 100%;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 5px 10px;
