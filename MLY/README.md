@@ -5,7 +5,7 @@ Run the following command in the terminal to install Homebrew:
 ```shell
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
-*if you have problem with this instalation visit the website https://brew.sh.
+*if you have problems with this instalation visit the website https://brew.sh.
 
 Verify that Homebrew is installed correctly:
 ```shell
@@ -25,7 +25,7 @@ watchman -v
 ```
 * Make sure it is Node 18.18 or newer.
 
-Verify that npm was installed as part of node,js:
+Verify that npm was installed as part of node.js:
 ```shell
 npm -v
 ``` 
@@ -52,12 +52,7 @@ In a new directory run the following command:
 ```shell
 git clone https://github.com/snmoya/DecoProject.git
 ```
-This will the complete project (Web + Mobile).
-
-Move into the Mobile app directory:
-```shell
-cd DecoProject/MLY
-```
+This will clone the complete project (Web + Mobile).
 
 
 ## Running the project
@@ -73,6 +68,11 @@ Once all dependencies are installed, you can run the app on an iPhone simulator 
 cd /clonePath
 ```
 *replace "/clonePath" with the actual path of the repository clone.
+
+Move into the Mobile app directory:
+```shell
+cd DecoProject/MLY
+```
 
 - In the project directory, run:
 
