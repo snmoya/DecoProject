@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import ShowMap from './components/ShowMap';
 import TopBar from './components/TopBar';
@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import List from './components/List';
 import VoiceToText from './components/VoiceToText';
+import PushNotification from 'react-native-push-notification';
 
 
 const Stack = createStackNavigator();
@@ -17,6 +18,35 @@ export default function App() {
         console.log('Showing side menu:', !sideMenuVisible);
         setSideMenuVisible(!sideMenuVisible);
     };
+
+    PushNotification.configure({
+        onRegister: function (token) {
+          console.log("TOKEN:", token);
+        },
+        onNotification: function (notification) {
+          console.log("NOTIFICATION:", notification);
+        },
+        permissions: {
+          alert: true,
+          badge: true,
+          sound: true,
+        },
+        popInitialNotification: true,
+        requestPermissions: true,
+      });
+
+    useEffect(() => {
+        PushNotification.createChannel(
+          {
+            channelId: "default-channel-id", // Ensure the channel ID matches what you use in the notification config
+            channelName: "Default Channel", // Name of the channel
+            channelDescription: "A default channel for push notifications", // Optional: description of the channel
+            importance: 4, // Importance level: 4 is high
+            vibrate: true, // Enable vibration
+          },
+          (created) => console.log(`Notification channel created: ${created}`) // Log the channel creation status
+        );
+      }, []);
 
 
     return (
