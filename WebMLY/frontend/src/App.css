@@ -71,6 +71,9 @@ button:hover {
 }
 
 .close-button {
+    position: sticky;
+    top: 0;
+    right: 0;
     color: #6b4f18;
     float: right;
     font-size: 24px;

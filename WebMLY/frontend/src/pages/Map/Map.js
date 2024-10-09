@@ -7,6 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import ControlButtons from '../../components/ControlButtons/ControlButtons';
 import NewZoneModal from '../../components/NewZoneModal/NewZoneModal';
 import PushNotificationModal from '../../components/PushNotificationModal/PushNotificationModal';
+import ViewNotificationsModal from '../../components/ViewNotificationsModal/ViewNotificationsModal';
 
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
@@ -20,8 +21,9 @@ const Map = () => {
     const [zoneInfo, setZoneInfo] = useState({ name: '', address: '', polygon: null});
     const [drawnLayer, setDrawnLayer] = useState(null);     // Hold reference to the drawn zone
     const [showPopup, setShowPopup] = useState(false);
-    const [showNotificationModal, setShowNotificationModal] = useState(false);
-    const [selectedZoneForNotification, setSelectedZoneForNotification] = useState(null);
+    const [showPushNotificationModal, setShowPushNotificationModal] = useState(false);
+    const [showAllNotificationsModal, setShowAllNotificationsModal] = useState(false);
+    const [selectedZone, setSelectedZone] = useState(null);
 
     // * Fetch zones from API
     useEffect(() => {
@@ -94,13 +96,19 @@ const Map = () => {
     // * Handle "Send Notification" button click
     const handleSendNotificationClick = (zone) => {
         if (zone) {
-            setSelectedZoneForNotification(zone); // Pass the selected zone to the modal
+            setSelectedZone(zone); // Pass the selected zone to the modal
         } else {
-            setSelectedZoneForNotification(zones);
+            setSelectedZone(zones);
         }
         
-        setShowNotificationModal(true); // Show the modal
+        setShowPushNotificationModal(true); // Show the modal
     };
+
+    // * Handle click to view all notifications
+    const handleViewNotificationsClick = (zone) => {
+        setSelectedZone(zone);
+        setShowAllNotificationsModal(true);
+    }
 
     return (
         <div>
@@ -138,6 +146,13 @@ const Map = () => {
                                     </button>
 
                                     <button
+                                        className='view-notifications-button'
+                                        onClick={() => handleViewNotificationsClick(zone)}
+                                    >
+                                        View All Notifications   
+                                    </button>
+
+                                    <button
                                         className='delete-button'
                                         onClick={() => handleDeleteZone(zone.id)}
                                     >
@@ -165,10 +180,13 @@ const Map = () => {
             </MapContainer>
 
             {/* PushNotificationModal Popup */}
-            {showNotificationModal && (
+            {showPushNotificationModal && (
                 <PushNotificationModal
-                    zones={selectedZoneForNotification}
-                    onClose={() => setShowNotificationModal(false)} // Close the modal
+                    zones={selectedZone}
+                    onClose={() => {
+                        setShowPushNotificationModal(false);
+                        setSelectedZone(null);
+                    }}
                 />
             )}
 
@@ -181,6 +199,17 @@ const Map = () => {
                     drawnLayer={drawnLayer}
                     featureGroupRef={featureGroupRef}
                     resetForm={resetForm}
+                />
+            )}
+
+            {/* Render the All Notifications modal */}
+            {showAllNotificationsModal && (
+                <ViewNotificationsModal
+                    zone={selectedZone}
+                    onClose={() => {
+                        setShowAllNotificationsModal(false);
+                        setSelectedZone(null);
+                    }}
                 />
             )}
         </div>

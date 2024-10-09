@@ -30,13 +30,22 @@
     transition: background-color 0.3s ease;
 }
 
-.notification-button {
-    margin-bottom: 10px;
+.notification-button,
+.view-notifications-button {
     color: black;
+    margin-bottom: 10px;
+}
+
+.view-notifications-button {
+    background-color: #feb877;
+}
+
+.view-notifications-button:hover {
+    background-color: #faa657;
 }
 
 .delete-button {
-    color: #fff;
+    color: black;
     background-color: #f88383;  
 }
 
