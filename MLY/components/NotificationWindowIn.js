@@ -3,11 +3,30 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react
 import icons from '../data/icons';
 import { useNavigation } from '@react-navigation/native';
 import getNotifications from './getNotifications';
+import PushNotification from 'react-native-push-notification';
 
 
 const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId }) => {
   const navigation = useNavigation();
   const { messages, loading } = getNotifications(1);
+  const latestMessageId = useRef(null);
+  const zoneName = location;
+
+  console.log("zoneNmae: ", zoneName);
+
+  const showLocalNotification = (title, message) => {
+    PushNotification.localNotification({
+      channelId: "default-channel-id",
+      title:`${zoneName} - ${title}:` || "New Notification", // Fallback title
+      message: message || "You have a new message", // Fallback message
+      playSound: true, // Play sound when notification is shown
+      soundName: 'default', 
+      importance: 'high', // Ensure visibility on lock screen
+      vibrate: true, // Enable vibration
+      vibration: 300, // Vibration duration
+      priority: 'high', 
+    });
+  };
 
   const getlatestMessage = () => {
         const zoneMessages = messages.filter(message => message.zone_id === zoneId);
@@ -33,6 +52,14 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId }) =>
       });
 
   }
+
+  useEffect(() => {
+    if (latestMessage && latestMessage.id !== latestMessageId.current) {
+      showLocalNotification(latestMessage.title, latestMessage.message); // Trigger a local notification
+      latestMessageId.current = latestMessage.id; // Update the latest message ID
+    }
+  }, [latestMessage]);
+
 
   const cutMessage = (message, length = 40) => {
     if (message.length > length) {
