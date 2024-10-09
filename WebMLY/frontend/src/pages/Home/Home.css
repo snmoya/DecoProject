@@ -18,10 +18,10 @@ body {
 }
 
 .heroSection {
-    background-image: url('../../Images/hero-image.png');
+    background-image: url('../../Images/web-image.jpg');
     /* Path to your hero image */
     background-size: cover;
-    background-position: center;
+    background-position: bottom;
     color: #FFFFFF;
     /* White text on dark background */
     padding: 100px 20px;
@@ -69,7 +69,7 @@ button:hover {
 }
 
 .contentSection {
-    height: 300px;
+    height: 250px;
     padding: 0;
     margin-bottom: 20px;
     text-align: center;
