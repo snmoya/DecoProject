@@ -6,7 +6,7 @@
 }
 
 .heroSection {
-    background-image: url('../../Images/web-image.jpg');
+    background-image: url('../../../public/web-image.jpg');
     /* Path to your hero image */
     background-size: cover;
     background-position: bottom;
