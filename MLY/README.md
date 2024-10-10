@@ -40,6 +40,14 @@ Installing iOS Simulator:
 Xcode > Settings (or Preferences) > Components (or Platform) > "+" (plus button at the bottom) > Select iOS.. > Choose a simulator, the latest would be iOS 18.0. 
 
 - CocoaPods: 
+
+Cocoapos is a Ruby gem, so is recommended to have the lastes ruby version.
+```shell
+brew install ruby
+echo 'export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
 Install CocoaPods for managing iOS dependencies.
 ```shell
 sudo gem install cocoapods
@@ -86,7 +94,55 @@ this will install all the necessary dependencies.
 cd ios
 pod install
 ```
+
 *This might take a while...
+
+## Possible problem: `pod` Command Not Found
+1. **Check Where CocoaPods Was Installed**:
+   First, we need to find out where CocoaPods was installed. You can do this by running the following command:
+   ```shell
+   gem which cocoapods
+   ```
+
+   This will return the path where CocoaPods was installed
+   ```shell
+   /opt/homebrew/lib/ruby/gems/3.x.x/gems/cocoapods-x.x.x/lib/cocoapods.rb
+   ```
+
+2. **Locate the Ruby Gem Binary Directory**:
+   ```shell
+   gem environment
+   ```
+
+   Look for the section that says **EXECUTABLE DIRECTORY**
+   ```shell
+   - EXECUTABLE DIRECTORY: /opt/homebrew/lib/ruby/gems/3.x.x/bin
+   ```
+
+3. **Add the Ruby Gem Binary Directory to Your `PATH`**:
+   Now, you need to add the **EXECUTABLE DIRECTORY** to your `PATH`.
+   gem environemnet should show something like `/opt/homebrew/lib/ruby/gems/3.x.x/bin`
+
+   Open your `.zshrc` file:
+   ```shell
+   nano ~/.zshrc
+   ```
+
+   Add this line at the top (replace the second path with the correct one from your system):
+   ```bash
+   export PATH="/opt/homebrew/lib/ruby/gems/3.x.x/bin:$PATH"
+   ```
+4. **Reload Your Shell**:
+   ```shell
+   source ~/.zshrc
+   ```
+
+5. **Verify CocoaPods Installation**:
+   Now, try running the `pod` command again:
+   ```shell
+   pod --version
+   ```
+
 
 - After that, back to the mobile app directory:
 ```shell
