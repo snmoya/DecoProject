@@ -1,0 +1,54 @@
+.leaflet-draw {
+    display: none !important;  /* Hide the toolbar */
+}
+
+.zone-name {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.leaflet-popup-content-wrapper {
+    background-color: #fff8f3;
+    border-color: #d2c5b4;
+}
+
+.leaflet-popup-close-button {
+    font-size: 18px !important;
+}
+
+.popup-text {
+    color: #6b4f18;
+}
+
+.leaflet-popup-content-wrapper button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 0;
+    transition: background-color 0.3s ease;
+}
+
+.notification-button,
+.view-notifications-button {
+    color: black;
+    margin-bottom: 10px;
+}
+
+.view-notifications-button {
+    background-color: #feb877;
+}
+
+.view-notifications-button:hover {
+    background-color: #faa657;
+}
+
+.delete-button {
+    color: black;
+    background-color: #f88383;  
+}
+
+.delete-button:hover {
+    background-color: #f93f3f;  /* Darker red on hover */
+}

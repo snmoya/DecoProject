@@ -196,6 +196,72 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
+// * Create new zones
+app.post('/api/zones', async (req, res) => {
+    const { org_id, name, address, polygon } = req.body;
+
+    // Basic validation
+    if (!org_id || !name || !address || !polygon || !Array.isArray(polygon)) {
+        return res.status(400).json({ error: 'Invalid request. Name, address, and polygon are required' });
+    }
+
+    try {
+        // Convert the polygon into a string format for storage in the database
+        const polygonString = `POLYGON((${polygon.map(coord => `${coord[1]} ${coord[0]}`).join(', ')}))`;
+
+        // Insert the new zone into the database
+        const [result] = await connectionPool.execute(
+            'INSERT INTO zones (org_id, name, address, polygon) VALUES (?, ?, ?, ST_GeomFromText(?))',
+            [org_id, name, address, polygonString]
+        );
+
+        // Respond with the ID of the created zone
+        res.status(201).json({ message: 'Zone created successfully', zoneId: result.insertId});
+    } catch (error) {
+        console.error('ERROR: Creating zone:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// * Get all zones (or from specific organisation)
+app.get('/api/zones', async (req, res) => {
+    const { orgId } = req.query;    // Get org id from query params
+
+    try {
+        // Base query
+        let query = 'SELECT id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones';
+        let queryParams = [];
+
+        // If orgId provided, concatenate the query
+        if (orgId) {
+            query += ' WHERE org_id = ?';
+            queryParams.push(orgId);
+        }
+
+        // Execute the query
+        const [rows] = await connectionPool.execute(query, queryParams);
+
+        // Zone not found
+        if (rows.length === 0) {
+            console.log('No zone found');
+            return res.status(200).json([]);
+        }
+
+        // Transform each zone to extract polygon coordinates
+        const transformedZones = rows.map((zone) => ({
+            ...zone,
+            polygon: extractCoordinates(zone.polygon),
+        }));
+
+        // Return the result as JSON
+        res.json(transformedZones);
+    } catch (error) {
+        console.log('ERROR:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+})
+
+// * Get specific zone
 app.get('/api/zones/:id', async (req, res) => {
     try {
         const zoneId = req.params.id;   // Get zone id from param
@@ -226,7 +292,97 @@ app.get('/api/zones/:id', async (req, res) => {
     }
 })
 
-// Fallback route to serve the React app for any other route
+// * Delete specific zone by ID
+app.delete('/api/zones/:id', async (req, res) => {
+    const zoneId = req.params.id;
+
+    try {
+        // Check if the zone exists
+        const [zone] = await connectionPool.execute('SELECT * FROM zones WHERE id = ?', [zoneId]);
+        if (zone.length === 0) {
+            return res.status(404).json({ error: 'Zone not found' });
+        }
+
+        // Delete the zone
+        await connectionPool.execute('DELETE FROM zones WHERE id = ?', [zoneId]);
+
+        res.status(200).json({ message: 'Zone deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting zone:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// * Create new notification
+app.post('/api/notifications', async (req, res) => {
+    const { title, message, zones } = req.body;
+
+    // Validation: Ensure message & zone_id are provided
+    if (!message || !zones || zones.length === 0) {
+        return res.status(400).json({ error: 'Message and at least one zone_id are required'});
+    }
+
+    try {
+        // Loop over the selected zones
+        for (const zone_id of zones) {
+            // Check if the zone exists in the database
+            const [zoneResult] = await connectionPool.execute(
+                'SELECT id FROM zones WHERE id = ?',
+                [zone_id]
+            );
+
+            if (zoneResult.length == 0) {
+                return res.status(400).json({ error: 'Invalid zone id'});
+            }
+
+            // Insert the new notification into the notifications table
+            await connectionPool.execute(
+                'INSERT INTO notifications (title, message, zone_id, created_at) VALUES (?, ?, ?, ?)',
+                [title, message, zone_id, new Date()]
+            );
+        }
+        
+        // Send success response with the newly created notification's id
+        res.status(201).json({ message: 'Notification created successfully' });
+    } catch (error) {
+        console.error('ERROR: Creating notification', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// * Get all the notifications (or from specific zones)
+app.get('/api/notifications', async (req, res) => {
+    const { zoneId } = req.query;   // Get zone id from query params
+
+    try {
+        // Base query
+        let query = 'SELECT * FROM notifications';
+        let queryParams = [];
+
+        // If zoneId provided, concatenate the query
+        if (zoneId) {
+            query += ' WHERE zone_id = ?';
+            queryParams.push(zoneId);
+        }
+
+        // Execute the query
+        const [rows] = await connectionPool.execute(query, queryParams);
+
+        // Notification not found
+        if (rows.length === 0) {
+            console.log('No notification found');
+            return res.status(200).json([]);
+        }
+
+        // Return the notifications
+        res.status(200).json(rows);
+    } catch (error) {
+        console.log('ERROR: Fetching notifications', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// * Fallback route to serve the React app for any other route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });

@@ -1,23 +1,55 @@
 // src/contexts/AuthContext.js
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const navigate = useNavigate();
+
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [orgId, setOrgId] = useState(null);
 
     const login = (token) => {
         localStorage.setItem('token', token);
-        setIsAuthenticated(true);
-    }
+        handleToken(token);
+    };
 
-    const logout = () => {
+    const logout = useCallback(() => {
         localStorage.removeItem('token');
         setIsAuthenticated(false);
-    }
+        setOrgId(null);
+        
+        navigate('/login');
+    }, [navigate]);
+
+    // Decode the token & Extract org id
+    const handleToken = useCallback((token) => {
+        try {
+            const decodedToken = jwtDecode(token);
+            setOrgId(decodedToken.orgId);
+            setIsAuthenticated(true);
+        } catch (error) {
+            console.log('Invalid token, logging out');
+            logout();
+        }
+    }, [logout]);
+
+    // useEffect to check for token on mount
+    useEffect(() => {
+        const initializeAuth = () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                handleToken(token);  // Use the common function to handle token
+            }
+        };
+
+        initializeAuth();  // Call the function inside useEffect
+    }, [handleToken]);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, orgId }}>
             {children}
         </AuthContext.Provider>
     );

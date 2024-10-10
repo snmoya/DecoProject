@@ -41,7 +41,7 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
             // Successful login
             if (response.status === 200) {
                 login(response.data.token);
-                navigate('/home');   // TODO
+                navigate('/map');
             }
         } catch (error) {
             if (error.response) {
@@ -91,31 +91,29 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
         <form onSubmit={isLoginPage ? handleLoginSubmit : handleSignupSubmit} className="login-form">
             <h2>{isLoginPage ? 'Login' : 'Sign Up'}</h2>
 
-            <label>
-                <small>Username</small>
-                <input
-                    type="text"
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-            </label>
+            <label>Username</label>
+            <input
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+            />
 
-            <label>
-                <small>Password</small>
-                <input
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </label>
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
 
             {!isLoginPage && (
-                <label id='confirm-password'>
-                    <small>Confirm Password</small>
+                <>
+                    <label id='confirm-password'>Confirm Password</label>
                     <input
                         type='password'
                         placeholder='Enter your password again'
@@ -123,12 +121,12 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                     />
-                </label>
+                </>
             )}
 
             {!isLoginPage && (
-                <label>
-                    <small>Organisation's Name</small>
+                <>
+                    <label>Organisation's Name</label>
                     <input
                         type='text'
                         placeholder="Enter your organisation's name"
@@ -136,19 +134,15 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
                         onChange={(e) => setOrganisationName(e.target.value)}
                         required
                     />
-                </label>
+                </>
             )}
 
             <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>
 
-            <p className="terms">
-                By continuing, you agree to the <span className="underline">Terms of use</span> and <span className="underline">Privacy Policy</span>.
-            </p>
-
             {isLoginPage && (
                 <div className="form-other">
                     <ul>
-                        <li className="underline">Other issue with sign in</li>
+                        <li className="underline">Report other issues</li>
                         <li className="underline">Forget your password</li>
                     </ul>
                 </div>
