@@ -22,7 +22,7 @@ const useNotifications = () => {
 
         const data = await response.json();
         setMessages(data); // Correct state update
-        console.log("Fetched Messages: ", data); // Log the fetched data
+        //console.log("Fetched Messages: ", data); // Log the fetched data
       } catch (error) {
         console.error('Error fetching messages:', error);
       } finally {
@@ -31,6 +31,12 @@ const useNotifications = () => {
     };
 
     getMessages();
+    const intervalId = setInterval(() => {
+      //console.log("Fetching new messages...");
+      getMessages();
+    }, 1000);
+    return () => clearInterval(intervalId);
+
   }, []); 
 
   return { messages, loading };

@@ -1,40 +1,94 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator, Animated } from 'react-native';
 import icons from '../data/icons';
 import getNotifications from './getNotifications'; 
 //import { API_KEY } from '@env';
 
 const List = ({ navigation, route }) => {
 
-  const { zone_id } = route.params;
-  const {messages, loading} = getNotifications(zone_id);
+  const { zoneId } = route.params;
+  const {messages, loading} = getNotifications();
+  const [filteredMessages, setFilteredMessages] = useState([]);
+  const [expandedMessageId, setExpandedMessageId] = useState(null);
 
-  // Fetch messages on component mount
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Notifications</Text>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={icons.close} style={styles.closeIcon} />
-                </TouchableOpacity>
-            </View>
+  useEffect(() => {
+    const filteredMessages = messages.filter(message => message.zone_id === zoneId).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    setFilteredMessages(filteredMessages);
+  }, [messages, zoneId]);
+  
+  const cutMessage = (message, length = 50) => {
+    if (message.length > length) {
+      return message.substring(0, length) + '...';
+    }
+    return message;
+  };
+
+  const toggleMessage = (messageId) => {
+    if (expandedMessageId === messageId) {
+      setExpandedMessageId(null);
+    } else {
+      setExpandedMessageId(messageId);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Notifications</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image source={icons.close} style={styles.closeIcon} />
+        </TouchableOpacity>
+      </View>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.id.toString()}  // Use the notification ID as the key
-          renderItem={({ item }) => (
-            <View style={styles.notificationItem}>
-              <Text style={styles.notificationTitle}>{item.title}</Text>
-              <Text style={styles.notificationMessage}>{item.message}</Text>
-              <Text style={styles.notificationTimestamp}>{new Date(item.created_at).toLocaleString()}</Text>
+        <ScrollView 
+          style={styles.scrollView} 
+          contentContainerStyle={styles.scrollViewContent}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false} 
+          indicatorStyle="black"
+        >
+          {filteredMessages.map((item) => (
+            <View key={item.id.toString()}               style={[
+                styles.infoFrame,
+                expandedMessageId === item.id && styles.expandedFrame,
+              ]}>
+              <View style={styles.infoItem2}>
+                <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
+                <View style={styles.textContainer}>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.infoText}>{item.title}</Text>
+                    <Text style={styles.timeText}>
+                      {new Date(item.created_at).toLocaleString('en-AU', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </Text>
+                  </View>
+                  <Text style={styles.messageText}>
+                    {expandedMessageId === item.id ? item.message : cutMessage(item.message)}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={() => toggleMessage(item.id)}>
+                  <Animated.Image
+                    source={icons.arrowDown}
+                    style={[
+                      styles.arrowIcon,
+                      { transform: [{ rotate: expandedMessageId === item.id ? '180deg' : '0deg' }] }, // Rotate when expanded
+                    ]}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          )}
-        />
+          ))}
+        </ScrollView>
       )}
     </View>
-    );
+  );
 };
 
 const styles = StyleSheet.create({
@@ -49,6 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBottom: 20,
     paddingTop: 40,
+    paddingHorizontal: 20,
   },
   closeIcon: {
     width: 24,
@@ -90,9 +145,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     paddingLeft: 5,
+    fontWeight: 'bold',
   },
   timeText: {
-    fontSize: 16,
+    fontSize: 12,
     color: '#666',
     paddingLeft: 10,
   },
@@ -114,17 +170,30 @@ const styles = StyleSheet.create({
   },
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'left',
+    justifyContent: 'space-between', // Space between title and time
+    alignItems: 'center',
+    width: '100%',
   },
   arrowIcon: {
     width: 30,
     height: 30,
+    marginLeft: 10,
   },
   messageText: {
     fontSize: 14,
     color: '#666',
-    marginTop: 5,
+    marginTop: 10,
     paddingLeft: 20,
+  },
+  scrollView: {
+    flex: 1,
+    marginLeft: 0, 
+  },
+  scrollViewContent: {
+    paddingHorizontal: 0, 
+  },
+  expandedFrame: {
+    backgroundColor: '#FFFF',
   },
 });
 
