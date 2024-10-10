@@ -56,6 +56,10 @@ DANGEROUSLY_DISABLE_HOST_CHECK=true
 
 ## Setup Instructions
 
+### Prerequisites
+
+- **Node.js**: Make sure you have Node.js installed. You can download it from [nodejs.org](https://nodejs.org/).
+
 ### Installing Dependencies
 
 You only need to do this at the first time, or after anything changes in `package.json` and `package-lock.json`

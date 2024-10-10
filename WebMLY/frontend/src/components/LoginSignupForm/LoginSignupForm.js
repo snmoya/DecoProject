@@ -139,14 +139,10 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
 
             <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>
 
-            <p className="terms">
-                By continuing, you agree to the <span className="underline">Terms of use</span> and <span className="underline">Privacy Policy</span>.
-            </p>
-
             {isLoginPage && (
                 <div className="form-other">
                     <ul>
-                        <li className="underline">Other issue with sign in</li>
+                        <li className="underline">Report other issues</li>
                         <li className="underline">Forget your password</li>
                     </ul>
                 </div>
