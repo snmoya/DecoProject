@@ -5,7 +5,7 @@ Run the following command in the terminal to install Homebrew:
 ```shell
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
-*if you have problems with this instalation visit the website https://brew.sh.
+*if you have problems with this installation visit the website https://brew.sh.
 
 Verify that Homebrew is installed correctly:
 ```shell
@@ -41,7 +41,7 @@ Xcode > Settings (or Preferences) > Components (or Platform) > "+" (plus button 
 
 - CocoaPods: 
 
-Cocoapos is a Ruby gem, so is recommended to have the lastes ruby version.
+Cocoapos is a Ruby gem, so is recommended to have the latest ruby version.
 ```shell
 brew install ruby
 echo 'export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' >> ~/.zshrc
@@ -121,7 +121,7 @@ pod install
 
 3. **Add the Ruby Gem Binary Directory to Your `PATH`**:
    Now, you need to add the **EXECUTABLE DIRECTORY** to your `PATH`.
-   gem environemnet should show something like `/opt/homebrew/lib/ruby/gems/3.x.x/bin`
+   gem environment should show something like `/opt/homebrew/lib/ruby/gems/3.x.x/bin`
 
    Open your `.zshrc` file:
    ```shell
@@ -182,7 +182,7 @@ If you have any problems in the process please contact the developer team of MLY
 3. **Open the Project in Xcode**:
    - Navigate to the `ios` folder and open the `.xcworkspace` file:
      ```shell
-     open ios/your_project_name.xcworkspace
+     open ios/MLY.xcworkspace
      ```
 
 4. **Select Your iPhone as the Build Target**:
