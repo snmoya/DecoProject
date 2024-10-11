@@ -166,8 +166,28 @@ npx react-native run-ios --simulator="iPhone 14"
 ```
 
 
-## Problems
-If you have any problems in the process please contact the developer team of MLY developers. 
+## Possible Problem: Problem not running the app
+run the following commands:
+```shell
+rm -rf ~/Library/Developer/Xcode/DerivedData/*
+```
+
+-From the terminal, navigate to the ios folder of your React Native project(mobile-app -> ios):
+-Run the following command to clean the Xcode build:
+```shell
+cd ios
+xcodebuild clean
+```
+
+-Back to the mobile-app folder:
+```shell
+cd ..
+```
+
+Finally you can run the project:
+```shell
+npx react-native run-ios
+```
 
 
 ## OPTIONAL: Run the App on a Physical iPhone
