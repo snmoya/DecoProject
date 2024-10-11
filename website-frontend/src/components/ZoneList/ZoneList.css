@@ -1,0 +1,28 @@
+.zone-list-container {
+    padding: 10px;
+}
+
+.zone-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.zone-list li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.zone-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.zone-list h4 {
+    margin: 0;
+}
+
+.zone-list p {
+    margin: 5px 0;
+    color: #555;
+}
