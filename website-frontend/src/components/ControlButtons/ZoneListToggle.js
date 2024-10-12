@@ -12,7 +12,7 @@ const ZoneListToggle = ({ setShowZoneList }) => {
                 <FontAwesomeIcon icon={faList} />
             </button>
 
-            <span className='hover-text left-hover-text'>All Zones of your Organisation</span>
+            <span className='hover-text left-hover-text'>See All Zones and Edit Zone Info</span>
         </div>
     )
 }

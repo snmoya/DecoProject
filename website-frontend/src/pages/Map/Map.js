@@ -7,7 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import ZoneList from '../../components/ZoneList/ZoneList';
 import ControlButtons from '../../components/ControlButtons/ControlButtons';
 import ZoneListToggle from '../../components/ControlButtons/ZoneListToggle';
-import NewZoneModal from '../../components/NewZoneModal/NewZoneModal';
+import EditZoneInfoModal from '../../components/EditZoneInfoModal/EditZoneInfoModal';
 import PushNotificationModal from '../../components/PushNotificationModal/PushNotificationModal';
 import ViewNotificationsModal from '../../components/ViewNotificationsModal/ViewNotificationsModal';
 
@@ -213,7 +213,7 @@ const Map = () => {
 
             {/* Popup form to enter new zone info */}
             {showZoneInfoModal && (
-                <NewZoneModal
+                <EditZoneInfoModal
                     selectedZone={selectedZone}
                     setZones={setZones}
                     zoneInfo={zoneInfo}

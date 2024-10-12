@@ -2,9 +2,9 @@ import React, { useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../contexts/AuthContext";
 
-import './NewZoneModal.css';
+import './EditZoneInfoModal.css';
 
-const NewZoneModal = ({ selectedZone, setZones, zoneInfo, setZoneInfo, drawnLayer, featureGroupRef, resetForm }) => {
+const EditZoneInfoModal = ({ selectedZone, setZones, zoneInfo, setZoneInfo, drawnLayer, featureGroupRef, resetForm }) => {
     const { orgId } = useContext(AuthContext);
 
     // * Initialize zoneInfo with selectedZone's data when editing
@@ -126,4 +126,4 @@ const NewZoneModal = ({ selectedZone, setZones, zoneInfo, setZoneInfo, drawnLaye
     )
 };
 
-export default NewZoneModal;
+export default EditZoneInfoModal;
