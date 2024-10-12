@@ -16,7 +16,7 @@ const PushMultipleZonesButton = ({ handleSendNotificationClick }) => {
                 <FontAwesomeIcon icon={faBell} />
             </button>
 
-            <span className='hover-text'>Push Notification to Multiple Zones</span>
+            <span className='hover-text right-hover-text'>Push Notification to Multiple Zones</span>
         </div>
     );
 };
@@ -42,14 +42,14 @@ const CreateZoneButton = () => {
                 <FontAwesomeIcon icon={faPencilAlt} />
             </button>
 
-            <span className='hover-text'>Create New Zone</span>
+            <span className='hover-text right-hover-text'>Create New Zone</span>
         </div>
     );
 };
 
 const ControlButtons = ({ handleSendNotificationClick }) => {
     return (
-        <div className='control-buttons'>
+        <div className='control-buttons right-control-button'>
             <PushMultipleZonesButton handleSendNotificationClick={handleSendNotificationClick} />
             <CreateZoneButton />
         </div>
