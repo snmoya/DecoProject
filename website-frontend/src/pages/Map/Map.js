@@ -4,7 +4,9 @@ import { EditControl } from 'react-leaflet-draw';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 
+import ZoneList from '../../components/ZoneList/ZoneList';
 import ControlButtons from '../../components/ControlButtons/ControlButtons';
+import ZoneListToggle from '../../components/ControlButtons/ZoneListToggle';
 import NewZoneModal from '../../components/NewZoneModal/NewZoneModal';
 import PushNotificationModal from '../../components/PushNotificationModal/PushNotificationModal';
 import ViewNotificationsModal from '../../components/ViewNotificationsModal/ViewNotificationsModal';
@@ -18,8 +20,9 @@ const Map = () => {
     const { orgId } = useContext(AuthContext);
 
     const [zones, setZones] = useState([]);
-    const [zoneInfo, setZoneInfo] = useState({ name: '', address: '', polygon: null});
+    const [zoneInfo, setZoneInfo] = useState({ name: '', address: '', polygon: null });
     const [drawnLayer, setDrawnLayer] = useState(null);     // Hold reference to the drawn zone
+    const [showZoneList, setShowZoneList] = useState(true);
     const [showPopup, setShowPopup] = useState(false);
     const [showPushNotificationModal, setShowPushNotificationModal] = useState(false);
     const [showAllNotificationsModal, setShowAllNotificationsModal] = useState(false);
@@ -100,7 +103,7 @@ const Map = () => {
         } else {
             setSelectedZone(zones);
         }
-        
+
         setShowPushNotificationModal(true); // Show the modal
     };
 
@@ -111,12 +114,23 @@ const Map = () => {
     }
 
     return (
-        <div>
-            <MapContainer center={[-27.497418, 153.013277]} zoom={18} style={{ height: 'calc(100vh - 100px)', width: '100%' }}>
+        <div className='map-container'>
+            <MapContainer
+                center={[-27.497418, 153.013277]}
+                zoom={18}
+                style={{ height: 'calc(100vh - 100px)', width: '100%' }}
+            >
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
+
+                {/* Zone List */}
+                {showZoneList ? (
+                    <ZoneList zones={zones} setShowZoneList={setShowZoneList} />
+                ) : (
+                    <ZoneListToggle setShowZoneList={setShowZoneList} />
+                )}
 
                 {/* Render zones as polygons */}
                 {/* FeatureGroup to manage layers */}
@@ -132,6 +146,7 @@ const Map = () => {
                             fillColor='lightblue'
                             fillOpacity={0.3}
                             onClick={() => alert(`Zone: ${zone.name}`)}
+                            options={{ zoneId: zone.id }}
                         >
                             <Popup>
                                 <div>
@@ -149,7 +164,7 @@ const Map = () => {
                                         className='view-notifications-button'
                                         onClick={() => handleViewNotificationsClick(zone)}
                                     >
-                                        View All Notifications   
+                                        View All Notifications
                                     </button>
 
                                     <button
