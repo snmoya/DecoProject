@@ -1,11 +1,23 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../contexts/AuthContext";
 
 import './NewZoneModal.css';
 
-const NewZoneModal = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGroupRef, resetForm }) => {
+const NewZoneModal = ({ selectedZone, setZones, zoneInfo, setZoneInfo, drawnLayer, featureGroupRef, resetForm }) => {
     const { orgId } = useContext(AuthContext);
+
+    // * Initialize zoneInfo with selectedZone's data when editing
+    useEffect(() => {
+        if (selectedZone) {
+            setZoneInfo({
+                name: selectedZone.name,
+                address: selectedZone.address,
+                polygon: selectedZone.polygon  // Keep polygon to edit it later
+            });
+        }
+    }, [selectedZone, setZoneInfo]);
+
 
     // * Handle form submission for the new zone
     const handleZoneSubmit = async (e) => {
@@ -27,22 +39,41 @@ const NewZoneModal = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGrou
         console.log('Zone data:', zoneData);
 
         try {
-            // Save the new zone to the backend
-            const response = await axios.post('/api/zones', zoneData);
+            // * Update zone
+            if (selectedZone) {
+                await axios.put(`/api/zones/${selectedZone.id}`, zoneData);
+                
+                // Update the zone in the state
+                setZones((prevZones) =>
+                    prevZones.map((zone) =>
+                        zone.id === selectedZone.id ? { ...zone, ...zoneData } : zone
+                    )
+                );
 
-            // Extract the newly created zoneId from the backend response
-            const { zoneId } = response.data;
+                // Alert user about successful update
+                alert('Zone updated successfully!');
+            } else {
+                // * Insert new zone
+                // Save the new zone to the backend
+                const response = await axios.post('/api/zones', zoneData);
 
-            // Add the new zone with its ID to the list
-            setZones((prevZones) => [
-                ...prevZones,
-                { ...zoneData, id: zoneId } // Add the newly generated ID
-            ]);
+                // Extract the newly created zoneId from the backend response
+                const { zoneId } = response.data;
 
-            // Associate the layer with the zoneId (used for deletion)
-            drawnLayer.options.zoneId = zoneId;
-            featureGroupRef.current.addLayer(drawnLayer);  // Add the layer to the FeatureGroup
+                // Add the new zone with its ID to the list
+                setZones((prevZones) => [
+                    ...prevZones,
+                    { ...zoneData, id: zoneId } // Add the newly generated ID
+                ]);
 
+                // Associate the layer with the zoneId (used for deletion)
+                drawnLayer.options.zoneId = zoneId;
+                featureGroupRef.current.addLayer(drawnLayer);  // Add the layer to the FeatureGroup
+
+                // Alert user about successful creation
+                alert('Zone created successfully!');
+            }
+            
             // Reset the form and close the popup
             resetForm();
         } catch (error) {
@@ -69,7 +100,7 @@ const NewZoneModal = ({ setZones, zoneInfo, setZoneInfo, drawnLayer, featureGrou
             <form onSubmit={handleZoneSubmit} className="popup-form">
                 {/* <div className="popup-form-header"> */}
                     <span className="close-button" onClick={handleCancel}>&times;</span>
-                    <h3>Create New Zone</h3>
+                    <h3>{selectedZone ? 'Edit Zone' : 'Create New Zone'}</h3>
                 {/* </div> */}
 
                 <label>Name</label>

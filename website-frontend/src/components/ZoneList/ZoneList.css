@@ -28,6 +28,8 @@
     border-bottom: 1px solid #ddd;
 }
 
-.zone-list-popup p {
-    margin-top: 10px;
+.zone-list-popup li:hover {
+    color: white;
+    background-color: #d5b079;
+    cursor: pointer;
 }

@@ -290,7 +290,42 @@ app.get('/api/zones/:id', async (req, res) => {
         console.log('ERROR:', error);
         res.status(500).json({ error: 'Server error' });
     }
-})
+});
+
+// * Update an existing zone
+app.put('/api/zones/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, address } = req.body;
+
+    // Check if all required field are provided
+    if (!name || !address) {
+        return res.status(400).json({ error: 'Name and address are required' });
+    }
+
+    try {
+        // Check if the zone exist in the database
+        const [existingZone] = await connectionPool.execute(
+            'SELECT * FROM zones WHERE id = ?',
+            [id]
+        );
+
+        if (existingZone.length == 0) {
+            return res.status(404).json({ error: 'Zone not found' });
+        }
+
+        // Update the zone
+        await connectionPool.execute(
+            'UPDATE zones SET name = ?, address = ? WHERE id = ?',
+            [name, address, id]
+        );
+
+        // Send success response
+        res.status(200).json({ message: 'Zone updated successfully' });
+    } catch (error) {
+        console.error('ERROR: Updating zone:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 // * Delete specific zone by ID
 app.delete('/api/zones/:id', async (req, res) => {

@@ -23,7 +23,7 @@ const Map = () => {
     const [zoneInfo, setZoneInfo] = useState({ name: '', address: '', polygon: null });
     const [drawnLayer, setDrawnLayer] = useState(null);     // Hold reference to the drawn zone
     const [showZoneList, setShowZoneList] = useState(true);
-    const [showPopup, setShowPopup] = useState(false);
+    const [showZoneInfoModal, setShowZoneInfoModal] = useState(false);
     const [showPushNotificationModal, setShowPushNotificationModal] = useState(false);
     const [showAllNotificationsModal, setShowAllNotificationsModal] = useState(false);
     const [selectedZone, setSelectedZone] = useState(null);
@@ -42,7 +42,8 @@ const Map = () => {
 
     // Reset form function to clean up the states
     const resetForm = () => {
-        setShowPopup(false);
+        setSelectedZone(null);
+        setShowZoneInfoModal(false);
         setZoneInfo({ name: '', address: '', polygon: null });
         setDrawnLayer(null);
     }
@@ -69,7 +70,7 @@ const Map = () => {
             setDrawnLayer(layer);
 
             // Show the popup to enter zone info
-            setShowPopup(true);
+            setShowZoneInfoModal(true);
         }
     };
 
@@ -127,7 +128,12 @@ const Map = () => {
 
                 {/* Zone List */}
                 {showZoneList ? (
-                    <ZoneList zones={zones} setShowZoneList={setShowZoneList} />
+                    <ZoneList 
+                        zones={zones} 
+                        setShowZoneList={setShowZoneList} 
+                        setShowZoneInfoModal={setShowZoneInfoModal} 
+                        setSelectedZone={setSelectedZone} 
+                    />
                 ) : (
                     <ZoneListToggle setShowZoneList={setShowZoneList} />
                 )}
@@ -206,8 +212,9 @@ const Map = () => {
             )}
 
             {/* Popup form to enter new zone info */}
-            {showPopup && (
+            {showZoneInfoModal && (
                 <NewZoneModal
+                    selectedZone={selectedZone}
                     setZones={setZones}
                     zoneInfo={zoneInfo}
                     setZoneInfo={setZoneInfo}
