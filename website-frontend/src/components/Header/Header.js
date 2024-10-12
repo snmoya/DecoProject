@@ -11,18 +11,37 @@ function Header() {
         <div className="header">
             <div className="navigation">
                 {isAuthenticated ? (
-                    <NavLink to="/map" activeClassName="active-link">Zone Map</NavLink>
+                    <NavLink 
+                        to="/map" 
+                        className={({ isActive }) => isActive ? "active-link" : ""}
+                    >
+                        Zone Map
+                    </NavLink>
                 ) : (
-                    <NavLink to="/home" activeClassName="active-link">Home</NavLink>
+                    <NavLink 
+                        to="/home" 
+                        className={({ isActive }) => isActive ? "active-link" : ""}
+                    >
+                        Home
+                    </NavLink>
                 )}
             </div>
 
             <div className="navigation" id="user-info">
-                {/* <img src={require('../../Images/user-icon.png')} alt="User" /> */}
                 {isAuthenticated ? (
-                    <NavLink onClick={logout} to="/login">Log out</NavLink>
+                    <NavLink 
+                        onClick={logout} 
+                        to="/login"
+                    >
+                        Log out
+                    </NavLink>
                 ) : (
-                    <NavLink to="/login">Login</NavLink>
+                    <NavLink 
+                        to="/login"
+                        className={({ isActive }) => isActive ? "active-link" : ""}
+                    >
+                        Login
+                    </NavLink>
                 )}
             </div>
         </div>
