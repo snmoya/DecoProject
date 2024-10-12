@@ -2,7 +2,7 @@
     position: absolute;
     bottom: 20px;
     left: 20px;
-    background-color: #F8ECDF;
+    background-color: white;
     padding: 15px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -10,6 +10,7 @@
     max-height: 90vh;
     overflow-y: auto;
     z-index: 1000;
+    color: black;
 }
 
 .zone-list-popup h3 {
@@ -29,7 +30,6 @@
 }
 
 .zone-list-popup li:hover {
-    color: white;
-    background-color: #d5b079;
+    background-color: #F8ECDF;
     cursor: pointer;
 }
