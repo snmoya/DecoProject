@@ -417,6 +417,31 @@ app.get('/api/notifications', async (req, res) => {
     }
 });
 
+// * Feedback endpoint to handle feedback submission
+app.post('/api/feedback', async (req, res) => {
+    const { email, feedback } = req.body;
+
+    // Validate the request
+    if (!email || !feedback) {
+        console.log('here');
+        return res.status(400).json({ error: 'Email and feedback are required' });
+    }
+
+    console.log('start');
+    try {
+        // Insert the feedback into the database
+        const [result] = await connectionPool.execute(
+            'INSERT INTO feedbacks (email, feedback) VALUES (?, ?)',
+            [email, feedback]
+        );
+        console.log("Success");
+        res.status(201).json({ message: 'Feedback submitted successfully', feedbackId: result.insertId });
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // * Fallback route to serve the React app for any other route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../website-frontend/build', 'index.html'));
