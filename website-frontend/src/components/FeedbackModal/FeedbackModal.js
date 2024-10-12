@@ -13,8 +13,6 @@ const FeedbackModal = ({ onClose }) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        console.log("Submitting feedback:", { email, feedback });
-
         try {
             const response = await axios.post('/api/feedback', { email, feedback });
             if (response.status === 201) {
