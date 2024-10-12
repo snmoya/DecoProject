@@ -147,6 +147,30 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+// * Get organisation name from ID
+app.get('/api/org/:id', async (req, res) => {
+    const orgId = req.params.id;
+
+    try {
+        // Query the organization from the database using orgId
+        const [rows] = await connectionPool.execute(
+            'SELECT name FROM organisations WHERE id = ?', 
+            [orgId]
+        );
+
+        // Check if the organization exists
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Organization not found' });
+        }
+
+        // Return the organization name
+        res.status(200).json({ name: rows[0].name });
+    } catch (error) {
+        console.error('Error fetching organization:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // * Add new account from user registration
 app.post('/api/signup', async (req, res) => {
     const { username, password, confirmPassword, organisationName } = req.body;
@@ -423,18 +447,16 @@ app.post('/api/feedback', async (req, res) => {
 
     // Validate the request
     if (!email || !feedback) {
-        console.log('here');
         return res.status(400).json({ error: 'Email and feedback are required' });
     }
 
-    console.log('start');
     try {
         // Insert the feedback into the database
         const [result] = await connectionPool.execute(
             'INSERT INTO feedbacks (email, feedback) VALUES (?, ?)',
             [email, feedback]
         );
-        console.log("Success");
+        
         res.status(201).json({ message: 'Feedback submitted successfully', feedbackId: result.insertId });
     } catch (error) {
         console.error('Error submitting feedback:', error);
