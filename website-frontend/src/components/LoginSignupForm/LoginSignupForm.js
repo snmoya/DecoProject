@@ -143,18 +143,16 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
 
                 <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>
 
-                {isLoginPage && (
-                    <div className="form-other">
-                        <ul>
-                            <li
-                                className="underline"
-                                onClick={() => setShowFeedbackModal(true)}
-                            >
-                                Report issues to admin
-                            </li>
-                        </ul>
-                    </div>
-                )}
+                <div className="form-other">
+                    <ul>
+                        <li
+                            className="underline"
+                            onClick={() => setShowFeedbackModal(true)}
+                        >
+                            Send feedback or report issues
+                        </li>
+                    </ul>
+                </div>
 
                 {message && <p id='success-message'>{message}</p>}
             </form>
