@@ -15,17 +15,7 @@ import getZones from './getZones';
 
 
 export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
-    /*
-    const updatedLocations = locations.map(location => {
-        if (location.polygon) {
-            location.coordinates = location.polygon.map(([latitude, longitude]) => ({
-                latitude,
-                longitude
-            }));
-        }
-        return location;
-    });
-    */
+
     const [buttonPosition, setButtonPosition] = useState(30);
     const { messages, loading } = getNotifications(1);
 
@@ -50,7 +40,8 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
     const [showNotifSelectZone, setShowNotifSelectZone] = useState(false);
     //Variable to check if the user is receiving notifications
     const [isReceivingNotifications, setIsReceivingNotifications] = useState(false);
-    const mapRef = React.useRef(null); 
+    const mapRef = React.useRef(null);
+    
 
     useEffect(() => {
         async function requestAndroidLocationPermission() {
@@ -88,7 +79,8 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
             coordinates: zone.polygon.map(([longitude, latitude]) => ({
               latitude,
               longitude
-            }))
+            })),
+            org_id: zone.org_id
           }));
           setMapState((prevState) => ({
             ...prevState,
@@ -106,7 +98,6 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
 
         return updatedLocations.find(location => location.distance.nearby);
     }
-
 
     useEffect(() => {
         // Adjust button position when the user is in the zone or when they click a zone
@@ -201,6 +192,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
         }, 1000); 
     };
 
+
     //console.log("--------------------");
     //console.log("inZone: ", inZone);
     //console.log("showNotifA: ", showNotifA);
@@ -209,8 +201,9 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
     //console.log("filteredMessages: ", filteredMessages);
     //console.log("isReceivingNotifications: ", isReceivingNotifications);
     //console.log("messages: ", messages);   
-    console.log("blinkingEnabled in ShowMap:", blinkingEnabled);
+    //console.log("blinkingEnabled in ShowMap:", blinkingEnabled);
     //console.log("blinking in ShowMap:", blinking);
+    //console.log("Nearby Location org_id in SHOWMAP: ", mapState.nearbyLocation.org_id);
 
     return (
         <>
@@ -267,6 +260,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
             {(inZone && showNotifA && !showNotifSelectZone) && (
                 <NotificationWindow
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
+                    orgId={mapState.selectedLocation.org_id}
                     onPressReceive={handlePressReceive}
                 />
             )}
@@ -275,6 +269,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
                 <NotificationWindow
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
                     onPressReceive={handlePressReceive}
+                    orgId={mapState.selectedLocation.org_id}
                 />
             )}
 
@@ -282,6 +277,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
                 <NotificationWindow
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
                     onPressReceive={handlePressReceive}
+                    orgId={mapState.selectedLocation.org_id}
                     onClose={() => {
                         setShowNotifA(false);
                         setShowNotifSelectZone(false); 

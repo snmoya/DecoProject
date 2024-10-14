@@ -14,7 +14,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
 
   //console.log("zoneNmae: ", zoneName);
   //console.log("blinking in NotificationWindowIn: ", blinking);
-  console.log("blinkEnabled in NotificationWindowIn: ", blinkEnabled);
+  //console.log("blinkEnabled in NotificationWindowIn: ", blinkEnabled);
 
   const showLocalNotification = (title, message) => {
     PushNotification.localNotification({
@@ -61,7 +61,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
       latestMessageId.current = latestMessage.id; // Update the latest message ID
 
       if (blinkEnabled) {
-        console.log("Blinking screen");
+        //console.log("Blinking screen");
         blinkScreen(); 
       }
     }

@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 
-const NotificationWindow = ({ location, onPressReceive, onClose }) => {
+const NotificationWindow = ({ location, orgId, onPressReceive, onClose }) => {
+
+  const [orgName, setOrgName] = useState(null); 
+  console.log("Organization ID:", orgId);
+  const fetchOrganizationName = async (orgId) => {
+    try {
+        const response = await fetch(`https://deco3801-machineleads.uqcloud.net/api/org/${orgId}`);
+        const data = await response.json();
+        console.log("Organization data:", data);
+        console.log("Organization name:", data.name);
+        setOrgName(data.name); 
+    } catch (error) {
+        console.error("Error fetching organization name:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (orgId) {
+      fetchOrganizationName(orgId);
+    }
+  }, [orgId]); 
+
+
   return (
     <View style={styles.container}>
 
@@ -19,7 +41,9 @@ const NotificationWindow = ({ location, onPressReceive, onClose }) => {
             <View style={styles.smallLine} />
             <View style={styles.infoItem}>
                 <Image source={icons.notification} style={styles.notIcon} />
-                <Text style={styles.infoText}>Notification receiving type</Text>
+                <Text style={styles.infoText}>
+            {orgName ? orgName : "Loading organization..."}
+          </Text>
             </View>
         </View>
 
