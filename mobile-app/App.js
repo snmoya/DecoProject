@@ -14,9 +14,25 @@ const Stack = createStackNavigator();
 
 export default function App() {
     const [sideMenuVisible, setSideMenuVisible] = useState(false);
+    const [blinking, setBlinking] = useState(false); 
+    const [blinkingEnabled, setBlinkingEnabled] = useState(false); 
+
     const showSideMenu = () => {
         console.log('Showing side menu:', !sideMenuVisible);
         setSideMenuVisible(!sideMenuVisible);
+    };
+
+    const blinkScreen = () => {
+        let blinkCount = 0;
+        setBlinking(true);
+        const blinkInterval = setInterval(() => {
+            blinkCount++;
+            setBlinking(prev => !prev);  
+            if (blinkCount >= 6) {  
+                clearInterval(blinkInterval);
+                setBlinking(false); 
+            }
+        }, 250);
     };
 
     PushNotification.configure({
@@ -48,6 +64,9 @@ export default function App() {
         );
       }, []);
 
+      useEffect(() => {
+        console.log("blinkingEnabled state in App.js:", blinkingEnabled);
+    }, [blinkingEnabled]); 
 
     return (
         <NavigationContainer>
@@ -58,10 +77,8 @@ export default function App() {
                             <TopBar 
                                 title="EVAN"
                                 onMenuPress={showSideMenu}
-                                onSearchPress={() => console.log('search is working :)')}
-                                onOptionsPress={() => console.log('options is working :)')}
                             />
-                            <ShowMap navigation={navigation} />
+                            <ShowMap navigation={navigation} blinking={blinking} blinkingEnabled={blinkingEnabled} blinkScreen={blinkScreen}/>
                             {sideMenuVisible && (
                                 <TouchableOpacity 
                                     style={styles.overlay} 
@@ -69,13 +86,15 @@ export default function App() {
                                     activeOpacity={1}
                                 />
                             )}
-                            <SideMenu visible={sideMenuVisible} showSideMenu={showSideMenu} />
+                            <SideMenu visible={sideMenuVisible} showSideMenu={showSideMenu} blinkScreen={blinkScreen} setBlinkingEnabled={setBlinkingEnabled} />
                         </View>
                     )}
                 </Stack.Screen>
                 <Stack.Screen name="List" component={List} />
                 <Stack.Screen name="VoiceToText" component={VoiceToText} />
             </Stack.Navigator>
+
+            {blinking && <View style={styles.blinkOverlay} />}
         </NavigationContainer>
     );
 }
@@ -94,4 +113,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',  
         zIndex: 900, 
     },
+    blinkOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', // White blink effect
+        zIndex: 2000, // Ensure it's on top of everything
+    }
 });

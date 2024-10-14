@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, TouchableOpacity, Image } from "react-native";
+import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, TouchableOpacity, Image, Animated } from "react-native";
 import MapView, { AnimateToRegion } from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
 import { isPointInPolygon } from "geolib";
@@ -14,7 +14,7 @@ import getNotifications from './getNotifications';
 import getZones from './getZones';
 
 
-export default function ShowMap({ navigation }) {
+export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
     /*
     const updatedLocations = locations.map(location => {
         if (location.polygon) {
@@ -125,6 +125,7 @@ export default function ShowMap({ navigation }) {
                         const userLocation = {
                             latitude: position.coords.latitude,
                             longitude: position.coords.longitude,
+                            accuracy: position.coords.accuracy,
                         };
 
                         const nearbyLocation = checkIfUserInZone(userLocation);
@@ -136,20 +137,20 @@ export default function ShowMap({ navigation }) {
                         }));
 
                         if (nearbyLocation && nearbyLocation.distance.nearby) {
-                            console.log("User is IN a zone");
+                            //console.log("User is IN a zone");
                             setInZone(true);
                             setButtonPosition(340);
                             setShowNotifA(true);
                             setShowNotifSelectZone(false);
                         } else {
-                            console.log("User is NOT in zone");
+                            //console.log("User is NOT in zone");
                             setInZone(false);
                             setShowNotifA(false);
                             //setButtonPosition(30);
                         }
                     },
                     error => console.log("Error getting current position: ", error),
-                    { enableHighAccuracy: true }
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
                 );
             }
         }, [mapState.locationPermission])
@@ -200,15 +201,17 @@ export default function ShowMap({ navigation }) {
         }, 1000); 
     };
 
-    console.log("--------------------");
-    console.log("inZone: ", inZone);
-    console.log("showNotifA: ", showNotifA);
-    console.log("showNotifSelectZone: ", showNotifSelectZone);
+    //console.log("--------------------");
+    //console.log("inZone: ", inZone);
+    //console.log("showNotifA: ", showNotifA);
+    //console.log("showNotifSelectZone: ", showNotifSelectZone);
     //const filteredMessages = messages.filter(message => message.zone_id === mapState.selectedLocation?.id);
     //console.log("filteredMessages: ", filteredMessages);
     //console.log("isReceivingNotifications: ", isReceivingNotifications);
     //console.log("messages: ", messages);   
-    
+    console.log("blinkingEnabled in ShowMap:", blinkingEnabled);
+    //console.log("blinking in ShowMap:", blinking);
+
     return (
         <>
             <MapView
@@ -224,6 +227,7 @@ export default function ShowMap({ navigation }) {
                 style={styles.container}
                 onPress={handleMapPress} 
             >
+            
                 {mapState.locations.map(location => {
                     if (location.coordinates) {
                         return ( 
@@ -290,6 +294,8 @@ export default function ShowMap({ navigation }) {
                 <NotificationWindowIn
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
                     zoneId={showNotifSelectZone ? mapState.selectedLocation.id : mapState.nearbyLocation.id}
+                    blinkEnabled={blinkingEnabled}
+                    blinkScreen={blinkScreen}  
                     onStopReceiving={handleStopReceiving}
                     onClose={() => {
                         setShowNotifA(true);  // Close the notification window
@@ -304,6 +310,8 @@ export default function ShowMap({ navigation }) {
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
                     zoneId={showNotifSelectZone ? mapState.selectedLocation.id : mapState.nearbyLocation.id}
                     onStopReceiving={handleStopReceiving}
+                    blinkEnabled={blinkingEnabled}
+                    blinkScreen={blinkScreen} // 
                     onClose={() => {
                         setShowNotifA(true);  // Close the notification window
                         setShowNotifSelectZone(false);  // Optionally close the selected zone window
@@ -312,6 +320,8 @@ export default function ShowMap({ navigation }) {
                 />
             )}
 
+
+            
         </>
     );
 }
@@ -354,4 +364,5 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 100,
     },
+
 });

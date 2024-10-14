@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Dimensions, Switch } from 'react-native';
 import icons from '../data/icons';
 
-const SideMenu = ({ visible, showSideMenu }) => {
+const SideMenu = ({ visible, showSideMenu, blinkScreen, setBlinkingEnabled }) => {
     const slideAnim = React.useRef(new Animated.Value(-Dimensions.get('window').width)).current;
     const [screenBlinkEnabled, setScreenBlinkEnabled] = useState(false);
-    const [vibrationEnabled, setVibrationEnabled] = useState(false);
 
     React.useEffect(() => {
         Animated.timing(slideAnim, {
@@ -20,28 +19,30 @@ const SideMenu = ({ visible, showSideMenu }) => {
             <TouchableOpacity style={styles.closeButton} onPress={showSideMenu}>
                 <Image source={icons.close} style={styles.closeIcon} />
             </TouchableOpacity>
+
             <View style={styles.profileSection}>
-                <Text style={styles.profileName}>Notifications Settings</Text>
-                <Text style={styles.profileEmail}>Enable or disable settings</Text>
+                <Text style={styles.profileName}>Screen Blinking</Text>
+                <Text style={styles.profileEmail}>Enable screen blinking every time that you get a new notification</Text>
             </View>
 
             <View style={styles.buttonSection}>
-            <View style={styles.toggleContainer}>
+                {/* Button to manually trigger the blink */}
+                <TouchableOpacity style={styles.button} onPress={blinkScreen}>
+                    <Text style={styles.buttonText}>Press to try it</Text>
+                </TouchableOpacity>
+
+                <View style={styles.toggleContainer}>
                     <Text style={styles.toggleLabel}>Enable Screen Blink</Text>
                     <Switch
                         value={screenBlinkEnabled}
-                        onValueChange={(value) => setScreenBlinkEnabled(value)}
+                        onValueChange={(value) => {
+                        console.log("Screen Blink Enabled set to:", value);
+                        setScreenBlinkEnabled(value);
+                        setBlinkingEnabled(value);
+                        console.log("SetBlinkingEnable with value:", value);
+                        }}
                         trackColor={{ false: '#767577', true: '#FFDEAB' }}
                         thumbColor={screenBlinkEnabled ? '#04AA6D' : '#f4f3f4'}
-                    />
-                </View>
-                <View style={styles.toggleContainer}>
-                    <Text style={styles.toggleLabel}>Enable Vibration</Text>
-                    <Switch
-                        value={vibrationEnabled}
-                        onValueChange={(value) => setVibrationEnabled(value)}
-                        trackColor={{ false: '#767577', true: '#FFDEAB' }}
-                        thumbColor={vibrationEnabled ? '#04AA6D' : '#f4f3f4'}
                     />
                 </View>
             </View>
@@ -73,15 +74,15 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#666',
     },
-    settingsSection: {
-        marginBottom: 20,
+    toggleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 10,
     },
-    settingsText: {
+    toggleLabel: {
         fontSize: 16,
         color: '#333',
-    },
-    toggleContainer: {
-        marginTop: 20,
     },
     button: {
         backgroundColor: '#FFDEAB',
@@ -103,16 +104,6 @@ const styles = StyleSheet.create({
     closeIcon: {
         width: 24,
         height: 24,
-    },
-    toggleContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginVertical: 10,
-    },
-    toggleLabel: {
-        fontSize: 16,
-        color: '#333',
     },
 });
 

@@ -6,13 +6,15 @@ import getNotifications from './getNotifications';
 import PushNotification from 'react-native-push-notification';
 
 
-const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId }) => {
+const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blinkEnabled, blinkScreen}) => {
   const navigation = useNavigation();
   const { messages, loading } = getNotifications(1);
   const latestMessageId = useRef(null);
   const zoneName = location;
 
-  console.log("zoneNmae: ", zoneName);
+  //console.log("zoneNmae: ", zoneName);
+  //console.log("blinking in NotificationWindowIn: ", blinking);
+  console.log("blinkEnabled in NotificationWindowIn: ", blinkEnabled);
 
   const showLocalNotification = (title, message) => {
     PushNotification.localNotification({
@@ -57,6 +59,11 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId }) =>
     if (latestMessage && latestMessage.id !== latestMessageId.current) {
       showLocalNotification(latestMessage.title, latestMessage.message); // Trigger a local notification
       latestMessageId.current = latestMessage.id; // Update the latest message ID
+
+      if (blinkEnabled) {
+        console.log("Blinking screen");
+        blinkScreen(); 
+      }
     }
   }, [latestMessage]);
 
@@ -81,20 +88,15 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId }) =>
             <Image source={icons.locationPin} style={styles.locIcon} />
             <Text style={styles.infoText}>{location}</Text>
         </View>
-        {/*
-        <View style={styles.infoItem1}>
-                <Image source={icons.notification} style={styles.notIcon} />
-                <Text style={styles.infoText}>Notification receiving type</Text>
-        </View>
-          */}
         <View style={styles.infoFrame}>
             <View style={styles.infoItem2}>
                 <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
                 <View style={styles.textContainer}>
                     <View style={styles.titleRow}>
                       <Text style={styles.notificationTitle}>{latestMessage ? latestMessage.title : 'No Notifications'}</Text>
-                      <Text style={styles.timeText}> • {timeMessage || 'N/A'}</Text>
+                      
                     </View>
+                    <Text style={styles.timeText}> • {timeMessage || 'N/A'}</Text>
                     <Text style={styles.messageText}>{latestMessage ? cutMessage(latestMessage.message) : 'No messages for this zone.'}</Text>
                 </View>
                 <Image source={icons.arrowDown} style={styles.arrowIcon} />
@@ -113,7 +115,6 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId }) =>
         <TouchableOpacity style={styles.button} onPress={onStopReceiving}>
             <Text style={styles.closeButtonText}>Stop receiving</Text>
         </TouchableOpacity>
-
     </View>
   );
 };
@@ -177,9 +178,10 @@ container: {
     paddingLeft: 20,
   },
   timeText: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
     paddingLeft: 10,
+    marginTop: 5,
   },
   messageText: {
     fontSize: 14,

@@ -79,7 +79,7 @@ cd /clonePath
 
 Move into the Mobile app directory:
 ```shell
-cd DecoProject/MLY
+cd DecoProject/mobile-app
 ```
 
 - In the project directory, run:

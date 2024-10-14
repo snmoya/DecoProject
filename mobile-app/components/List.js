@@ -59,7 +59,9 @@ const List = ({ navigation, route }) => {
                 <View style={styles.textContainer}>
                   <View style={styles.titleRow}>
                     <Text style={styles.infoText}>{item.title}</Text>
-                    <Text style={styles.timeText}>
+
+                  </View>
+                  <Text style={styles.timeText}>
                       {new Date(item.created_at).toLocaleString('en-AU', {
                         year: 'numeric',
                         month: '2-digit',
@@ -68,7 +70,6 @@ const List = ({ navigation, route }) => {
                         minute: '2-digit',
                       })}
                     </Text>
-                  </View>
                   <Text style={styles.messageText}>
                     {expandedMessageId === item.id ? item.message : cutMessage(item.message)}
                   </Text>
@@ -148,9 +149,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   timeText: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
     paddingLeft: 10,
+    marginTop: 2,
   },
   infoFrame: {
     backgroundColor: '#FFF8F3',
