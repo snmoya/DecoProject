@@ -253,7 +253,7 @@ app.get('/api/zones', async (req, res) => {
 
     try {
         // Base query
-        let query = 'SELECT id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones';
+        let query = 'SELECT id, org_id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones';
         let queryParams = [];
 
         // If orgId provided, concatenate the query
