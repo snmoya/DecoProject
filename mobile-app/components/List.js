@@ -31,6 +31,13 @@ const List = ({ navigation, route }) => {
     }
   };
 
+  const cutTitle = (text, length = 18) => {
+    if (text.length > length) {
+      return text.substring(0, length) + '...';
+    }
+    return text;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -199,28 +206,5 @@ const styles = StyleSheet.create({
   },
 });
 
-/*
-            <ScrollView>
-                {loading ? (
-                    <Text>Loading...</Text> // Display loading text while fetching
-                ) : (
-                    messages.map((message, index) => (
-                        <View key={index} style={styles.infoFrame}>
-                            <View style={styles.infoItem2}>
-                                <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
-                                <View style={styles.textContainer}>
-                                    <View style={styles.titleRow}>
-                                        <Text style={styles.infoText}>{message.user}</Text>
-                                        <Text style={styles.timeText}> • {index + 1}h</Text>
-                                    </View>
-                                    <Text style={styles.messageText}>{message.message}</Text>
-                                </View>
-                                <Image source={icons.circledArrow} style={styles.arrowIcon} />
-                            </View>
-                        </View>
-                    ))
-                )}
-            </ScrollView>
-*/
 
 export default  List;

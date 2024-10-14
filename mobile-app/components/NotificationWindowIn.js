@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
 import icons from '../data/icons';
 import { useNavigation } from '@react-navigation/native';
@@ -11,6 +11,8 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
   const { messages, loading } = getNotifications(1);
   const latestMessageId = useRef(null);
   const zoneName = location;
+
+  const [isExpanded, setIsExpanded] = useState(false);
 
   //console.log("zoneNmae: ", zoneName);
   //console.log("blinking in NotificationWindowIn: ", blinking);
@@ -68,16 +70,26 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
   }, [latestMessage]);
 
 
-  const cutMessage = (message, length = 40) => {
+  const cutMessage = (message, length = 49) => {
     if (message.length > length) {
       return message.substring(0, length) + '...';
     }
     return message;
   };
-  
 
+  const cutTitle = (text, length = 18) => {
+    if (text.length > length) {
+      return text.substring(0, length) + '...';
+    }
+    return text;
+  };
+
+  const toggleMessage = () => {
+    setIsExpanded(!isExpanded); 
+  };
+  
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { zIndex: 100 }]}>
 
         <View style={styles.closeButtonFrame}>
             <TouchableOpacity onPress={onClose}>
@@ -88,18 +100,30 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
             <Image source={icons.locationPin} style={styles.locIcon} />
             <Text style={styles.infoText}>{location}</Text>
         </View>
-        <View style={styles.infoFrame}>
+        <View style={[styles.infoFrame, isExpanded && styles.expandedFrame]}>
             <View style={styles.infoItem2}>
                 <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
                 <View style={styles.textContainer}>
                     <View style={styles.titleRow}>
-                      <Text style={styles.notificationTitle}>{latestMessage ? latestMessage.title : 'No Notifications'}</Text>
+                    <Text style={styles.notificationTitle}>
+                        {latestMessage ? cutTitle(latestMessage.title) : 'No Notifications'}
+                      </Text>
                       
                     </View>
                     <Text style={styles.timeText}> • {timeMessage || 'N/A'}</Text>
-                    <Text style={styles.messageText}>{latestMessage ? cutMessage(latestMessage.message) : 'No messages for this zone.'}</Text>
+                    <Text style={styles.messageText}>
+              {isExpanded ? latestMessage.message : latestMessage ? cutMessage(latestMessage.message) : 'No messages for this zone.'}
+                    </Text>
                 </View>
-                <Image source={icons.arrowDown} style={styles.arrowIcon} />
+                <TouchableOpacity onPress={toggleMessage}>
+            <Animated.Image
+              source={icons.arrowDown}
+              style={[
+                styles.arrowIcon,
+                { transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }, // Rotate when expanded
+              ]}
+            />
+          </TouchableOpacity>
             </View>
         </View>
         <TouchableOpacity
@@ -234,6 +258,9 @@ container: {
   notificationTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  expandedFrame: {
+    backgroundColor: '#FFFF',
   },
 });
 

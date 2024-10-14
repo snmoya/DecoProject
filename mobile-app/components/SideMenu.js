@@ -33,18 +33,19 @@ const SideMenu = ({ visible, showSideMenu, blinkScreen, setBlinkingEnabled }) =>
 
                 <View style={styles.toggleContainer}>
                     <Text style={styles.toggleLabel}>Enable Screen Blink</Text>
-                    <Switch
-                        value={screenBlinkEnabled}
-                        onValueChange={(value) => {
-                        console.log("Screen Blink Enabled set to:", value);
-                        setScreenBlinkEnabled(value);
-                        setBlinkingEnabled(value);
-                        console.log("SetBlinkingEnable with value:", value);
-                        }}
-                        trackColor={{ false: '#767577', true: '#FFDEAB' }}
-                        thumbColor={screenBlinkEnabled ? '#04AA6D' : '#f4f3f4'}
-                    />
+
                 </View>
+                    <Switch style={styles.toggleContainer}
+                            value={screenBlinkEnabled}
+                            onValueChange={(value) => {
+                            console.log("Screen Blink Enabled set to:", value);
+                            setScreenBlinkEnabled(value);
+                            setBlinkingEnabled(value);
+                            console.log("SetBlinkingEnable with value:", value);
+                            }}
+                            trackColor={{ false: '#767577', true: '#FFDEAB' }}
+                            thumbColor={screenBlinkEnabled ? '#04AA6D' : '#f4f3f4'}
+                        />
             </View>
         </Animated.View>
     );
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     profileEmail: {
         fontSize: 14,
         color: '#666',
+        marginTop: 5,
     },
     toggleContainer: {
         flexDirection: 'row',
@@ -89,7 +91,8 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         borderRadius: 10,
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
+        marginTop: 20,
     },
     buttonText: {
         color: '#333',
@@ -104,6 +107,13 @@ const styles = StyleSheet.create({
     closeIcon: {
         width: 24,
         height: 24,
+    },
+    toggleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+        marginHorizontal: 20,
     },
 });
 

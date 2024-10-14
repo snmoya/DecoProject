@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         padding: 10,
         elevation: 5,
-        zIndex: 100,
+        zIndex: 1,
     },
     voiceIcon: {
         width: 32,
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         padding: 10,
         elevation: 5,
-        zIndex: 100,
+        zIndex: 1,
     },
 
 });
