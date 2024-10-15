@@ -79,17 +79,17 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
             coordinates: zone.polygon.map(([longitude, latitude]) => ({
               latitude,
               longitude
-            })),
-            org_id: zone.org_id
+            }))
           }));
           setMapState((prevState) => ({
             ...prevState,
             locations: updatedLocations,
           }));
         }
-      }, [zonesLoading, zones]);    
+      }, [zonesLoading, zones]);
+    
 
-    function checkIfUserInZone(userLocation) {
+      function checkIfUserInZone(userLocation) {
         const updatedLocations = mapState.locations.map(location => {
             const inZone = isPointInPolygon(userLocation, location.coordinates);
             location["distance"] = { nearby: inZone };
@@ -98,6 +98,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
 
         return updatedLocations.find(location => location.distance.nearby);
     }
+    console.log("Nearby Location:", mapState.nearbyLocation);
 
     useEffect(() => {
         // Adjust button position when the user is in the zone or when they click a zone
@@ -116,7 +117,6 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
                         const userLocation = {
                             latitude: position.coords.latitude,
                             longitude: position.coords.longitude,
-                            accuracy: position.coords.accuracy,
                         };
 
                         const nearbyLocation = checkIfUserInZone(userLocation);
@@ -128,20 +128,20 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
                         }));
 
                         if (nearbyLocation && nearbyLocation.distance.nearby) {
-                            //console.log("User is IN a zone");
+                            console.log("User is IN a zone");
                             setInZone(true);
                             setButtonPosition(340);
                             setShowNotifA(true);
                             setShowNotifSelectZone(false);
                         } else {
-                            //console.log("User is NOT in zone");
+                            console.log("User is NOT in zone");
                             setInZone(false);
                             setShowNotifA(false);
                             //setButtonPosition(30);
                         }
                     },
                     error => console.log("Error getting current position: ", error),
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
+                    { enableHighAccuracy: true }
                 );
             }
         }, [mapState.locationPermission])
@@ -260,7 +260,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
             {(inZone && showNotifA && !showNotifSelectZone) && (
                 <NotificationWindow
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
-                    orgId={mapState.selectedLocation.org_id}
+                    orgId={mapState.selectedLocation?.org_id || mapState.nearbyLocation?.org_id}
                     onPressReceive={handlePressReceive}
                 />
             )}
@@ -269,7 +269,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
                 <NotificationWindow
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
                     onPressReceive={handlePressReceive}
-                    orgId={mapState.selectedLocation.org_id}
+                    orgId={mapState.selectedLocation?.org_id || mapState.nearbyLocation?.org_id}
                 />
             )}
 
@@ -277,7 +277,7 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen }) {
                 <NotificationWindow
                     location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
                     onPressReceive={handlePressReceive}
-                    orgId={mapState.selectedLocation.org_id}
+                    orgId={mapState.selectedLocation?.org_id || mapState.nearbyLocation?.org_id}
                     onClose={() => {
                         setShowNotifA(false);
                         setShowNotifSelectZone(false); 

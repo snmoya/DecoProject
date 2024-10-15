@@ -15,7 +15,8 @@ const Stack = createStackNavigator();
 export default function App() {
     const [sideMenuVisible, setSideMenuVisible] = useState(false);
     const [blinking, setBlinking] = useState(false); 
-    const [blinkingEnabled, setBlinkingEnabled] = useState(false); 
+    const [blinkingEnabled, setBlinkingEnabled] = useState(false);
+    const [blinkColor, setBlinkColor] = useState('rgba(255, 255, 255, 0.8)');
 
     const showSideMenu = () => {
         console.log('Showing side menu:', !sideMenuVisible);
@@ -34,6 +35,7 @@ export default function App() {
             }
         }, 250);
     };
+
 
     PushNotification.configure({
         onRegister: function (token) {
@@ -86,7 +88,7 @@ export default function App() {
                                     activeOpacity={1}
                                 />
                             )}
-                            <SideMenu visible={sideMenuVisible} showSideMenu={showSideMenu} blinkScreen={blinkScreen} setBlinkingEnabled={setBlinkingEnabled} />
+                            <SideMenu visible={sideMenuVisible} showSideMenu={showSideMenu} blinkScreen={blinkScreen} setBlinkingEnabled={setBlinkingEnabled} setBlinkColor={setBlinkColor} />
                         </View>
                     )}
                 </Stack.Screen>
@@ -94,7 +96,7 @@ export default function App() {
                 <Stack.Screen name="VoiceToText" component={VoiceToText} />
             </Stack.Navigator>
 
-            {blinking && <View style={styles.blinkOverlay} />}
+            {blinking && <View style={[styles.blinkOverlay, { backgroundColor: blinkColor }]} />}
         </NavigationContainer>
     );
 }
@@ -115,7 +117,6 @@ const styles = StyleSheet.create({
     },
     blinkOverlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(255, 255, 255, 0.8)', // White blink effect
         zIndex: 2000, // Ensure it's on top of everything
     }
 });
