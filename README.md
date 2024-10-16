@@ -24,3 +24,14 @@ For detailed setup instructions for each part of the project, please refer to th
 - [mobile-app/README.md](./mobile-app/README.md)
 - [website-frontend/README.md](./website-frontend/README.md)
 - [backend/README.md](./backend/README.md)
+
+## External Resources
+
+### Backend
+- [How to Hash Passwords with bcrypt in Node.js](https://www.freecodecamp.org/news/how-to-hash-passwords-with-bcrypt-in-nodejs/#heading-how-to-install-bcrypt-in-nodejs)
+- [JWT Authentication in Node.js: A Practical Guide](https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49)
+
+### Website Frontend
+- [React Leaflet Documentation](https://react-leaflet.js.org/docs/start-introduction/)
+
+### Mobile Frontend
