@@ -424,6 +424,9 @@ app.get('/api/notifications', async (req, res) => {
             queryParams.push(zoneId);
         }
 
+        // Sort by descending
+        query += ' ORDER BY created_at DESC';
+
         // Execute the query
         const [rows] = await connectionPool.execute(query, queryParams);
 
