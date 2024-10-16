@@ -80,16 +80,6 @@ function extractCoordinates(polygon) {
     }
 }
 
-// * API route
-app.get('/api', checkApiKey, async (req, res) => {
-    try {
-        const [rows] = await connectionPool.execute('SELECT * FROM test');
-        res.json({ message: rows[0].message });
-    } catch (err) {
-        res.json({ message: 'Error fetching data' });
-    }
-});
-
 // * Login
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
