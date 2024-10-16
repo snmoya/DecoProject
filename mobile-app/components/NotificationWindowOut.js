@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     right: 0,
     width: 24,
     height: 24,
+    zIndex: 100,
   },
   closeButtonFrame: {
     position: 'absolute',

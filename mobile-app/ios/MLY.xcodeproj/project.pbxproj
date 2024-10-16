@@ -679,7 +679,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Chen.MLY;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Seb.MLY;
 				PRODUCT_NAME = MLY;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -861,7 +861,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Chen.MLY;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Seb.MLY;
 				PRODUCT_NAME = MLY;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

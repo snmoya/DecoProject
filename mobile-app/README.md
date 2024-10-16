@@ -1,4 +1,75 @@
-## System Requirements
+# Mobile App Frontend
+
+This folder contains the source code for the mobile-app frontend of our project. 
+The mobile-app alloweds the users to view all the zones availables in a map and click in any one of them to get notifications.
+
+## Overview
+
+The mobile-app is built using **React Native**. This choice was made because of the multiple libraries supported by this framework that help to the implementation of our project. Some of them are react-native-maps and react-native-voice, between others. 
+
+The app communicate to the backend via a RESTful API. Throughout different helper functions gets the necessary information about the zones created by the organisations and the notifications sent by them. 
+
+### Key Features
+
+- **Responsive Design**: Designed to work across a wide range of Iphone screens sizes.
+- **API Integration**: Interacts with the backend API to fetch and display dynamic data in real-time.
+- **Modular Components**: Built using reusable React components to maintain scalability and ease of development.
+
+### Functionalities 
+
+- **Maps View**: The main pages is a map that render all the zones available and the location of the user.
+- **Zones selection**: Zones can be click by the user, so it shows up a notificatin window to start receiving notificaitons.
+- **Blink Screen**: The user can adjust the notifications, to also blink the screen while is in the app. Also can choose the colour for a more personalize experience. This helps to have visual alarm.
+- **Notification List**: Access to all the notifications sent previously by the organisation to that zone.
+- **Lock-screen Notifications**: The user gets the notified in the lock-screen, so there is no need to have the mobile app constantly open. 
+- **Voice To Text**: In case the notifications are given by voice, the user can use this option to get a transcript of what is being said. 
+
+## Project Structure
+
+```
+mobile-app/
+├── assets/
+├── components/
+      ├── getNotifications.js
+      ├── getZones.js
+      ├── List.js
+      ├── NotificationWindowIn.js
+      ├── NotificationWindowOut.js
+      ├── ShowMap.js
+      ├── SideMenu.js
+      ├── TopBar.js
+      ├── VoiceToText.js
+├── data/
+│     ├── icons.js
+├── App.js
+├── package.json
+└── README.md
+```
+
+- **`assets`**: icons.
+- **`components/`**: Contains the main source code for the frontend.
+  - **`getNotifications.js`**: Utility component to get notifications from the API.
+  - **`getZones.js`**: Utility component to get Zones from the API.
+  - **`List.js`**: Component the shows all the notifications sent by the organisation.
+  - **`NotificationWindowIn.js`**: Pop-up window that show the latest notification and gives acces to the list.
+  - **`NotificationWindoOut.js`**: Pop-up window that show the zone name and a button to start receiving notifications.
+  - **`ShowMap.js`**: Main component, where the zones are render and works as the base component of the application.  
+  - **`SideMenu.js`**: SideMenu with the setting for the Blink Screen functionality.
+  - **`TopBar.js`**: Top Bar component that displey the name of the application and acces to side menu.
+  - **`VoiceToText.js`**: This component allows the user to record an audio and get the transcript on the screen.
+
+
+## Backend Integration
+
+- The mobile-app will get the necessary data using the RESTful API hosted at `https://deco3801-machineleads.uqcloud.net/api/`
+- Utility componets are used to Fetch the required data:
+   - For zones: getZones.js
+   - For notifications: getNotifications.js
+
+
+## Setup Instructions
+
+### System Requirements
 
 - Homebrew:
 Run the following command in the terminal to install Homebrew:
@@ -54,7 +125,7 @@ sudo gem install cocoapods
 ```
 
 
-## Clone the repository
+### Clone the repository
 
 In a new directory run the following command:
 ```shell
@@ -63,7 +134,7 @@ git clone https://github.com/snmoya/DecoProject.git
 This will clone the complete project (Web + Mobile).
 
 
-## Running the project
+### Running the project
 
 Once all dependencies are installed, you can run the app on an iPhone simulator by following these steps:
 
@@ -97,7 +168,7 @@ pod install
 
 *This might take a while...
 
-## Possible problem: `pod` Command Not Found
+### Possible problem: `pod` Command Not Found
 1. **Check Where CocoaPods Was Installed**:
    First, we need to find out where CocoaPods was installed. You can do this by running the following command:
    ```shell
@@ -166,7 +237,7 @@ npx react-native run-ios --simulator="iPhone 14"
 ```
 
 
-## Possible Problem: Problem not running the app
+### Possible Problem: Problem not running the app
 run the following commands:
 ```shell
 rm -rf ~/Library/Developer/Xcode/DerivedData/*
@@ -190,7 +261,7 @@ npx react-native run-ios
 ```
 
 
-## OPTIONAL: Run the App on a Physical iPhone
+### OPTIONAL: Run the App on a Physical iPhone
 
 1. **Connect your iPhone to your Mac**:
    - Use a USB cable to connect your iPhone to the Mac.

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, AppState } from 'react-native';
 import ShowMap from './components/ShowMap';
 import TopBar from './components/TopBar';
 import SideMenu from './components/SideMenu';
@@ -17,6 +17,9 @@ export default function App() {
     const [blinking, setBlinking] = useState(false); 
     const [blinkingEnabled, setBlinkingEnabled] = useState(false);
     const [blinkColor, setBlinkColor] = useState('rgba(255, 255, 255, 0.8)');
+    const [vibrationPattern, setVibrationPattern] = useState([0, 500]);
+    const [appState, setAppState] = useState(AppState.currentState); // Track app state
+    const [selectedZone, setSelectedZone] = useState(null);
 
     const showSideMenu = () => {
         console.log('Showing side menu:', !sideMenuVisible);
@@ -80,7 +83,13 @@ export default function App() {
                                 title="EVAN"
                                 onMenuPress={showSideMenu}
                             />
-                            <ShowMap navigation={navigation} blinking={blinking} blinkingEnabled={blinkingEnabled} blinkScreen={blinkScreen}/>
+                            <ShowMap 
+                            navigation={navigation}
+                            blinking={blinking}
+                            blinkingEnabled={blinkingEnabled} 
+                            blinkScreen={blinkScreen}
+                            vibrationPattern={vibrationPattern}    
+                            />
                             {sideMenuVisible && (
                                 <TouchableOpacity 
                                     style={styles.overlay} 
@@ -88,7 +97,14 @@ export default function App() {
                                     activeOpacity={1}
                                 />
                             )}
-                            <SideMenu visible={sideMenuVisible} showSideMenu={showSideMenu} blinkScreen={blinkScreen} setBlinkingEnabled={setBlinkingEnabled} setBlinkColor={setBlinkColor} />
+                            <SideMenu 
+                            visible={sideMenuVisible} 
+                            showSideMenu={showSideMenu} 
+                            blinkScreen={blinkScreen} 
+                            setBlinkingEnabled={setBlinkingEnabled} 
+                            setBlinkColor={setBlinkColor} 
+                            setVibrationPattern={setVibrationPattern}
+                            />
                         </View>
                     )}
                 </Stack.Screen>

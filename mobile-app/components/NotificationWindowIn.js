@@ -1,22 +1,48 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Animated, Vibration } from 'react-native';
 import icons from '../data/icons';
 import { useNavigation } from '@react-navigation/native';
 import getNotifications from './getNotifications';
 import PushNotification from 'react-native-push-notification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blinkEnabled, blinkScreen}) => {
+const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blinkEnabled, blinkScreen, vibrationPattern}) => {
   const navigation = useNavigation();
   const { messages, loading } = getNotifications(1);
   const latestMessageId = useRef(null);
   const zoneName = location;
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isSeen, setIsSeen] = useState(false); 
 
   //console.log("zoneNmae: ", zoneName);
   //console.log("blinking in NotificationWindowIn: ", blinking);
   //console.log("blinkEnabled in NotificationWindowIn: ", blinkEnabled);
+
+  const checkIfSeen = async (messageId) => {
+    try {
+      const seenMessages = await AsyncStorage.getItem('seenMessages');
+      return seenMessages ? JSON.parse(seenMessages).includes(messageId) : false;
+    } catch (error) {
+      console.error('Error checking if message is seen:', error);
+      return false;
+    }
+  };
+
+  const markAsSeen = async (messageId) => {
+    try {
+      const seenMessages = await AsyncStorage.getItem('seenMessages');
+      const updatedSeenMessages = seenMessages ? JSON.parse(seenMessages) : [];
+      if (!updatedSeenMessages.includes(messageId)) {
+        updatedSeenMessages.push(messageId);
+        await AsyncStorage.setItem('seenMessages', JSON.stringify(updatedSeenMessages));
+      }
+      setIsSeen(true);
+    } catch (error) {
+      console.error('Error marking message as seen:', error);
+    }
+  };
 
   const showLocalNotification = (title, message) => {
     PushNotification.localNotification({
@@ -59,13 +85,22 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
 
   useEffect(() => {
     if (latestMessage && latestMessage.id !== latestMessageId.current) {
-      showLocalNotification(latestMessage.title, latestMessage.message); // Trigger a local notification
-      latestMessageId.current = latestMessage.id; // Update the latest message ID
-
-      if (blinkEnabled) {
-        //console.log("Blinking screen");
-        blinkScreen(); 
-      }
+      latestMessageId.current = latestMessage.id;
+      console.log('New message:', latestMessage);
+      console.log("latestMessageId.current: ", latestMessageId.current);
+      console.log("latestMessage.id: ", latestMessage.id);
+      // Check if the message has been seen
+      checkIfSeen(latestMessage.id).then((alreadySeen) => {
+        if (!alreadySeen) {
+          // Trigger vibration only if the message hasn't been seen yet
+          showLocalNotification(latestMessage.title, latestMessage.message); // Trigger a local notification
+          if (blinkEnabled) {
+            blinkScreen(); // Blink screen if enabled
+          }
+          Vibration.vibrate(vibrationPattern); // Vibrate
+          markAsSeen(latestMessage.id); // Mark the message as seen
+        }
+      });
     }
   }, [latestMessage]);
 
@@ -245,6 +280,7 @@ container: {
     right: 0,
     width: 24,
     height: 24,
+    zIndex: 1000,
   },
   closeButtonFrame: {
     position: 'absolute',
