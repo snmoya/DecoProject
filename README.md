@@ -25,6 +25,9 @@ For detailed setup instructions for each part of the project, please refer to th
 - [website-frontend/README.md](./website-frontend/README.md)
 - [backend/README.md](./backend/README.md)
 
+## Contact
+If you have any problems in the process please contact the our team through the Feedback form at https://deco3801-machineleads.uqcloud.net/. 
+
 ## External Resources
 
 ### Backend
