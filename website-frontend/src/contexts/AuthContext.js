@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [orgId, setOrgId] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const login = (token) => {
         localStorage.setItem('token', token);
@@ -33,6 +34,8 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.log('Invalid token, logging out');
             logout();
+        } finally {
+            setLoading(false);
         }
     }, [logout]);
 
@@ -42,6 +45,8 @@ export const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('token');
             if (token) {
                 handleToken(token);  // Use the common function to handle token
+            } else {
+                setLoading(false);
             }
         };
 
@@ -49,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     }, [handleToken]);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, orgId }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, orgId, loading }}>
             {children}
         </AuthContext.Provider>
     );

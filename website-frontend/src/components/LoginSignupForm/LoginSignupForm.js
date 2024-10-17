@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
 
+import FeedbackModal from '../FeedbackModal/FeedbackModal';
+
 import './LoginSignupForm.css';
 
 const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
@@ -14,6 +16,7 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [organisationName, setOrganisationName] = useState('');
     const [message, setMessage] = useState('');
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
     // Clear the input fields when switching the page
     useEffect(() => {
@@ -88,68 +91,78 @@ const LoginSignupForm = ({ isLoginPage, resetSignal, handleReset }) => {
     }
 
     return (
-        <form onSubmit={isLoginPage ? handleLoginSubmit : handleSignupSubmit} className="login-form">
-            <h2>{isLoginPage ? 'Login' : 'Sign Up'}</h2>
+        <>
+            <form onSubmit={isLoginPage ? handleLoginSubmit : handleSignupSubmit} className="login-form">
+                <h2>{isLoginPage ? 'Login' : 'Sign Up'}</h2>
 
-            <label>Username</label>
-            <input
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-            />
+                <label>Username</label>
+                <input
+                    type="text"
+                    placeholder="Enter your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
 
 
-            <label>Password</label>
+                <label>Password</label>
 
-            <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
+                <input
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
 
-            {!isLoginPage && (
-                <>
-                    <label id='confirm-password'>Confirm Password</label>
-                    <input
-                        type='password'
-                        placeholder='Enter your password again'
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                    />
-                </>
-            )}
+                {!isLoginPage && (
+                    <>
+                        <label id='confirm-password'>Confirm Password</label>
+                        <input
+                            type='password'
+                            placeholder='Enter your password again'
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                        />
+                    </>
+                )}
 
-            {!isLoginPage && (
-                <>
-                    <label>Organisation's Name</label>
-                    <input
-                        type='text'
-                        placeholder="Enter your organisation's name"
-                        value={organisationName}
-                        onChange={(e) => setOrganisationName(e.target.value)}
-                        required
-                    />
-                </>
-            )}
+                {!isLoginPage && (
+                    <>
+                        <label>Organisation's Name</label>
+                        <input
+                            type='text'
+                            placeholder="Enter your organisation's name"
+                            value={organisationName}
+                            onChange={(e) => setOrganisationName(e.target.value)}
+                            required
+                        />
+                    </>
+                )}
 
-            <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>
+                <button type="submit" className="login-button">{isLoginPage ? 'Login' : 'Sign Up'}</button>
 
-            {isLoginPage && (
                 <div className="form-other">
                     <ul>
-                        <li className="underline">Report other issues</li>
-                        <li className="underline">Forget your password</li>
+                        <li
+                            className="underline"
+                            onClick={() => setShowFeedbackModal(true)}
+                        >
+                            Send feedback or report issues
+                        </li>
                     </ul>
                 </div>
-            )}
 
-            {message && <p id='success-message'>{message}</p>}
-        </form>
+                {message && <p id='success-message'>{message}</p>}
+            </form>
+
+
+            {/* Feedback Modal */}
+            {showFeedbackModal && (
+                <FeedbackModal onClose={() => setShowFeedbackModal(false)} />
+            )}
+        </>
     );
 };
 

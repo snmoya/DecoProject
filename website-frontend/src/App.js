@@ -10,6 +10,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
 import './App.css';
+import ProtectedRoute from './contexts/ProtectedRoute';
 
 const App = () => {
     return (
@@ -18,10 +19,22 @@ const App = () => {
                 <AuthProvider>
                     <Header />
                     <Routes>
+                        {/* Routes for all the web pages */}
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<LoginSignup />} />
                         <Route path="/signup" element={<LoginSignup />} />
-                        <Route path="/map" element={<Map />} />
+
+                        {/* Protected route for accessing the map */}
+                        <Route 
+                            path="/map" 
+                            element={
+                                <ProtectedRoute>
+                                    <Map />
+                                </ProtectedRoute>
+                            } 
+                        />
+
+                        {/* Route for invalid path */}
                         <Route path="*" element={<Home />} />
                     </Routes>
                     <Footer />

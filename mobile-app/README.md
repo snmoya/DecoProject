@@ -239,7 +239,6 @@ This command automatically will:
 npx react-native run-ios --simulator="iPhone 14"
 ```
 
-
 ### Possible Problem: Problem not running the app
 
 run the following commands:

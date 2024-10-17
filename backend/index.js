@@ -26,7 +26,7 @@ app.set('trust proxy', 'loopback');
 app.use(express.json());
 
 // Serve the React app from the 'build' folder
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, '../website-frontend/build')));
 
 // * Middleware to check API key
 function checkApiKey(req, res, next) {
@@ -79,16 +79,6 @@ function extractCoordinates(polygon) {
         throw new Error('Invalid GeoJSON structure');
     }
 }
-
-// * API route
-app.get('/api', checkApiKey, async (req, res) => {
-    try {
-        const [rows] = await connectionPool.execute('SELECT * FROM test');
-        res.json({ message: rows[0].message });
-    } catch (err) {
-        res.json({ message: 'Error fetching data' });
-    }
-});
 
 // * Login
 app.post('/api/login', async (req, res) => {
@@ -144,6 +134,30 @@ app.post('/api/login', async (req, res) => {
     } catch (error) {
         console.error('ERROR: Logging in', error);
         res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// * Get organisation name from ID
+app.get('/api/org/:id', async (req, res) => {
+    const orgId = req.params.id;
+
+    try {
+        // Query the organization from the database using orgId
+        const [rows] = await connectionPool.execute(
+            'SELECT name FROM organisations WHERE id = ?', 
+            [orgId]
+        );
+
+        // Check if the organization exists
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Organization not found' });
+        }
+
+        // Return the organization name
+        res.status(200).json({ name: rows[0].name });
+    } catch (error) {
+        console.error('Error fetching organization:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -229,7 +243,7 @@ app.get('/api/zones', async (req, res) => {
 
     try {
         // Base query
-        let query = 'SELECT id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones';
+        let query = 'SELECT id, org_id, name, address, ST_AsGeoJSON(polygon) AS polygon FROM zones';
         let queryParams = [];
 
         // If orgId provided, concatenate the query
@@ -290,7 +304,42 @@ app.get('/api/zones/:id', async (req, res) => {
         console.log('ERROR:', error);
         res.status(500).json({ error: 'Server error' });
     }
-})
+});
+
+// * Update an existing zone
+app.put('/api/zones/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, address } = req.body;
+
+    // Check if all required field are provided
+    if (!name || !address) {
+        return res.status(400).json({ error: 'Name and address are required' });
+    }
+
+    try {
+        // Check if the zone exist in the database
+        const [existingZone] = await connectionPool.execute(
+            'SELECT * FROM zones WHERE id = ?',
+            [id]
+        );
+
+        if (existingZone.length == 0) {
+            return res.status(404).json({ error: 'Zone not found' });
+        }
+
+        // Update the zone
+        await connectionPool.execute(
+            'UPDATE zones SET name = ?, address = ? WHERE id = ?',
+            [name, address, id]
+        );
+
+        // Send success response
+        res.status(200).json({ message: 'Zone updated successfully' });
+    } catch (error) {
+        console.error('ERROR: Updating zone:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 // * Delete specific zone by ID
 app.delete('/api/zones/:id', async (req, res) => {
@@ -365,6 +414,9 @@ app.get('/api/notifications', async (req, res) => {
             queryParams.push(zoneId);
         }
 
+        // Sort by descending
+        query += ' ORDER BY created_at DESC';
+
         // Execute the query
         const [rows] = await connectionPool.execute(query, queryParams);
 
@@ -382,9 +434,32 @@ app.get('/api/notifications', async (req, res) => {
     }
 });
 
+// * Feedback endpoint to handle feedback submission
+app.post('/api/feedback', async (req, res) => {
+    const { email, feedback } = req.body;
+
+    // Validate the request
+    if (!email || !feedback) {
+        return res.status(400).json({ error: 'Email and feedback are required' });
+    }
+
+    try {
+        // Insert the feedback into the database
+        const [result] = await connectionPool.execute(
+            'INSERT INTO feedbacks (email, feedback) VALUES (?, ?)',
+            [email, feedback]
+        );
+        
+        res.status(201).json({ message: 'Feedback submitted successfully', feedbackId: result.insertId });
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // * Fallback route to serve the React app for any other route
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../website-frontend/build', 'index.html'));
 });
 
 // Start the server

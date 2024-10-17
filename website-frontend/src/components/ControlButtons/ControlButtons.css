@@ -1,8 +1,15 @@
 .control-buttons {
     position: absolute;
     bottom: 20px;
-    right: 20px;
     z-index: 500;
+}
+
+.right-control-button {
+    right: 20px;
+}
+
+.left-control-button {
+    left: 20px;
 }
 
 .circle-button {
@@ -23,14 +30,24 @@
 .hover-text {
     display: none;
     position: absolute;
-    top: 45%;
-    right: 100%;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
     white-space: nowrap;
     font-size: 14px;
+}
+
+.right-hover-text {
+    top: 45%;
+    right: 100%;
+    margin-right: 10px;
+}
+
+.left-hover-text {
+    top: 35%;
+    left: 100%;
+    margin-left: 10px;
 }
 
 .circle-button:hover + .hover-text {
