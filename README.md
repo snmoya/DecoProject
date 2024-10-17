@@ -35,3 +35,7 @@ For detailed setup instructions for each part of the project, please refer to th
 - [React Leaflet Documentation](https://react-leaflet.js.org/docs/start-introduction/)
 
 ### Mobile Frontend
+- [ReactNative Environment setup](https://reactnative.dev/docs/set-up-your-environment)
+- [React-native-voice Api](https://github.com/react-native-voice/voice)
+- [COMP2140 Lecture 10: Integrating Maps and GeoLocaton](./supporting-documents/COMP2140_Week10.pdf)
+- [COMP2140 Lecture 3: Data Fetching and Async](./supporting-documents/COMP2140_Week3.pdf)
