@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     vibrationButton: {
         backgroundColor: '#FFDEAB',
         paddingVertical: 12,
-        paddingHorizontal: 35,
+        paddingHorizontal: 30,
         borderRadius: 10,
         alignItems: 'center',
         marginBottom: 20,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const baseURL = 'https://deco3801-machineleads.uqcloud.net/api';
-const APIKEY = 'machine-leads-yesterday-secret';
+const APIKEY = 'put-your-API-key-here'; 
 
 const useZones = () => {
   const [zones, setZones] = useState([]);

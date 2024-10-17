@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity, AppState } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import ShowMap from './components/ShowMap';
 import TopBar from './components/TopBar';
 import SideMenu from './components/SideMenu';
@@ -18,8 +18,6 @@ export default function App() {
     const [blinkingEnabled, setBlinkingEnabled] = useState(false);
     const [blinkColor, setBlinkColor] = useState('rgba(255, 255, 255, 0.8)');
     const [vibrationPattern, setVibrationPattern] = useState([0, 500]);
-    const [appState, setAppState] = useState(AppState.currentState); // Track app state
-    const [selectedZone, setSelectedZone] = useState(null);
 
     const showSideMenu = () => {
         console.log('Showing side menu:', !sideMenuVisible);

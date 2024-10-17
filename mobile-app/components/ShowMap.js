@@ -69,6 +69,37 @@ export default function ShowMap({ navigation, blinkingEnabled, blinkScreen, vibr
         }
     }, []);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            let watchId;
+    
+            if (mapState.locationPermission) {
+                watchId = Geolocation.watchPosition(
+                    position => {
+                        const userLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                        };
+    
+                        setMapState(prevState => ({
+                            ...prevState,
+                            userLocation,
+                        }));
+                    },
+                    error => console.log("Error getting current position: ", error),
+                    { enableHighAccuracy: true }
+                );
+            }
+    
+            // Cleanup when component unmounts
+            return () => {
+                if (watchId) {
+                    Geolocation.clearWatch(watchId);
+                }
+            };
+        }, [mapState.locationPermission])
+    );
+
     useEffect(() => {
         if (!zonesLoading) {
           const updatedLocations = zones.map(zone => ({
