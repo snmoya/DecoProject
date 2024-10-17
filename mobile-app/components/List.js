@@ -1,9 +1,14 @@
+/* This component displays a list of notifications for a specific zone.
+  * It uses the getNotifications.js component to fetch the notifications from the API.
+  * The notifications are filtered by the zoneId passed as a prop.
+*/
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator, Animated } from 'react-native';
 import icons from '../data/icons';
 import getNotifications from './getNotifications'; 
 //import { API_KEY } from '@env';
 
+// List component to display notifications
 const List = ({ navigation, route }) => {
 
   const { zoneId } = route.params;
@@ -11,11 +16,13 @@ const List = ({ navigation, route }) => {
   const [filteredMessages, setFilteredMessages] = useState([]);
   const [expandedMessageId, setExpandedMessageId] = useState(null);
 
+  // Filter messages by zone ID and sort by date (newest first)
   useEffect(() => {
     const filteredMessages = messages.filter(message => message.zone_id === zoneId).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     setFilteredMessages(filteredMessages);
   }, [messages, zoneId]);
   
+  // Cut message if it is too long, MAX 50 characters
   const cutMessage = (message, length = 50) => {
     if (message.length > length) {
       return message.substring(0, length) + '...';
@@ -23,6 +30,7 @@ const List = ({ navigation, route }) => {
     return message;
   };
 
+  // Toggle message expansion
   const toggleMessage = (messageId) => {
     if (expandedMessageId === messageId) {
       setExpandedMessageId(null);
@@ -31,6 +39,7 @@ const List = ({ navigation, route }) => {
     }
   };
 
+  // Cut title if it is too long, MAX 18 characters
   const cutTitle = (text, length = 18) => {
     if (text.length > length) {
       return text.substring(0, length) + '...';
@@ -56,6 +65,7 @@ const List = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false} 
           indicatorStyle="black"
         >
+         {/* Loop through filtered messages and display each */}
           {filteredMessages.map((item) => (
             <View key={item.id.toString()}               style={[
                 styles.infoFrame,
@@ -81,6 +91,7 @@ const List = ({ navigation, route }) => {
                     {expandedMessageId === item.id ? item.message : cutMessage(item.message)}
                   </Text>
                 </View>
+                {/* Toggle message expansion when arrow is pressed */}
                 <TouchableOpacity onPress={() => toggleMessage(item.id)}>
                   <Animated.Image
                     source={icons.arrowDown}

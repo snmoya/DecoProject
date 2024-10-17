@@ -1,11 +1,18 @@
+/* This component is a notification window that appears when a user click in a Zone.
+* It displays the location of the Zone and the organization that is responsible for the Zone.
+* The user can press the button to receive the notification.
+*/
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 
+// NotificationWindow component
 const NotificationWindow = ({ location, orgId, onPressReceive, onClose }) => {
 
   const [orgName, setOrgName] = useState(null); 
-  console.log("Organization ID:", orgId);
+  //console.log("Organization ID:", orgId);
+
+  // Fetch organization name from the API
   const fetchOrganizationName = async (orgId) => {
     try {
         const response = await fetch(`https://deco3801-machineleads.uqcloud.net/api/org/${orgId}`);
@@ -18,6 +25,7 @@ const NotificationWindow = ({ location, orgId, onPressReceive, onClose }) => {
     }
   };
 
+  // Fetch organization name when orgId changes
   useEffect(() => {
     if (orgId) {
       fetchOrganizationName(orgId);

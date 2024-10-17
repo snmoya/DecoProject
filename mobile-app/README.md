@@ -5,9 +5,9 @@ The mobile-app alloweds the users to view all the zones availables in a map and 
 
 ## Overview
 
-The mobile-app is built using **React Native**. This choice was made because of the multiple libraries supported by this framework that help to the implementation of our project. Some of them are react-native-maps and react-native-voice, between others. 
+The mobile-app is built using **React Native**. This choice was made because of the numerous libraries supported by this framework that facilitate the implementation of our project. Some of these libraries include react-native-maps and react-native-voice, among others.
 
-The app communicate to the backend via a RESTful API. Throughout different helper functions gets the necessary information about the zones created by the organisations and the notifications sent by them. 
+The app communicates with the backend via a RESTful API. Through various helper functions, it retrieves the necessary information about the zones created by organizations and the notifications they send.
 
 ### Key Features
 
@@ -17,12 +17,14 @@ The app communicate to the backend via a RESTful API. Throughout different helpe
 
 ### Functionalities 
 
-- **Maps View**: The main pages is a map that render all the zones available and the location of the user.
+- **Maps View**: The main page is a map that renders all the available zones and the user’s location.
 - **Zones selection**: Zones can be click by the user, so it shows up a notificatin window to start receiving notificaitons.
-- **Blink Screen**: The user can adjust the notifications, to also blink the screen while is in the app. Also can choose the colour for a more personalize experience. This helps to have visual alarm.
-- **Notification List**: Access to all the notifications sent previously by the organisation to that zone.
-- **Lock-screen Notifications**: The user gets the notified in the lock-screen, so there is no need to have the mobile app constantly open. 
-- **Voice To Text**: In case the notifications are given by voice, the user can use this option to get a transcript of what is being said. 
+- **Side Menu**: Allows the user to access notification settings.
+      - **Blink Setting**: The user can adjust the settings to make the screen blink when notifications are received. They can also choose the color for a more personalized experience, providing an additional visual alert.
+      - **Vibration Settings**: The user can select different vibration lengths. Since some users are more sensitive than others, extra-long alarms can be helpful.
+- **Notification List**: Provides access to all notifications previously sent by the organization for that zone.
+- **Lock-screen Notifications**: The user receives notifications on the lock screen, eliminating the need to keep the app constantly open. 
+- **Voice To Text**: If notifications are delivered by voice, the user can use this option to receive a transcript of what is being said.
 
 ## Project Structure
 
@@ -53,10 +55,11 @@ mobile-app/
   - **`List.js`**: Component the shows all the notifications sent by the organisation.
   - **`NotificationWindowIn.js`**: Pop-up window that show the latest notification and gives acces to the list.
   - **`NotificationWindoOut.js`**: Pop-up window that show the zone name and a button to start receiving notifications.
-  - **`ShowMap.js`**: Main component, where the zones are render and works as the base component of the application.  
+  - **`ShowMap.js`**: Where the zones are render and works as the base secreen component of the application.  
   - **`SideMenu.js`**: SideMenu with the setting for the Blink Screen functionality.
   - **`TopBar.js`**: Top Bar component that displey the name of the application and acces to side menu.
   - **`VoiceToText.js`**: This component allows the user to record an audio and get the transcript on the screen.
+- **`App.js`**: This component is the main component of the app.
 
 
 ## Backend Integration
@@ -238,9 +241,11 @@ npx react-native run-ios --simulator="iPhone 14"
 
 
 ### Possible Problem: Problem not running the app
+
 run the following commands:
 ```shell
 rm -rf ~/Library/Developer/Xcode/DerivedData/*
+rm -rf ~/Library/Caches/*
 ```
 
 -From the terminal, navigate to the ios folder of your React Native project(mobile-app -> ios):

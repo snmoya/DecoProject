@@ -1,3 +1,7 @@
+/* This component is the main component of the app.
+* It contains the navigation stack and the main screens of the app.
+* From here, the app can navigate to the main screen and the rest of the screens.
+*/
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import ShowMap from './components/ShowMap';
@@ -19,11 +23,14 @@ export default function App() {
     const [blinkColor, setBlinkColor] = useState('rgba(255, 255, 255, 0.8)');
     const [vibrationPattern, setVibrationPattern] = useState([0, 500]);
 
+    // Function to show/hide the side menu
     const showSideMenu = () => {
         console.log('Showing side menu:', !sideMenuVisible);
         setSideMenuVisible(!sideMenuVisible);
     };
 
+    // Function to blink the screen
+    // This function is trigger in here and passed down to all the components.
     const blinkScreen = () => {
         let blinkCount = 0;
         setBlinking(true);
@@ -37,7 +44,7 @@ export default function App() {
         }, 250);
     };
 
-
+    // Push notification configuration to get notifications on Lock Screen.
     PushNotification.configure({
         onRegister: function (token) {
           console.log("TOKEN:", token);
@@ -131,6 +138,6 @@ const styles = StyleSheet.create({
     },
     blinkOverlay: {
         ...StyleSheet.absoluteFillObject,
-        zIndex: 2000, // Ensure it's on top of everything
+        zIndex: 2000, 
     }
 });

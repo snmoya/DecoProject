@@ -1,3 +1,9 @@
+/* This component is a notification window that displays the latest notification for a specific zone.
+* It also allows the user to stop receiving notifications for that zone.
+* The user can click on the notification list to see all notifications for that zone.
+* The notification window will blink and/or vibrate when a new notification is received.
+*/
+
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Animated, Vibration } from 'react-native';
 import icons from '../data/icons';
@@ -6,7 +12,7 @@ import getNotifications from './getNotifications';
 import PushNotification from 'react-native-push-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+// NotificationWindowIn component
 const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blinkEnabled, blinkScreen, vibrationPattern}) => {
   const navigation = useNavigation();
   const { messages, loading } = getNotifications(1);
@@ -20,6 +26,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
   //console.log("blinking in NotificationWindowIn: ", blinking);
   //console.log("blinkEnabled in NotificationWindowIn: ", blinkEnabled);
 
+  // Check if the message has been seen, so it doesn't trigger the vibration and blink again.
   const checkIfSeen = async (messageId) => {
     try {
       const seenMessages = await AsyncStorage.getItem('seenMessages');
@@ -30,6 +37,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
     }
   };
 
+  // Mark the message as seen so it doesn't trigger the vibration and blink again.
   const markAsSeen = async (messageId) => {
     try {
       const seenMessages = await AsyncStorage.getItem('seenMessages');
@@ -44,6 +52,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
     }
   };
 
+  // Show notification in the lock-screen of the phone with the spcified format.
   const showLocalNotification = (title, message) => {
     PushNotification.localNotification({
       channelId: "default-channel-id",
@@ -58,6 +67,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
     });
   };
 
+  // Get the latest message for the zone
   const getlatestMessage = () => {
         const zoneMessages = messages.filter(message => message.zone_id === zoneId);
         if (zoneMessages.length > 0) {
@@ -68,11 +78,14 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
 
         return null;
   };
+
+
   const latestMessage = getlatestMessage();
   let timeMessage = '';
   if (latestMessage === null) {
       timeMessage = null;
   } else {
+      // Format the time of the latest message
       timeMessage = new Date(latestMessage.created_at).toLocaleString('en-AU', {
         year: 'numeric',
         month: '2-digit',
@@ -83,6 +96,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
 
   }
 
+  // Check if the latest message has changed
   useEffect(() => {
     if (latestMessage && latestMessage.id !== latestMessageId.current) {
       latestMessageId.current = latestMessage.id;
@@ -105,6 +119,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
   }, [latestMessage]);
 
 
+  // Cut the message if it's too long, Maximum length is 49 characters.
   const cutMessage = (message, length = 49) => {
     if (message.length > length) {
       return message.substring(0, length) + '...';
@@ -112,6 +127,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
     return message;
   };
 
+  // Cut the title if it's too long, Maximum length is 18 characters.
   const cutTitle = (text, length = 18) => {
     if (text.length > length) {
       return text.substring(0, length) + '...';
@@ -119,6 +135,7 @@ const NotificationWindowIn = ({ location, onStopReceiving, onClose, zoneId, blin
     return text;
   };
 
+  // Toggle the message expansion
   const toggleMessage = () => {
     setIsExpanded(!isExpanded); 
   };
@@ -210,7 +227,7 @@ container: {
   },
   titleRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // Space between title and time
+    justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
   },

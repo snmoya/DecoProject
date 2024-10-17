@@ -1,14 +1,19 @@
+/* This component contains the Voice to Text feature that allows the user to
+* record their voice and convert it to text.
+* The user can start and stop the recording, and increase or decrease the font size of the text.
+*/
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Voice from '@react-native-voice/voice';
 import icons from '../data/icons';
 
-
+// VoiceToText component
 const VoiceToText = ({ navigation }) => {
     const [isRecording, setIsRecording] = useState(false);
     const [transcription, setTranscription] = useState('Press to start the transcription...');
     const [fontSize, setFontSize] = useState(18);
 
+    // Set up the voice recognition event listeners
     useEffect(() => {
       Voice.onSpeechStart = speechStart;
       Voice.onSpeechResults = speechResults;
@@ -19,19 +24,23 @@ const VoiceToText = ({ navigation }) => {
       };
   }, []);
 
+    // Start the voice regognition
     const speechStart = () => {
         setTranscription('Listening...');
     };
 
+    // Display the speech results
     const speechResults = (event) => {
         setTranscription(event.value[0]);
     };
 
+    // Display the speech error
     const speechError = (error) => {
         //console.error('Speech recognition error:', error);
         setTranscription('Please try again');
     };
 
+    // Start the voice recording
     const handleStartRecording = async () => {
         try {
             setIsRecording(true);
@@ -41,6 +50,7 @@ const VoiceToText = ({ navigation }) => {
         }
     };
 
+    // Stop the voice recording
     const handleStopRecording = async () => {
         try {
             await Voice.stop();
@@ -50,10 +60,12 @@ const VoiceToText = ({ navigation }) => {
         }
     };
 
+    // Increase the font size
     const handleIncreaseFont = () => {
         setFontSize((prevSize) => prevSize < 30 ? prevSize + 2 : prevSize);
     }
 
+    // Decrease the font size
     const handleDecreaseFont = () => {
         setFontSize((prevSize) => prevSize > 12 ? prevSize - 2 : prevSize);
     }

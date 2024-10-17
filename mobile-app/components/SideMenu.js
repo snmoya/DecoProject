@@ -1,13 +1,18 @@
+/* This component is responsible for rendering the side menu that contains the settings for the Notifications.
+* The user can enable or disable the screen blinking, choose the color of the blinking, and select the vibration pattern.
+*/
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Dimensions, Switch, Vibration } from 'react-native';
 import icons from '../data/icons';
 
+// SideMenu component
 const SideMenu = ({ visible, showSideMenu, blinkScreen, setBlinkingEnabled, setBlinkColor, setVibrationPattern }) => {
     const slideAnim = React.useRef(new Animated.Value(-Dimensions.get('window').width)).current;
     const [screenBlinkEnabled, setScreenBlinkEnabled] = useState(false);
     const [selectedColor, setSelectedColor] = useState('rgba(255, 255, 255, 0.6)');
     const [selectedVibration, setSelectedVibration] = useState('soft');
 
+    // Slide the side menu in and out
     React.useEffect(() => {
         Animated.timing(slideAnim, {
             toValue: visible ? 0 : -Dimensions.get('window').width,
@@ -16,19 +21,20 @@ const SideMenu = ({ visible, showSideMenu, blinkScreen, setBlinkingEnabled, setB
         }).start();
     }, [visible]);
 
+    // List of colors for the user to choose from
     const colors = [
         'rgba(255, 255, 255, 0.6)',   // Softer White
         'rgba(255, 87, 51, 0.6)',     // Softer Red
         'rgba(51, 255, 87, 0.6)',     // Softer Green
-        'rgba(51, 87, 255, 0.6)',     // Softer Blue                   // Random color option
+        'rgba(51, 87, 255, 0.6)',     // Softer Blue              
     ];
 
     // Vibration patterns
     const vibrationPatterns = {
-        soft: [0, 500],            // Vibrate for 500ms
-        medium: [0, 1000], // Vibrate for 1s, wait 500ms, vibrate for 1s
-        strong: [0, 1000, 10, 1000], // Vibrate for 1.5s, wait 300ms, vibrate for 1.5s
-        veryStrong: [0, 1000, 10, 1000, 10, 1000], // Vibrate for 2s, wait 200ms, vibrate for 2s
+        soft: [0, 500],            // 1 pulse of vibration.
+        medium: [0, 1000], // 2 pulses of vibration.
+        strong: [0, 1000, 10, 1000], // 3 pulses of vibration.
+        veryStrong: [0, 1000, 10, 1000, 10, 1000], // 4 pulses of vibration.
     };
 
     // Function to generate random color from the list
@@ -38,11 +44,13 @@ const SideMenu = ({ visible, showSideMenu, blinkScreen, setBlinkingEnabled, setB
         setBlinkColor(randomColor);
     };
 
+    // Function to handle the color selection
     const handleColorSelection = (color) => {
         setSelectedColor(color);
         setBlinkColor(color);
     };
 
+    // Function to handle the vibration pattern selection
     const handleVibrationSelection = (pattern) => {
         setVibrationPattern(vibrationPatterns[pattern]);  // Pass the selected pattern to App.js
         setSelectedVibration(pattern); 
@@ -260,13 +268,13 @@ const styles = StyleSheet.create({
     },
     randomButton: {
         marginTop: 30,
-        backgroundColor: '#04AA6D',
+        backgroundColor: '#FFDEAB',
         padding: 10,
         borderRadius: 10,
         alignItems: 'center',
     },
     randomButtonText: {
-        color: '#fff',
+        color: '#333',
         fontSize: 16,
     },
     vibrationPicker: {
