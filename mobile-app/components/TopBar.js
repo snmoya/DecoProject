@@ -1,3 +1,6 @@
+/* This component is used to display the AppBar at the top of the screen.
+  * The AppBar contains a title and a menu button that can be pressed to open the side menu.
+*/
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import icons from '../data/icons';

@@ -1,8 +1,38 @@
-import React from 'react';
+/* This component is a notification window that appears when a user click in a Zone.
+* It displays the location of the Zone and the organization that is responsible for the Zone.
+* The user can press the button to receive the notification.
+*/
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import icons from '../data/icons';
 
-const NotificationWindow = ({ location, onPressReceive, onClose }) => {
+// NotificationWindow component
+const NotificationWindow = ({ location, orgId, onPressReceive, onClose }) => {
+
+  const [orgName, setOrgName] = useState(null); 
+  //console.log("Organization ID:", orgId);
+
+  // Fetch organization name from the API
+  const fetchOrganizationName = async (orgId) => {
+    try {
+        const response = await fetch(`https://deco3801-machineleads.uqcloud.net/api/org/${orgId}`);
+        const data = await response.json();
+        console.log("Organization data:", data);
+        console.log("Organization name:", data.name);
+        setOrgName(data.name); 
+    } catch (error) {
+        console.error("Error fetching organization name:", error);
+    }
+  };
+
+  // Fetch organization name when orgId changes
+  useEffect(() => {
+    if (orgId) {
+      fetchOrganizationName(orgId);
+    }
+  }, [orgId]); 
+
+
   return (
     <View style={styles.container}>
 
@@ -19,7 +49,9 @@ const NotificationWindow = ({ location, onPressReceive, onClose }) => {
             <View style={styles.smallLine} />
             <View style={styles.infoItem}>
                 <Image source={icons.notification} style={styles.notIcon} />
-                <Text style={styles.infoText}>Notification receiving type</Text>
+                <Text style={styles.infoText}>
+            {orgName ? orgName : "Loading organization..."}
+          </Text>
             </View>
         </View>
 
@@ -108,6 +140,7 @@ const styles = StyleSheet.create({
     right: 0,
     width: 24,
     height: 24,
+    zIndex: 100,
   },
   closeButtonFrame: {
     position: 'absolute',
