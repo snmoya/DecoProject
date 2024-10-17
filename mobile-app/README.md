@@ -1,7 +1,7 @@
 # Mobile App Frontend
 
 This folder contains the source code for the mobile-app frontend of our project. 
-The mobile-app alloweds the users to view all the zones availables in a map and click in any one of them to get notifications.
+The mobile-app allows the users to view all the zones available in a map and click in any one of them to get notifications.
 
 ## Overview
 
@@ -18,7 +18,7 @@ The app communicates with the backend via a RESTful API. Through various helper 
 ### Functionalities 
 
 - **Maps View**: The main page is a map that renders all the available zones and the user’s location.
-- **Zones selection**: Zones can be click by the user, so it shows up a notificatin window to start receiving notificaitons.
+- **Zones selection**: Zones can be click by the user, so it shows up a notification window to start receiving notifications.
 - **Side Menu**: Allows the user to access notification settings.
       - **Blink Setting**: The user can adjust the settings to make the screen blink when notifications are received. They can also choose the color for a more personalized experience, providing an additional visual alert.
       - **Vibration Settings**: The user can select different vibration lengths. Since some users are more sensitive than others, extra-long alarms can be helpful.
@@ -53,11 +53,11 @@ mobile-app/
   - **`getNotifications.js`**: Utility component to get notifications from the API.
   - **`getZones.js`**: Utility component to get Zones from the API.
   - **`List.js`**: Component the shows all the notifications sent by the organisation.
-  - **`NotificationWindowIn.js`**: Pop-up window that show the latest notification and gives acces to the list.
+  - **`NotificationWindowIn.js`**: Pop-up window that show the latest notification and gives access to the list.
   - **`NotificationWindoOut.js`**: Pop-up window that show the zone name and a button to start receiving notifications.
-  - **`ShowMap.js`**: Where the zones are render and works as the base secreen component of the application.  
+  - **`ShowMap.js`**: Where the zones are render and works as the base screen component of the application.  
   - **`SideMenu.js`**: SideMenu with the setting for the Blink Screen functionality.
-  - **`TopBar.js`**: Top Bar component that displey the name of the application and acces to side menu.
+  - **`TopBar.js`**: Top Bar component that display the name of the application and access to side menu.
   - **`VoiceToText.js`**: This component allows the user to record an audio and get the transcript on the screen.
 - **`App.js`**: This component is the main component of the app.
 
@@ -65,7 +65,7 @@ mobile-app/
 ## Backend Integration
 
 - The mobile-app will get the necessary data using the RESTful API hosted at `https://deco3801-machineleads.uqcloud.net/api/`
-- Utility componets are used to Fetch the required data:
+- Utility components are used to Fetch the required data:
    - For zones: getZones.js
    - For notifications: getNotifications.js
 
@@ -92,6 +92,7 @@ you should get something like this Homebrew 4.3.24. (the version can be differen
 brew install node
 brew install watchman
 ```
+
 Verify that are installed correctly:
 ```shell
 node -v
@@ -127,7 +128,6 @@ Install CocoaPods for managing iOS dependencies.
 sudo gem install cocoapods
 ```
 
-
 ### Clone the repository
 
 In a new directory run the following command:
@@ -135,7 +135,6 @@ In a new directory run the following command:
 git clone https://github.com/snmoya/DecoProject.git
 ```
 This will clone the complete project (Web + Mobile).
-
 
 ### Running the project
 
@@ -217,7 +216,6 @@ pod install
    pod --version
    ```
 
-
 - After that, back to the mobile app directory:
 ```shell
 cd ..
@@ -264,7 +262,6 @@ Finally you can run the project:
 npx react-native run-ios
 ```
 
-
 ### OPTIONAL: Run the App on a Physical iPhone
 
 1. **Connect your iPhone to your Mac**:
@@ -297,5 +294,3 @@ npx react-native run-ios
 8. **Troubleshooting**:
    - If you encounter any issues, ensure the development team is correctly set and your Apple ID is valid.
    - You may need to reset the trust settings on your iPhone by going to **Settings** > **General** > **Device Management** and trusting your developer profile again.
-
-

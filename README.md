@@ -40,5 +40,5 @@ If you have any problems in the process please contact the our team through the 
 ### Mobile Frontend
 - [ReactNative Environment setup](https://reactnative.dev/docs/set-up-your-environment)
 - [React-native-voice Api](https://github.com/react-native-voice/voice)
-- [COMP2140 Lecture 10: Integrating Maps and GeoLocaton](./supporting-documents/COMP2140_Week10.pdf)
+- [COMP2140 Lecture 10: Integrating Maps and GeoLocation](./supporting-documents/COMP2140_Week10.pdf)
 - [COMP2140 Lecture 3: Data Fetching and Async](./supporting-documents/COMP2140_Week3.pdf)
