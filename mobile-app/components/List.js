@@ -1,9 +1,14 @@
+/* This component displays a list of notifications for a specific zone.
+  * It uses the getNotifications.js component to fetch the notifications from the API.
+  * The notifications are filtered by the zoneId passed as a prop.
+*/
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator, Animated } from 'react-native';
 import icons from '../data/icons';
 import getNotifications from './getNotifications'; 
 //import { API_KEY } from '@env';
 
+// List component to display notifications
 const List = ({ navigation, route }) => {
 
   const { zoneId } = route.params;
@@ -11,11 +16,13 @@ const List = ({ navigation, route }) => {
   const [filteredMessages, setFilteredMessages] = useState([]);
   const [expandedMessageId, setExpandedMessageId] = useState(null);
 
+  // Filter messages by zone ID and sort by date (newest first)
   useEffect(() => {
     const filteredMessages = messages.filter(message => message.zone_id === zoneId).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     setFilteredMessages(filteredMessages);
   }, [messages, zoneId]);
   
+  // Cut message if it is too long, MAX 50 characters
   const cutMessage = (message, length = 50) => {
     if (message.length > length) {
       return message.substring(0, length) + '...';
@@ -23,12 +30,21 @@ const List = ({ navigation, route }) => {
     return message;
   };
 
+  // Toggle message expansion
   const toggleMessage = (messageId) => {
     if (expandedMessageId === messageId) {
       setExpandedMessageId(null);
     } else {
       setExpandedMessageId(messageId);
     }
+  };
+
+  // Cut title if it is too long, MAX 18 characters
+  const cutTitle = (text, length = 18) => {
+    if (text.length > length) {
+      return text.substring(0, length) + '...';
+    }
+    return text;
   };
 
   return (
@@ -49,6 +65,7 @@ const List = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false} 
           indicatorStyle="black"
         >
+         {/* Loop through filtered messages and display each */}
           {filteredMessages.map((item) => (
             <View key={item.id.toString()}               style={[
                 styles.infoFrame,
@@ -59,7 +76,9 @@ const List = ({ navigation, route }) => {
                 <View style={styles.textContainer}>
                   <View style={styles.titleRow}>
                     <Text style={styles.infoText}>{item.title}</Text>
-                    <Text style={styles.timeText}>
+
+                  </View>
+                  <Text style={styles.timeText}>
                       {new Date(item.created_at).toLocaleString('en-AU', {
                         year: 'numeric',
                         month: '2-digit',
@@ -68,11 +87,11 @@ const List = ({ navigation, route }) => {
                         minute: '2-digit',
                       })}
                     </Text>
-                  </View>
                   <Text style={styles.messageText}>
                     {expandedMessageId === item.id ? item.message : cutMessage(item.message)}
                   </Text>
                 </View>
+                {/* Toggle message expansion when arrow is pressed */}
                 <TouchableOpacity onPress={() => toggleMessage(item.id)}>
                   <Animated.Image
                     source={icons.arrowDown}
@@ -148,9 +167,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   timeText: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
     paddingLeft: 10,
+    marginTop: 2,
   },
   infoFrame: {
     backgroundColor: '#FFF8F3',
@@ -197,28 +217,5 @@ const styles = StyleSheet.create({
   },
 });
 
-/*
-            <ScrollView>
-                {loading ? (
-                    <Text>Loading...</Text> // Display loading text while fetching
-                ) : (
-                    messages.map((message, index) => (
-                        <View key={index} style={styles.infoFrame}>
-                            <View style={styles.infoItem2}>
-                                <Image source={icons.circledNotif} style={styles.circleNotifIcon} />
-                                <View style={styles.textContainer}>
-                                    <View style={styles.titleRow}>
-                                        <Text style={styles.infoText}>{message.user}</Text>
-                                        <Text style={styles.timeText}> • {index + 1}h</Text>
-                                    </View>
-                                    <Text style={styles.messageText}>{message.message}</Text>
-                                </View>
-                                <Image source={icons.circledArrow} style={styles.arrowIcon} />
-                            </View>
-                        </View>
-                    ))
-                )}
-            </ScrollView>
-*/
 
 export default  List;

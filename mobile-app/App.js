@@ -1,3 +1,7 @@
+/* This component is the main component of the app.
+* It contains the navigation stack and the main screens of the app.
+* From here, the app can navigate to the main screen and the rest of the screens.
+*/
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import ShowMap from './components/ShowMap';
@@ -14,11 +18,33 @@ const Stack = createStackNavigator();
 
 export default function App() {
     const [sideMenuVisible, setSideMenuVisible] = useState(false);
+    const [blinking, setBlinking] = useState(false); 
+    const [blinkingEnabled, setBlinkingEnabled] = useState(false);
+    const [blinkColor, setBlinkColor] = useState('rgba(255, 255, 255, 0.8)');
+    const [vibrationPattern, setVibrationPattern] = useState([0, 500]);
+
+    // Function to show/hide the side menu
     const showSideMenu = () => {
         console.log('Showing side menu:', !sideMenuVisible);
         setSideMenuVisible(!sideMenuVisible);
     };
 
+    // Function to blink the screen
+    // This function is trigger in here and passed down to all the components.
+    const blinkScreen = () => {
+        let blinkCount = 0;
+        setBlinking(true);
+        const blinkInterval = setInterval(() => {
+            blinkCount++;
+            setBlinking(prev => !prev);  
+            if (blinkCount >= 6) {  
+                clearInterval(blinkInterval);
+                setBlinking(false); 
+            }
+        }, 250);
+    };
+
+    // Push notification configuration to get notifications on Lock Screen.
     PushNotification.configure({
         onRegister: function (token) {
           console.log("TOKEN:", token);
@@ -48,6 +74,9 @@ export default function App() {
         );
       }, []);
 
+      useEffect(() => {
+        console.log("blinkingEnabled state in App.js:", blinkingEnabled);
+    }, [blinkingEnabled]); 
 
     return (
         <NavigationContainer>
@@ -58,10 +87,14 @@ export default function App() {
                             <TopBar 
                                 title="EVAN"
                                 onMenuPress={showSideMenu}
-                                onSearchPress={() => console.log('search is working :)')}
-                                onOptionsPress={() => console.log('options is working :)')}
                             />
-                            <ShowMap navigation={navigation} />
+                            <ShowMap 
+                            navigation={navigation}
+                            blinking={blinking}
+                            blinkingEnabled={blinkingEnabled} 
+                            blinkScreen={blinkScreen}
+                            vibrationPattern={vibrationPattern}    
+                            />
                             {sideMenuVisible && (
                                 <TouchableOpacity 
                                     style={styles.overlay} 
@@ -69,13 +102,22 @@ export default function App() {
                                     activeOpacity={1}
                                 />
                             )}
-                            <SideMenu visible={sideMenuVisible} showSideMenu={showSideMenu} />
+                            <SideMenu 
+                            visible={sideMenuVisible} 
+                            showSideMenu={showSideMenu} 
+                            blinkScreen={blinkScreen} 
+                            setBlinkingEnabled={setBlinkingEnabled} 
+                            setBlinkColor={setBlinkColor} 
+                            setVibrationPattern={setVibrationPattern}
+                            />
                         </View>
                     )}
                 </Stack.Screen>
                 <Stack.Screen name="List" component={List} />
                 <Stack.Screen name="VoiceToText" component={VoiceToText} />
             </Stack.Navigator>
+
+            {blinking && <View style={[styles.blinkOverlay, { backgroundColor: blinkColor }]} />}
         </NavigationContainer>
     );
 }
@@ -94,4 +136,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',  
         zIndex: 900, 
     },
+    blinkOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        zIndex: 2000, 
+    }
 });

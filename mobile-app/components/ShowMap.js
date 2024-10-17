@@ -1,9 +1,14 @@
+/* This component is the main screen of the app. It displays a map with zones and the user's location.
+    * The user can click on a zone to receive notifications from that zone.
+    * The user can also click on the voice button to access the voice-to-text feature.
+    * The user can click on the location button to center the map on their location.
+    * The user can click on the map to select a zone.
+ */
 import React, { useState, useEffect } from "react";
-import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, TouchableOpacity, Image } from "react-native";
+import { PermissionsAndroid, StyleSheet, View, SafeAreaView, Text, Platform, TouchableOpacity, Image, Animated } from "react-native";
 import MapView, { AnimateToRegion } from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
 import { isPointInPolygon } from "geolib";
-//import { locations } from "../data/locations";
 import NotificationWindow from './NotificationWindowOut';
 import NotificationWindowIn from './NotificationWindowIn';
 import { Polygon } from "react-native-maps";
@@ -13,22 +18,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import getNotifications from './getNotifications';
 import getZones from './getZones';
 
+// ShowMap component
+export default function ShowMap({ navigation, blinkingEnabled, blinkScreen, vibrationPattern }) {
 
-export default function ShowMap({ navigation }) {
-    /*
-    const updatedLocations = locations.map(location => {
-        if (location.polygon) {
-            location.coordinates = location.polygon.map(([latitude, longitude]) => ({
-                latitude,
-                longitude
-            }));
-        }
-        return location;
-    });
-    */
     const [buttonPosition, setButtonPosition] = useState(30);
-    const { messages, loading } = getNotifications(1);
 
+    // Initial state for the map
     const initialMapState = {
         locationPermission: false,
         locations: [],
@@ -48,10 +43,10 @@ export default function ShowMap({ navigation }) {
     const [showNotifA, setShowNotifA] = useState(false);
     //Variable to check if the notification window for the selected zone should be up
     const [showNotifSelectZone, setShowNotifSelectZone] = useState(false);
-    //Variable to check if the user is receiving notifications
-    const [isReceivingNotifications, setIsReceivingNotifications] = useState(false);
-    const mapRef = React.useRef(null); 
+    const mapRef = React.useRef(null);
+    
 
+    // Permissions for Location tracking.
     useEffect(() => {
         async function requestAndroidLocationPermission() {
             try {
@@ -80,6 +75,38 @@ export default function ShowMap({ navigation }) {
         }
     }, []);
 
+    // Track of user's location
+    useFocusEffect(
+        React.useCallback(() => {
+            let watchId;
+    
+            if (mapState.locationPermission) {
+                watchId = Geolocation.watchPosition(
+                    position => {
+                        const userLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                        };
+    
+                        setMapState(prevState => ({
+                            ...prevState,
+                            userLocation,
+                        }));
+                    },
+                    error => console.log("Error getting current position: ", error),
+                    { enableHighAccuracy: true }
+                );
+            }
+    
+            return () => {
+                if (watchId) {
+                    Geolocation.clearWatch(watchId);
+                }
+            };
+        }, [mapState.locationPermission])
+    );
+
+    // Gets the zones from the API and updates the locations on the map.
     useEffect(() => {
         if (!zonesLoading) {
           const updatedLocations = zones.map(zone => ({
@@ -88,26 +115,17 @@ export default function ShowMap({ navigation }) {
             coordinates: zone.polygon.map(([longitude, latitude]) => ({
               latitude,
               longitude
-            }))
+            })),
+            org_id: zone.org_id,
           }));
           setMapState((prevState) => ({
             ...prevState,
             locations: updatedLocations,
           }));
         }
-      }, [zonesLoading, zones]);    
-
-    function checkIfUserInZone(userLocation) {
-        const updatedLocations = mapState.locations.map(location => {
-            const inZone = isPointInPolygon(userLocation, location.coordinates);
-            location["distance"] = { nearby: inZone };
-            return location;
-        });
-
-        return updatedLocations.find(location => location.distance.nearby);
-    }
-
-
+      }, [zonesLoading, zones]);
+    
+    // Change the render of the buttons when the user selectes a zone.
     useEffect(() => {
         // Adjust button position when the user is in the zone or when they click a zone
         if (inZone || showNotifSelectZone) {
@@ -117,54 +135,18 @@ export default function ShowMap({ navigation }) {
         }
     }, [inZone, showNotifSelectZone]);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            if (mapState.locationPermission) {
-                Geolocation.getCurrentPosition(
-                    position => {
-                        const userLocation = {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                        };
-
-                        const nearbyLocation = checkIfUserInZone(userLocation);
-
-                        setMapState(prevState => ({
-                            ...prevState,
-                            userLocation,
-                            nearbyLocation: nearbyLocation || {}
-                        }));
-
-                        if (nearbyLocation && nearbyLocation.distance.nearby) {
-                            console.log("User is IN a zone");
-                            setInZone(true);
-                            setButtonPosition(340);
-                            setShowNotifA(true);
-                            setShowNotifSelectZone(false);
-                        } else {
-                            console.log("User is NOT in zone");
-                            setInZone(false);
-                            setShowNotifA(false);
-                            //setButtonPosition(30);
-                        }
-                    },
-                    error => console.log("Error getting current position: ", error),
-                    { enableHighAccuracy: true }
-                );
-            }
-        }, [mapState.locationPermission])
-    );
-
+    // Handle the press of the "Press to receive" button
     const handlePressReceive = () => {
         setShowNotifA(false);
         //setIsReceivingNotifications(true);
-
     };
 
+    // Handle the press of the "Stop receiving" button
     const handleStopReceiving = () => {
         setShowNotifA(true);
     };
 
+    // Handle the press of a zone on the map
     function handleMapPress(event) {
         const { coordinate } = event.nativeEvent;
         const pressedLocation = {
@@ -179,6 +161,7 @@ export default function ShowMap({ navigation }) {
         }
     }
 
+    // Handle the press of a zone on the map
     const handleZonePress = (location) => {
         setShowNotifA(true); 
         //setIsReceivingNotifications(false);
@@ -190,6 +173,8 @@ export default function ShowMap({ navigation }) {
         setShowNotifSelectZone(true);
     };
 
+    // Handle the press of the location button. 
+    // Get the user's location and center the map on it.
     const handleUserLocPress = () => {
         mapRef.current.animateToRegion({
             latitude: mapState.userLocation.latitude,
@@ -200,15 +185,20 @@ export default function ShowMap({ navigation }) {
         }, 1000); 
     };
 
-    console.log("--------------------");
-    console.log("inZone: ", inZone);
-    console.log("showNotifA: ", showNotifA);
-    console.log("showNotifSelectZone: ", showNotifSelectZone);
+    // Debbuging Console Logs SECTION
+    //console.log("--------------------");
+    //console.log("inZone: ", inZone);
+    //console.log("Org ID: ", mapState.selectedLocation?.org_id);
+    //console.log("showNotifA: ", showNotifA);
+    //console.log("showNotifSelectZone: ", showNotifSelectZone);
     //const filteredMessages = messages.filter(message => message.zone_id === mapState.selectedLocation?.id);
     //console.log("filteredMessages: ", filteredMessages);
     //console.log("isReceivingNotifications: ", isReceivingNotifications);
     //console.log("messages: ", messages);   
-    
+    //console.log("blinkingEnabled in ShowMap:", blinkingEnabled);
+    //console.log("blinking in ShowMap:", blinking);
+    //console.log("Nearby Location org_id in SHOWMAP: ", mapState.nearbyLocation.org_id);
+
     return (
         <>
             <MapView
@@ -224,6 +214,7 @@ export default function ShowMap({ navigation }) {
                 style={styles.container}
                 onPress={handleMapPress} 
             >
+            
                 {mapState.locations.map(location => {
                     if (location.coordinates) {
                         return ( 
@@ -259,59 +250,38 @@ export default function ShowMap({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-            {/* Show this when user is in a zone and the FIRST NOTIF windows is up*/}
-            {(inZone && showNotifA && !showNotifSelectZone) && (
+            {/* Show this when user clicks on a zone and the FIRST NOTIF windows is up*/}
+            {showNotifA && showNotifSelectZone && (
                 <NotificationWindow
-                    location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
-                    onPressReceive={handlePressReceive}
-                />
-            )}
-
-            {inZone && showNotifA && showNotifSelectZone && (
-                <NotificationWindow
-                    location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
-                    onPressReceive={handlePressReceive}
-                />
-            )}
-
-            {!inZone && showNotifA && showNotifSelectZone && (
-                <NotificationWindow
-                    location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
+                    location={mapState.selectedLocation.location}
+                    orgId={mapState.selectedLocation?.org_id}
                     onPressReceive={handlePressReceive}
                     onClose={() => {
-                        setShowNotifA(false);
+                        //setShowNotifA(false);
                         setShowNotifSelectZone(false); 
-                        }}
+                    }}
                 />
             )}
 
             {/* Show this after pressing "Press to receive" */}
-            {inZone && !showNotifA && (
+            {!showNotifA && mapState.selectedLocation && (
                 <NotificationWindowIn
-                    location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
-                    zoneId={showNotifSelectZone ? mapState.selectedLocation.id : mapState.nearbyLocation.id}
+                    location={mapState.selectedLocation.location}
+                    zoneId={mapState.selectedLocation.id}
+                    blinkEnabled={blinkingEnabled}
+                    blinkScreen={blinkScreen}
+                    vibrationPattern={vibrationPattern}  
                     onStopReceiving={handleStopReceiving}
                     onClose={() => {
-                        setShowNotifA(true);  // Close the notification window
-                        setShowNotifSelectZone(false);  // Optionally close the selected zone window
+                        setShowNotifA(true);  
+                        setShowNotifSelectZone(false);  
                         setButtonPosition(340);
-                }}
+                    }}
                 />
             )}
 
-            {!inZone && !showNotifA && showNotifSelectZone && (
-                <NotificationWindowIn
-                    location={showNotifSelectZone ? mapState.selectedLocation.location : mapState.nearbyLocation.location}
-                    zoneId={showNotifSelectZone ? mapState.selectedLocation.id : mapState.nearbyLocation.id}
-                    onStopReceiving={handleStopReceiving}
-                    onClose={() => {
-                        setShowNotifA(true);  // Close the notification window
-                        setShowNotifSelectZone(false);  // Optionally close the selected zone window
-                        setButtonPosition(340);
-                }}
-                />
-            )}
 
+            
         </>
     );
 }
@@ -338,7 +308,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         padding: 10,
         elevation: 5,
-        zIndex: 100,
+        zIndex: 1,
     },
     voiceIcon: {
         width: 32,
@@ -352,6 +322,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         padding: 10,
         elevation: 5,
-        zIndex: 100,
+        zIndex: 1,
     },
+
 });
